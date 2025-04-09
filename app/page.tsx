@@ -1,6 +1,8 @@
 "use client";
 
 import { Video } from "@/types/youtubeApiTypes";
+import { Rocket } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Home() {
@@ -24,7 +26,7 @@ export default function Home() {
     }
   };
 
-  // 動画の追加取得をする関数
+  // 動画の追加取得をする関数(ただこれだと以前取得したものがわからないから同じ動画を出してしまうことがある)
   const handleLoadMore = async () => {
     if (!nextPageToken) return;
     setLoading(true);
@@ -42,8 +44,42 @@ export default function Home() {
     }
   };
 
+  // CSVファイルをダウンロードする関数
+  const downloadCSV = () => {
+    // CSVのヘッダー
+    const header = ["タイトル", "再生回数", "登録者数"];
+    // 動画情報をCSV形式に整形
+    const rows = videos.map((video) => [
+      video.title,
+      video.viewCount,
+      video.subscriberCount,
+    ]);
+
+    // CSV文字列を作成
+    const csvContent = [
+      header.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
+
+    // UTF-8 BOMを付与
+    const BOM = "\uFEFF";
+    const csvWithBOM = BOM + csvContent;
+
+    // Blobを作成
+    const blob = new Blob([csvWithBOM], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    // ダウンロードリンクを作成
+    link.setAttribute("href", url);
+    link.setAttribute("download", `youtube_videos_${keyword}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div>
+    <div className="m-auto">
       <h1>YouTube動画検索</h1>
       <label className="input">
         <svg
@@ -71,7 +107,14 @@ export default function Home() {
         />
       </label>
       <button onClick={handleSearch} disabled={!keyword} className="btn">
-        {loading ? "検索中..." : "検索"}
+        {loading ? (
+          <span className="loading loading-ring loading-xl"></span>
+        ) : (
+          <>
+            <Rocket />
+            <p>探索開始</p>
+          </>
+        )}
       </button>
 
       <div>
@@ -79,26 +122,32 @@ export default function Home() {
           <ul>
             {videos.map((video) => (
               <li key={video.videoId}>
-                <a
+                <Link
                   href={`https://www.youtube.com/watch?v=${video.videoId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   {video.title}
-                </a>
+                </Link>
                 <p>再生回数: {video.viewCount}</p>
                 <p>登録者数: {video.subscriberCount}</p>
               </li>
             ))}
           </ul>
         ) : (
-          <p>該当する動画はありません。</p>
+          <p>該当する動画が見つかりませんでした。</p>
         )}
       </div>
 
       {nextPageToken && !loading && (
-        <button onClick={handleLoadMore}>
-          {loading ? "読み込み中..." : "もっと見る"}
+        <button onClick={handleLoadMore} className="btn">
+          もっと見る
+        </button>
+      )}
+
+      {videos.length > 0 && (
+        <button onClick={downloadCSV} className="btn btn-link">
+          CSVでダウンロード
         </button>
       )}
     </div>

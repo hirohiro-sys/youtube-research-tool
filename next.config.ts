@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // 開発環境でNextのインジケーターを消す
+  devIndicators: false,
 };
 
 export default nextConfig;

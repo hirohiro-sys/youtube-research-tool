@@ -1,6 +1,7 @@
 import { SearchData } from "@/types/youtubeApiTypes";
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
+// これ意味ないかも
 const previouslyFetchedVideoIds: Set<string> = new Set();
 
 // チャンネルや動画のURLから情報を取得する関数
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
   const pageToken = url.searchParams.get('pageToken') ?? '';
 
   try {
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=10&pageToken=${pageToken}&key=${API_KEY}`;
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=5&pageToken=${pageToken}&key=${API_KEY}`;
     const searchData: SearchData = await fetchData(searchUrl);
 
     const filteredVideos = await Promise.all(

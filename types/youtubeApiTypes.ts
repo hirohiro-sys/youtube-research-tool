@@ -40,5 +40,4 @@ export interface Video {
     title: string;
     viewCount: number;
     subscriberCount: number;
-    // captionText: string;
   }
