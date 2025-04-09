@@ -80,6 +80,7 @@ export default function Home() {
 
   return (
     <div className="m-auto">
+      <p>デプロイしました</p>
       <h1>YouTube動画検索</h1>
       <label className="input">
         <svg
