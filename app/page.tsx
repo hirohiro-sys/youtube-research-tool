@@ -1,13 +1,7 @@
 "use client";
 
+import { Video } from "@/types/youtubeApiTypes";
 import { useState } from "react";
-
-interface Video {
-  videoId: string;
-  title: string;
-  viewCount: number;
-  subscriberCount: number;
-}
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
@@ -19,9 +13,7 @@ export default function Home() {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/research?keyword=${encodeURIComponent(keyword)}`
-      );
+      const response = await fetch(`/api/research?keyword=${keyword}`);
       const data = await response.json();
       setVideos(data.videos);
       setNextPageToken(data.nextPageToken);
@@ -38,9 +30,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/research?keyword=${encodeURIComponent(
-          keyword
-        )}&pageToken=${nextPageToken}`
+        `/api/research?keyword=${keyword}&pageToken=${nextPageToken}`
       );
       const data = await response.json();
       setVideos((prevVideos) => [...prevVideos, ...data.videos]);
@@ -55,21 +45,37 @@ export default function Home() {
   return (
     <div>
       <h1>YouTube動画検索</h1>
-      <input
-        type="text"
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        placeholder="検索キーワード"
-      />
-      <button
-        onClick={handleSearch}
-        disabled={!keyword}
-      >
+      <label className="input">
+        <svg
+          className="h-[1em] opacity-50"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <g
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </g>
+        </svg>
+        <input
+          type="search"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder="キーワードを入力してください"
+          className="input-lg"
+        />
+      </label>
+      <button onClick={handleSearch} disabled={!keyword} className="btn">
         {loading ? "検索中..." : "検索"}
       </button>
 
       <div>
-        {videos.length > 0 ? (
+        {videos && videos.length > 0 ? (
           <ul>
             {videos.map((video) => (
               <li key={video.videoId}>

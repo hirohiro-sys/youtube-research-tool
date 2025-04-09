@@ -22,7 +22,7 @@ export interface SearchResultItem {
   }
   
   // YouTube APIの検索結果全体の型
-  export interface SearchData {
+export interface SearchData {
     kind: string;
     etag: string;
     nextPageToken: string | null;
@@ -34,3 +34,11 @@ export interface SearchResultItem {
     items: SearchResultItem[];
   }
   
+// 動画の型情報
+export interface Video {
+    videoId: string;
+    title: string;
+    viewCount: number;
+    subscriberCount: number;
+    // captionText: string;
+  }
