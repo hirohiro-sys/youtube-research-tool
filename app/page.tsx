@@ -2,15 +2,19 @@
 
 import { Video } from "@/types/youtubeApiTypes";
 import Image from "next/image";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
-import { MonitorPlay } from "lucide-react";
+import { useDownloadCSV } from "@/src/hooks/useDownloadCSV";
+import { Download, Eye, Plus, Users } from "lucide-react";
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
+
+  const { downloadCSV } = useDownloadCSV();
 
   // 動画の初回取得をする関数
   const handleSearch = async () => {
@@ -45,92 +49,66 @@ export default function Home() {
     }
   };
 
-  // CSVファイルをダウンロードする関数
-  const downloadCSV = () => {
-    const header = ["タイトル", "再生回数", "登録者数"];
-    const rows = videos.map((video) => [
-      video.title,
-      video.viewCount,
-      video.subscriberCount,
-    ]);
-
-    // CSV文字列を作成
-    const csvContent = [
-      header.join(","),
-      ...rows.map((row) => row.join(",")),
-    ].join("\n");
-
-    // UTF-8 BOMを付与
-    const BOM = "\uFEFF";
-    const csvWithBOM = BOM + csvContent;
-
-    // Blobを作成
-    const blob = new Blob([csvWithBOM], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-
-    // ダウンロードリンクを作成
-    link.setAttribute("href", url);
-    link.setAttribute("download", `youtube_videos_${keyword}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
-    <div className="mt-20">
-      <h1 className="text-center mb-5 flex justify-center items-center gap-2 text-xl">
-        <MonitorPlay className="text-red-500" />
-        需要のある動画検索ツール
-      </h1>
-      <div className="flex justify-center">
-        <label className="input">
-          <svg
-            className="h-[1em] opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor"
+    <div className="pt-30 flex-grow">
+      <motion.div
+        className="flex justify-center mt-6"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 50 }}
+      >
+        <div className="card bg-base-100 shadow-md p-6 flex flex-row gap-4">
+          <label className="input">
+            <svg
+              className="h-[1em] opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
             >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input
-            type="search"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="キーワードを入力してください"
-            className="input-lg"
-          />
-        </label>
-        <button onClick={handleSearch} disabled={!keyword} className="btn">
-          {loading ? (
-            <span className="loading loading-ring loading-xl"></span>
-          ) : (
-            <>
+              <g
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input
+              type="search"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="キーワードを入力してください"
+              className="input-lg w-67"
+            />
+          </label>
+          <button
+            onClick={handleSearch}
+            disabled={!keyword}
+            className="btn btn-neutral"
+          >
+            {loading ? (
+              <span className="loading loading-ring loading-xl"></span>
+            ) : (
               <p>検索</p>
-            </>
-          )}
-        </button>
-        <div
-          className="tooltip ml-5"
-          data-tip="Youtubeではチャンネル登録者数の3倍の再生数をもつ動画は需要があると言われています。"
-        >
-          <button className="btn rounded-2xl">需要のある動画とは？</button>
-        </div>
-      </div>
-
-      <div className="text-center">
-        {videos && videos.length > 0 && (
-          <button onClick={downloadCSV} className="btn btn-link">
-            CSVでダウンロード
+            )}
           </button>
+        </div>
+      </motion.div>
+
+      <div className="flex justify-between items-center px-20 mt-10">
+        {videos && videos.length > 0 && (
+          <>
+            <p className="text-2xl font-bold">検索結果: {videos.length}件</p>
+            <button
+              onClick={() => downloadCSV(videos, keyword)}
+              className="btn btn-outline btn-success"
+            >
+              <Download />
+              CSVでダウンロード
+            </button>
+          </>
         )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 px-20">
@@ -145,7 +123,7 @@ export default function Home() {
                 height={270}
               />
             </figure>
-            <div className="card-body">
+            <div className="card-body p-6">
               <h2 className="card-title">
                 <Link
                   href={`https://www.youtube.com/watch?v=${video.videoId}`}
@@ -153,25 +131,37 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="hover:underline text-blue-600"
                 >
-                  {video.title.length > 25
-                    ? `${video.title.slice(0, 25)}...`
-                    : video.title}
+                  {video.title}
                 </Link>
               </h2>
-              <p>再生回数: {Number(video.viewCount).toLocaleString()} 回</p>
-              <p>
-                登録者数: {Number(video.subscriberCount).toLocaleString()} 人
-              </p>
+              <div className="flex flex-col gap-3">
+                <p className="flex items-center gap-4 font-mono">
+                  <Eye />
+                  {Number(video.viewCount).toLocaleString()} 回
+                </p>
+                <p className="flex items-center gap-4 font-mono">
+                  <Users />
+                  {Number(video.subscriberCount).toLocaleString()} 人
+                </p>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="text-center my-5">
-        {nextPageToken && !loading && (
-          <button onClick={handleLoadMore} className="btn">
-            もっと見る
-          </button>
+      <div className="text-center my-10">
+        {loading ? (
+          <span className="loading loading-dots loading-xl"></span>
+        ) : (
+          nextPageToken && (
+            <button
+              onClick={handleLoadMore}
+              className="btn rounded-2xl shadow-lg"
+            >
+              <Plus />
+              もっと見る
+            </button>
+          )
         )}
       </div>
     </div>
