@@ -1,10 +1,10 @@
 "use client";
 
 import { Video } from "@/types/youtubeApiTypes";
-import { Rocket } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { MonitorPlay } from "lucide-react";
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
@@ -47,9 +47,7 @@ export default function Home() {
 
   // CSVファイルをダウンロードする関数
   const downloadCSV = () => {
-    // CSVのヘッダー
     const header = ["タイトル", "再生回数", "登録者数"];
-    // 動画情報をCSV形式に整形
     const rows = videos.map((video) => [
       video.title,
       video.viewCount,
@@ -81,7 +79,10 @@ export default function Home() {
 
   return (
     <div className="mt-20">
-      <h1 className="text-center mb-5">需要のある動画検索ツール</h1>
+      <h1 className="text-center mb-5 flex justify-center items-center gap-2 text-xl">
+        <MonitorPlay className="text-red-500" />
+        需要のある動画検索ツール
+      </h1>
       <div className="flex justify-center">
         <label className="input">
           <svg
@@ -108,16 +109,21 @@ export default function Home() {
             className="input-lg"
           />
         </label>
-        <button onClick={handleSearch} disabled={!keyword} className="btn ml-3">
+        <button onClick={handleSearch} disabled={!keyword} className="btn">
           {loading ? (
             <span className="loading loading-ring loading-xl"></span>
           ) : (
             <>
-              <Rocket />
-              <p>探索開始</p>
+              <p>検索</p>
             </>
           )}
         </button>
+        <div
+          className="tooltip ml-5"
+          data-tip="Youtubeではチャンネル登録者数の3倍の再生数をもつ動画は需要があると言われています。"
+        >
+          <button className="btn rounded-2xl">需要のある動画とは？</button>
+        </div>
       </div>
 
       <div className="text-center">
