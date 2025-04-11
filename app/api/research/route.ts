@@ -15,14 +15,14 @@ const fetchData = async (url: string) => {
 const getSubscriberCount = async (channelId: string) => {
   const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${API_KEY}`;
   const channelData = await fetchData(channelUrl);
-  return parseInt(channelData.items[0].statistics.subscriberCount, 10);
+  return parseInt(channelData.items[0]?.statistics.subscriberCount, 10);
 };
 
 // 動画の再生回数を取得する関数
 const getViewCount = async (videoId: string) => {
   const videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${API_KEY}`;
   const videoData = await fetchData(videoUrl);
-  return parseInt(videoData.items[0].statistics.viewCount, 10);
+  return parseInt(videoData.items[0]?.statistics.viewCount, 10);
 };
 
 export async function GET(request: Request) {

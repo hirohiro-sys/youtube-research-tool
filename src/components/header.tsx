@@ -6,7 +6,7 @@ import { MonitorPlay, Info } from "lucide-react";
 export default function Header() {
   return (
     <motion.header
-      className="fixed top-0 w-full bg-white/80 shadow-lg z-50"
+      className="fixed top-0 w-full bg-black/80 shadow-lg z-50"
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -19,7 +19,9 @@ export default function Header() {
             whileTap={{ scale: 0.97 }}
           >
             <MonitorPlay className="h-6 w-6 text-red-500" />
-            <h1 className="text-xl font-bold">YouTube需要分析ツール</h1>
+            <h1 className="text-xl font-bold text-white">
+              YouTube需要分析ツール
+            </h1>
           </motion.div>
           <div
             className="tooltip tooltip-bottom ml-5"

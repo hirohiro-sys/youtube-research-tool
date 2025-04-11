@@ -13,12 +13,14 @@ export default function Home() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const { downloadCSV } = useDownloadCSV();
 
   // 動画の初回取得をする関数
   const handleSearch = async () => {
     setLoading(true);
+    setHasSearched(true);
     try {
       const response = await fetch(`/api/research?keyword=${keyword}`);
       const data = await response.json();
@@ -57,7 +59,7 @@ export default function Home() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 50 }}
       >
-        <div className="card bg-base-100 shadow-md p-6 flex flex-row gap-4">
+        <div className="card  border border-gray-300 shadow-sm p-6 flex flex-row gap-4 rounded-xl">
           <label className="input">
             <svg
               className="h-[1em] opacity-50"
@@ -80,7 +82,7 @@ export default function Home() {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="キーワードを入力してください"
-              className="input-lg w-67"
+              className="input-lg w-70"
             />
           </label>
           <button
@@ -111,6 +113,67 @@ export default function Home() {
           </>
         )}
       </div>
+      {!loading && videos?.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 px-4">
+          {hasSearched ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center max-w-md"
+            >
+              <div className="p-6 inline-flex mb-4">
+                <svg
+                  className="h-12 w-12 text-gray-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">
+                検索結果が見つかりませんでした
+              </h3>
+              <p className="text-gray-500">別のキーワードをお試しください</p>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center max-w-md"
+            >
+              <div className="p-6 inline-flex mb-4">
+                <svg
+                  className="h-12 w-12 text-gray-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">
+                動画を検索してみましょう
+              </h3>
+              <p className="text-gray-500">
+                キーワードを入力して、需要のある動画を検索できます
+              </p>
+            </motion.div>
+          )}
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 px-20">
         {videos?.map((video) => (
           <div key={video.videoId} className="card bg-base-100 shadow-md">
@@ -151,12 +214,13 @@ export default function Home() {
 
       <div className="text-center my-10">
         {loading ? (
-          <span className="loading loading-dots loading-xl"></span>
+          <span className="loading loading-dots loading-xl mt-20"></span>
         ) : (
+          videos.length > 0 &&
           nextPageToken && (
             <button
               onClick={handleLoadMore}
-              className="btn rounded-2xl shadow-lg"
+              className="btn btn-outline rounded-2xl shadow-lg"
             >
               <Plus />
               もっと見る
