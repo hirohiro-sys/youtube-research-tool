@@ -1,5 +1,5 @@
 // components/VideoCard.tsx
-import { Eye, Users } from "lucide-react";
+import { Eye, TrendingUp, Users } from "lucide-react";
 import { Video } from "@/types/youtubeApiTypes";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,6 +34,14 @@ export const VideoCard = ({ video }: { video: Video }) => (
         <p className="flex items-center gap-4 font-mono">
           <Users />
           {Number(video.subscriberCount).toLocaleString()} 人
+        </p>
+        <p className="flex items-center gap-4 font-mono text-green-600 font-semibold">
+          <TrendingUp />
+          {Number(video.subscriberCount) > 0
+            ? `${(
+                Number(video.viewCount) / Number(video.subscriberCount)
+              ).toFixed(1)} 倍`
+            : "N/A"}
         </p>
       </div>
     </div>
