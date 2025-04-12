@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 export default function Footer() {
   return (
     <motion.footer
-      className="bg-gray-100 mt-auto"
+      className="bg-gray-100"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.7, duration: 0.5 }}

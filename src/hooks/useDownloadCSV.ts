@@ -2,9 +2,10 @@ import { Video } from "@/types/youtubeApiTypes";
 
 export const useDownloadCSV = () => {
   const downloadCSV = (videos: Video[], keyword: string) => {
-    const header = ["タイトル", "再生回数", "登録者数"];
+    const header = ["タイトル", "URL","再生回数", "登録者数"];
     const rows = videos.map((video) => [
       video.title,
+      `https://www.youtube.com/watch?v=${video.videoId}`,
       video.viewCount,
       video.subscriberCount,
     ]);
