@@ -1,8 +1,6 @@
 import { SearchData } from "@/types/youtubeApiTypes";
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
-// これ意味ないかも
-const previouslyFetchedVideoIds: Set<string> = new Set();
 
 // チャンネルや動画のURLから情報を取得する関数
 const fetchData = async (url: string) => {
@@ -37,17 +35,12 @@ export async function GET(request: Request) {
     const filteredVideos = await Promise.all(
       searchData.items.map(async (item) => {
         const videoId = item.id.videoId;
-        // すでに取得済みの動画IDをスキップ
-        if (previouslyFetchedVideoIds.has(videoId)) return null;
         const channelId = item.snippet.channelId;
         // チャンネル登録者数と動画の再生回数を取得
         const subscriberCount = await getSubscriberCount(channelId);
         const viewCount = await getViewCount(videoId);
         // チャンネル登録者数 ✖️ 3倍以上の再生数でフィルタリング
         if (viewCount >= subscriberCount * 3) {
-          // 取得した動画IDを記録
-          previouslyFetchedVideoIds.add(videoId);
-
           return {
             title: item.snippet.title,
             videoId: videoId,
