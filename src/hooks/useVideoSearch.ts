@@ -31,7 +31,16 @@ export const useVideoSearch = () => {
         `/api/research?keyword=${keyword}&pageToken=${nextPageToken}`
       );
       const data = await response.json();
-      setVideos((prev) => [...prev, ...data.videos]);
+  
+      setVideos((prev) => {
+        // 「もっと見る」で追加取得した際に動画が重複しないようにする
+        const existingIds = new Set(prev.map((v) => v.videoId));
+        const uniqueNewVideos = data.videos.filter(
+          (video: Video) => !existingIds.has(video.videoId)
+        );
+        return [...prev, ...uniqueNewVideos];
+      });
+  
       setNextPageToken(data.nextPageToken);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
@@ -39,6 +48,7 @@ export const useVideoSearch = () => {
       setLoading(false);
     }
   };
+  
 
   return {
     keyword,
