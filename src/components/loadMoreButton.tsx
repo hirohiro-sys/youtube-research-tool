@@ -22,7 +22,7 @@ export const LoadMoreButton = ({
         hasVideos && (
           <button
             onClick={onClick}
-            className="btn btn-outline rounded-2xl shadow-lg"
+            className="btn btn-outline rounded-full"
           >
             <Plus />
             もっと見る
