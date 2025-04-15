@@ -2,69 +2,74 @@ import { SearchData } from "@/types/youtubeApiTypes";
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
 
-// チャンネルや動画のURLから情報を取得する関数
 const fetchData = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`データ取得エラー: ${url}`);
   return response.json();
 };
 
-// チャンネルの登録者数を取得する関数
-const getSubscriberCount = async (channelId: string) => {
-  const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${API_KEY}`;
-  const channelData = await fetchData(channelUrl);
-  return parseInt(channelData.items[0]?.statistics.subscriberCount, 10);
-};
-
-// 動画の再生回数を取得する関数
-const getViewCount = async (videoId: string) => {
-  const videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${API_KEY}`;
-  const videoData = await fetchData(videoUrl);
-  return parseInt(videoData.items[0]?.statistics.viewCount, 10);
-};
-
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const keyword = url.searchParams.get('keyword') ?? '';
+  const keyword = url.searchParams.get('keyword');
   const pageToken = url.searchParams.get('pageToken') ?? '';
 
   try {
     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=10&pageToken=${pageToken}&key=${API_KEY}`;
     const searchData: SearchData = await fetchData(searchUrl);
 
-    const filteredVideos = await Promise.all(
-      searchData.items.map(async (item) => {
-        const videoId = item.id.videoId;
-        const channelId = item.snippet.channelId;
-        // チャンネル登録者数と動画の再生回数を取得
-        const subscriberCount = await getSubscriberCount(channelId);
-        const viewCount = await getViewCount(videoId);
-        // チャンネル登録者数 ✖️ 3倍以上の再生数でフィルタリング
-        if (viewCount >= subscriberCount * 3) {
-          return {
-            title: item.snippet.title,
-            videoId: videoId,
-            channelId: channelId,
-            viewCount: viewCount,
-            subscriberCount: subscriberCount,
-          };
-        }
-        return null;
-      })
-    );
+    // 検索結果をまとめて取得することでユニットの消費量を減らしている
+    const videoIds = searchData.items.map(item => item.id.videoId).join(',');
+    const channelIds = searchData.items.map(item => item.snippet.channelId).join(',');
+    const [videoData, channelData] = await Promise.all([
+      fetchData(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoIds}&key=${API_KEY}`),
+      fetchData(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds}&key=${API_KEY}`)
+    ]);
 
-    // フィルタリング後の動画情報を取得
-    const validVideos = filteredVideos.filter(Boolean);
+    const viewCountMap = new Map<string, number>();
+    const subscriberCountMap = new Map<string, number>();
 
-    // 次のページのトークンを取得
-    const nextPageToken = searchData.nextPageToken || null;
+    videoData.items.forEach((item: { id: string, statistics: { viewCount: string } }) => {
+      viewCountMap.set(item.id, parseInt(item.statistics.viewCount ?? "0", 10));
+    });
+
+    channelData.items.forEach((item: { id: string, statistics: { subscriberCount: string } }) => {
+      subscriberCountMap.set(item.id, parseInt(item.statistics.subscriberCount ?? "0", 10));
+    });
+
+    const validVideos = searchData.items.reduce<{ 
+      title: string; 
+      videoId: string; 
+      channelId: string; 
+      viewCount: number; 
+      subscriberCount: number; 
+    }[]>((acc, item) => {
+      const videoId = item.id.videoId;
+      const channelId = item.snippet.channelId;
+      const viewCount = viewCountMap.get(videoId) ?? 0;
+      const subscriberCount = subscriberCountMap.get(channelId) ?? 1;
+    
+      if (viewCount >= subscriberCount * 3) {
+        acc.push({
+          title: item.snippet.title,
+          videoId,
+          channelId,
+          viewCount,
+          subscriberCount,
+        });
+      }
+      return acc;
+    }, []);
+    
 
     return new Response(
-      JSON.stringify({ videos: validVideos, nextPageToken }),
+      JSON.stringify({
+        videos: validVideos,
+        nextPageToken: searchData.nextPageToken || null,
+      }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('データ取得エラー:', error);
-    return new Response(JSON.stringify({ error: 'データの取得に失敗しました' }), { status: 500 });
+    console.error("データ取得エラー:", error);
+    return new Response(JSON.stringify({ error: "データの取得に失敗しました" }), { status: 500 });
   }
 }
