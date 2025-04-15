@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   const pageToken = url.searchParams.get('pageToken') ?? '';
 
   try {
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=10&pageToken=${pageToken}&key=${API_KEY}`;
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${pageToken}&key=${API_KEY}`;
     const searchData: SearchData = await fetchData(searchUrl);
 
     // 検索結果をまとめて取得することでユニットの消費量を減らしている
