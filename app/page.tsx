@@ -43,6 +43,7 @@ export default function TopPage() {
         hasNextPage={!!hasNextPage}
         hasVideos={videos.length > 0}
         loading={loading}
+        keyword={keyword}
       />
     </div>
   );

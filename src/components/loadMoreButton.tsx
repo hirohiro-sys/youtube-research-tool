@@ -5,6 +5,7 @@ type LoadMoreButtonProps = {
   loading: boolean;
   hasNextPage: boolean;
   hasVideos: boolean;
+  keyword: string;
 };
 
 export const LoadMoreButton = ({
@@ -12,6 +13,7 @@ export const LoadMoreButton = ({
   loading,
   hasNextPage,
   hasVideos,
+  keyword,
 }: LoadMoreButtonProps) => {
   return (
     <div className="text-center my-10">
@@ -23,6 +25,7 @@ export const LoadMoreButton = ({
           <button
             onClick={onClick}
             className="btn btn-outline rounded-full"
+            disabled={!keyword}
           >
             <Plus />
             もっと見る

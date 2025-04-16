@@ -41,7 +41,7 @@ export const VideoCard = ({ video }: { video: Video }) => (
             ? `${(
                 Number(video.viewCount) / Number(video.subscriberCount)
               ).toFixed(1)} 倍`
-            : "N/A"}
+            : "倍率なし"}
         </p>
       </div>
     </div>
