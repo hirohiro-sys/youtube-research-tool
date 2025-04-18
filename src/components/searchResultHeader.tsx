@@ -1,11 +1,13 @@
 import { ArrowUpDown, Download } from "lucide-react";
 
 type SearchResultHeaderProps = {
+  setSortType: (type: "newest" | "popular") => void;
   videosCount: number;
   onDownloadCSV: () => void;
 };
 
 export const SearchResultHeader = ({
+  setSortType,
   videosCount,
   onDownloadCSV,
 }: SearchResultHeaderProps) => {
@@ -29,13 +31,12 @@ export const SearchResultHeader = ({
                 className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
               >
                 <li>
-                  <p>新しい順</p>
+                  <button onClick={() => setSortType("popular")}>倍率順</button>
                 </li>
                 <li>
-                  <p>倍率順</p>
-                </li>
-                <li>
-                  <p>元に戻す</p>
+                  <button onClick={() => setSortType("newest")}>
+                    新しい順(デフォルト)
+                  </button>
                 </li>
               </ul>
             </div>

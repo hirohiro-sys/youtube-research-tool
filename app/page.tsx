@@ -12,6 +12,7 @@ export default function TopPage() {
   const {
     keyword,
     setKeyword,
+    setSortType,
     videos,
     loading,
     hasSearched,
@@ -23,9 +24,15 @@ export default function TopPage() {
 
   return (
     <div className="pt-30 flex-grow">
-      <Search keyword={keyword} onChange={setKeyword} onSearch={handleSearch} />
+      <Search
+        keyword={keyword}
+        onChange={setKeyword}
+        onSearch={handleSearch}
+        loading={loading}
+      />
 
       <SearchResultHeader
+        setSortType={setSortType}
         videosCount={videos.length}
         onDownloadCSV={() => downloadCSV(videos, keyword)}
       />

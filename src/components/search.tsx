@@ -7,9 +7,15 @@ type SearchProps = {
   keyword: string;
   onChange: (value: string) => void;
   onSearch: () => void;
+  loading: boolean;
 };
 
-export const Search = ({ keyword, onChange, onSearch }: SearchProps) => {
+export const Search = ({
+  keyword,
+  onChange,
+  onSearch,
+  loading,
+}: SearchProps) => {
   return (
     <motion.div
       className="flex justify-center mt-6"
@@ -36,9 +42,13 @@ export const Search = ({ keyword, onChange, onSearch }: SearchProps) => {
         <button
           onClick={onSearch}
           disabled={!keyword}
-          className="btn btn-neutral"
+          className="btn text-gray-800 font-semibold bg-gradient-to-b from-gray-100 via-gray-300 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
         >
-          検索
+          {loading ? (
+            <span className="loading loading-ring loading-xl"></span>
+          ) : (
+            <>検索</>
+          )}
         </button>
       </div>
     </motion.div>

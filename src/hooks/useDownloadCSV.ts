@@ -24,9 +24,7 @@ export const useDownloadCSV = () => {
     const link = document.createElement("a");
     link.setAttribute("href", url);
     link.setAttribute("download", `youtube_videos_${keyword}.csv`);
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
   };
 
   return { downloadCSV };

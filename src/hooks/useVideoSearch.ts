@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Video } from "@/types/youtubeApiTypes";
 
 export const useVideoSearch = () => {
@@ -7,6 +7,7 @@ export const useVideoSearch = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [sortType, setSortType] = useState<"newest" | "popular">("newest");
 
   const handleSearch = async () => {
     setLoading(true);
@@ -48,12 +49,30 @@ export const useVideoSearch = () => {
       setLoading(false);
     }
   };
-  
 
+  const sortedVideos = useMemo(() => {
+    if (sortType === "newest") {
+      return [...videos].sort(
+        // bの方が新しい場合(引き算の結果が正になる場合)は前に来るようにする
+        (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
+    }
+    if (sortType === "popular") {
+      return [...videos].sort((a, b) => {
+        const aRate = (a.viewCount ?? 0) / (a.subscriberCount ?? 1);
+        const bRate = (b.viewCount ?? 0) / (b.subscriberCount ?? 1);
+        return bRate - aRate;
+      });
+    }
+    return videos;
+  }, [videos, sortType]);
+  
+  
   return {
     keyword,
     setKeyword,
-    videos,
+    setSortType,
+    videos: sortedVideos,
     loading,
     hasSearched,
     hasNextPage: !!nextPageToken,
