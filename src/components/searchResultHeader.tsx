@@ -12,10 +12,10 @@ export const SearchResultHeader = ({
   onDownloadCSV,
 }: SearchResultHeaderProps) => {
   return (
-    <div className="flex justify-between items-center px-20 mt-10">
+    <div className="flex justify-between items-center px-5 md:px-20 mt-10">
       {videosCount > 0 && (
         <>
-          <p className="text-2xl font-bold">検索結果: {videosCount}件</p>
+          <p className="md:text-2xl font-bold">検索結果: {videosCount}件</p>
           <div>
             <div className="dropdown dropdown-left">
               <div
@@ -24,7 +24,7 @@ export const SearchResultHeader = ({
                 className="btn bg-white border border-white shadow-none"
               >
                 <ArrowUpDown />
-                並び替える
+                <span className="hidden md:inline">並び替える</span>
               </div>
               <ul
                 tabIndex={0}
@@ -45,7 +45,7 @@ export const SearchResultHeader = ({
               className="btn text-green-600 bg-white border border-gray-300"
             >
               <Download />
-              CSVでダウンロード
+              <span className="hidden md:inline">CSVでダウンロード</span>
             </button>
           </div>
         </>
