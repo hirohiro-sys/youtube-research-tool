@@ -23,7 +23,7 @@ export const Search = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 50 }}
     >
-      <div className="card border border-gray-400 shadow-sm p-6 flex flex-row gap-4 rounded-xl">
+      <div className="card border border-gray-400 shadow-sm p-6 flex flex-col md:flex-row gap-4 rounded-xl">
         <label className="input">
           <Image
             src="./searchIcon.svg"
@@ -36,7 +36,7 @@ export const Search = ({
             value={keyword}
             onChange={(e) => onChange(e.target.value)}
             placeholder="キーワードを入力してください"
-            className="input-lg w-70"
+            className="input-sm md:input-lg w-60 md:w-70"
           />
         </label>
         <button

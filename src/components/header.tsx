@@ -11,8 +11,8 @@ export default function Header() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between md:justify-between">
+      <div className="container mx-auto p-4">
+        <div className="flex items-center justify-between">
           <motion.div
             className="flex items-center space-x-2"
             whileHover={{ scale: 1.03 }}
@@ -24,7 +24,7 @@ export default function Header() {
             </h1>
           </motion.div>
           <div
-            className="tooltip tooltip-left md:tooltip-bottom mr-4"
+            className="tooltip tooltip-left md:tooltip-bottom w-8 md:w-auto"
             data-tip="Youtubeではチャンネル登録者数の3倍の再生数をもつ動画は需要があると言われています。"
           >
             <button className="btn rounded-2xl px-2 md:px-4">
