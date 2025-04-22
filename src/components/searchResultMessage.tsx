@@ -36,7 +36,7 @@ export const SearchResultMessage = ({
             ? "検索結果が見つかりませんでした"
             : "動画を検索してみましょう"}
         </h3>
-        <p className="text-gray-500">
+        <p className="text-gray-500 text-xs md:text-base">
           {hasSearched
             ? "別のキーワードを試すか、再度検索してみてください"
             : "キーワードを入力して、需要のある動画を検索できます"}
