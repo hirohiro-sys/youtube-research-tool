@@ -7,7 +7,7 @@ export const useVideoSearch = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [sortType, setSortType] = useState<"newest" | "popular">("newest");
+  const [sortType, setSortType] = useState<"newest" | "popular" | "viewCount" | "likeCount">("newest");
 
   const handleSearch = async () => {
     setLoading(true);
@@ -62,6 +62,16 @@ export const useVideoSearch = () => {
         const aRate = (a.viewCount ?? 0) / (a.subscriberCount ?? 1);
         const bRate = (b.viewCount ?? 0) / (b.subscriberCount ?? 1);
         return bRate - aRate;
+      });
+    }
+    if (sortType === "viewCount") {
+      return [...videos].sort((a, b) => {
+        return (b.viewCount ?? 0) - (a.viewCount ?? 0);
+      });
+    }
+    if (sortType === "likeCount") {
+      return [...videos].sort((a, b) => {
+        return (b.likeCount ?? 0) - (a.likeCount ?? 0);
       });
     }
     return videos;

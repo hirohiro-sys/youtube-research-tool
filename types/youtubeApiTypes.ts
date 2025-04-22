@@ -39,6 +39,7 @@ export interface Video {
     videoId: string;
     title: string;
     viewCount: number;
+    likeCount: number
     subscriberCount: number;
     publishedAt: string;
   }

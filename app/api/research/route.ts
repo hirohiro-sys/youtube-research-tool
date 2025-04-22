@@ -36,8 +36,10 @@ export async function GET(request: Request) {
     const viewCountMap = new Map<string, number>();
     const durationMap = new Map<string, number>();
     const subscriberCountMap = new Map<string, number>();
-    videoData.items.forEach((item: { id: string, statistics: { viewCount: string }, contentDetails: { duration: string } }) => {
+    const likeCountMap = new Map<string, number>();
+    videoData.items.forEach((item: { id: string, statistics: { viewCount: string, likeCount: string }, contentDetails: { duration: string } }) => {
       viewCountMap.set(item.id, parseInt(item.statistics.viewCount ?? "0", 10));
+      likeCountMap.set(item.id, parseInt(item.statistics.likeCount ?? "0", 10));
       durationMap.set(item.id, parseDuration(item.contentDetails.duration));
     });
     channelData.items.forEach((item: { id: string, statistics: { subscriberCount: string } }) => {
@@ -49,11 +51,13 @@ export async function GET(request: Request) {
       videoId: string; 
       channelId: string; 
       viewCount: number; 
+      likeCount: number;
       subscriberCount: number; 
     }[]>((acc, item) => {
       const videoId = item.id.videoId;
       const channelId = item.snippet.channelId;
       const viewCount = viewCountMap.get(videoId) ?? 0;
+      const likeCount = likeCountMap.get(videoId) ?? 0;
       const subscriberCount = subscriberCountMap.get(channelId) ?? 1;
       const duration = durationMap.get(videoId) ?? 0;
     
@@ -64,6 +68,7 @@ export async function GET(request: Request) {
           videoId,
           channelId,
           viewCount,
+          likeCount,
           subscriberCount,
         });
       }
