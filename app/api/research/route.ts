@@ -22,63 +22,83 @@ export async function GET(request: Request) {
   const pageToken = url.searchParams.get('pageToken') ?? '';
 
   try {
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${pageToken}&key=${API_KEY}`;
-    const searchData: SearchData = await fetchData(searchUrl);
-
-    const videoIds = searchData.items.map(item => item.id.videoId).join(',');
-    const channelIds = searchData.items.map(item => item.snippet.channelId).join(',');
-    const [videoData, channelData] = await Promise.all([
-      fetchData(`https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}&key=${API_KEY}`),
-      fetchData(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds}&key=${API_KEY}`)
-    ]);
-
-    // idに紐ずくデータをO(1)で取得するためにMapを使用
-    const viewCountMap = new Map<string, number>();
-    const durationMap = new Map<string, number>();
-    const subscriberCountMap = new Map<string, number>();
-    const likeCountMap = new Map<string, number>();
-    videoData.items.forEach((item: { id: string, statistics: { viewCount: string, likeCount: string }, contentDetails: { duration: string } }) => {
-      viewCountMap.set(item.id, parseInt(item.statistics.viewCount ?? "0", 10));
-      likeCountMap.set(item.id, parseInt(item.statistics.likeCount ?? "0", 10));
-      durationMap.set(item.id, parseDuration(item.contentDetails.duration));
-    });
-    channelData.items.forEach((item: { id: string, statistics: { subscriberCount: string } }) => {
-      subscriberCountMap.set(item.id, parseInt(item.statistics.subscriberCount ?? "0", 10));
-    });
-
-    const validVideos = searchData.items.reduce<{ 
+    let validVideos: { 
       title: string; 
       videoId: string; 
       channelId: string; 
       viewCount: number; 
       likeCount: number;
       subscriberCount: number; 
-    }[]>((acc, item) => {
-      const videoId = item.id.videoId;
-      const channelId = item.snippet.channelId;
-      const viewCount = viewCountMap.get(videoId) ?? 0;
-      const likeCount = likeCountMap.get(videoId) ?? 0;
-      const subscriberCount = subscriberCountMap.get(channelId) ?? 1;
-      const duration = durationMap.get(videoId) ?? 0;
+    }[] = [];
+    let currentPageToken = pageToken;
     
-      // ショート(3分未満)動画は需要がないみたいなので除外
-      if (viewCount >= subscriberCount * 3 && duration >= 180) {
-        acc.push({
-          title: item.snippet.title,
-          videoId,
-          channelId,
-          viewCount,
-          likeCount,
-          subscriberCount,
-        });
-      }
-      return acc;
-    }, []);
+    // validVideosが10件未満の間は検索を繰り返す
+    while (validVideos.length < 10) {
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${currentPageToken}&key=${API_KEY}`;
+      const searchData: SearchData = await fetchData(searchUrl);
+
+      const videoIds = searchData.items.map(item => item.id.videoId).join(',');
+      const channelIds = searchData.items.map(item => item.snippet.channelId).join(',');
+      const [videoData, channelData] = await Promise.all([
+        fetchData(`https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}&key=${API_KEY}`),
+        fetchData(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds}&key=${API_KEY}`)
+      ]);
+
+      // idに紐づくデータをO(1)で取得するためにMapを使用
+      const viewCountMap = new Map<string, number>();
+      const durationMap = new Map<string, number>();
+      const subscriberCountMap = new Map<string, number>();
+      const likeCountMap = new Map<string, number>();
+      videoData.items.forEach((item: { id: string, statistics: { viewCount: string, likeCount: string }, contentDetails: { duration: string } }) => {
+        viewCountMap.set(item.id, parseInt(item.statistics.viewCount ?? "0", 10));
+        likeCountMap.set(item.id, parseInt(item.statistics.likeCount ?? "0", 10));
+        durationMap.set(item.id, parseDuration(item.contentDetails.duration));
+      });
+      channelData.items.forEach((item: { id: string, statistics: { subscriberCount: string } }) => {
+        subscriberCountMap.set(item.id, parseInt(item.statistics.subscriberCount ?? "0", 10));
+      });
+
+      const validVideosBatch = searchData.items.reduce<{ 
+        title: string; 
+        videoId: string; 
+        channelId: string; 
+        viewCount: number; 
+        likeCount: number;
+        subscriberCount: number; 
+      }[]>((acc, item) => {
+        const videoId = item.id.videoId;
+        const channelId = item.snippet.channelId;
+        const viewCount = viewCountMap.get(videoId) ?? 0;
+        const likeCount = likeCountMap.get(videoId) ?? 0;
+        const subscriberCount = subscriberCountMap.get(channelId) ?? 1;
+        const duration = durationMap.get(videoId) ?? 0;
+
+        // ショート(3分未満)動画は需要がないみたいなので除外
+        if (viewCount >= subscriberCount * 3 && duration >= 180) {
+          // 現状もっと見るでしか重複削除できてなかったので、ここでも重複削除
+          if (!validVideos.some(video => video.videoId === videoId)) {
+            acc.push({
+              title: item.snippet.title,
+              videoId,
+              channelId,
+              viewCount,
+              likeCount,
+              subscriberCount,
+            });
+          }
+        }
+        return acc;
+      }, []);
+
+      validVideos = [...validVideos, ...validVideosBatch];
+      currentPageToken = searchData.nextPageToken || '';
+      if (!currentPageToken) break;
+    }
 
     return new Response(
       JSON.stringify({
         videos: validVideos,
-        nextPageToken: searchData.nextPageToken || null,
+        nextPageToken: currentPageToken || null,
       }),
       { status: 200 }
     );
