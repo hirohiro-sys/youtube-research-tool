@@ -35,8 +35,8 @@ export const Search = ({
             type="search"
             value={keyword}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="キーワードを入力してください"
-            className="input-md md:input-lg w-60 md:w-70"
+            placeholder="キーワードを入力"
+            className="input-lg md:input-lg w-60 md:w-70"
           />
         </label>
         <button
