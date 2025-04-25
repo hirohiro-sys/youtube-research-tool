@@ -17,7 +17,7 @@ export const SearchResultMessage = ({
   if (loading || hasVideos) return;
 
   return (
-    <div className="flex flex-col items-center justify-center py-25 px-4">
+    <div className="flex flex-col items-center justify-center py-4 md:py-25">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

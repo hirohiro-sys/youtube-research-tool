@@ -1,4 +1,3 @@
-// components/VideoCard.tsx
 import { Eye, ThumbsUp, TrendingUp, Users } from "lucide-react";
 import { Video } from "@/types/youtubeApiTypes";
 import Image from "next/image";

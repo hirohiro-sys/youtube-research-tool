@@ -36,7 +36,7 @@ export const Search = ({
             value={keyword}
             onChange={(e) => onChange(e.target.value)}
             placeholder="キーワードを入力"
-            className="input-lg md:input-lg w-60 md:w-70"
+            className="input-lg w-60 md:w-70"
           />
         </label>
         <button
