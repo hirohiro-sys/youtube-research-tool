@@ -2,10 +2,15 @@ import { Eye, ThumbsUp, TrendingUp, Users } from "lucide-react";
 import { Video } from "@/types/youtubeApiTypes";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export const VideoCard = ({ video }: { video: Video }) => (
-  <div className="card bg-base-100 shadow-md">
-    <figure>
+  <motion.div
+    className="card bg-base-100 shadow-lg"
+    whileHover={{ scale: 1.03 }}
+    transition={{ duration: 0.1 }}
+  >
+    <figure className="relative">
       <Image
         src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
         alt={video.title}
@@ -13,7 +18,12 @@ export const VideoCard = ({ video }: { video: Video }) => (
         width={480}
         height={270}
       />
+      <div className="absolute bottom-2 right-2 bg-gray-800 bg-opacity-50 text-white font-bold font-mono p-2 rounded-xl flex items-center text-sm">
+        <ThumbsUp className="inline-block mr-2 text-pink-500" />
+        {Number(video.likeCount).toLocaleString()}
+      </div>
     </figure>
+
     <div className="card-body p-6">
       <h2 className="card-title">
         <Link
@@ -25,20 +35,18 @@ export const VideoCard = ({ video }: { video: Video }) => (
           {video.title}
         </Link>
       </h2>
-      <div className="flex flex-col gap-3">
-        <p className="flex items-center gap-4 font-mono">
-          <Eye />
-          {Number(video.viewCount).toLocaleString()} 回
-        </p>
-        <p className="flex items-center gap-4 font-mono">
-          <Users />
-          {Number(video.subscriberCount).toLocaleString()} 人
-        </p>
-        <p className="flex items-center gap-4 font-mono text-pink-600">
-        <ThumbsUp />
-          {Number(video.likeCount).toLocaleString()}
-        </p>
-        <p className="flex items-center gap-4 font-mono text-green-600 font-semibold">
+      <div className="flex py-3 gap-8">
+        <div className="flex flex-col gap-3">
+          <p className="flex items-center gap-4 font-mono whitespace-nowrap">
+            <Eye />
+            {Number(video.viewCount).toLocaleString()} 回
+          </p>
+          <p className="flex items-center gap-4 font-mono whitespace-nowrap">
+            <Users />
+            {Number(video.subscriberCount).toLocaleString()} 人
+          </p>
+        </div>
+        <p className="flex items-center gap-4 font-mono text-green-600 font-bold text-lg md:text-xl whitespace-nowrap">
           <TrendingUp />
           {Number(video.subscriberCount) > 0
             ? `${(
@@ -48,5 +56,5 @@ export const VideoCard = ({ video }: { video: Video }) => (
         </p>
       </div>
     </div>
-  </div>
+  </motion.div>
 );
