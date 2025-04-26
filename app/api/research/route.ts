@@ -1,11 +1,38 @@
 import { SearchData } from "@/types/youtubeApiTypes";
 
-const API_KEY = process.env.YOUTUBE_API_KEY;
+// 1つの変数に , 区切りで入れたほうが良い？
+const API_KEYS = [
+  process.env.YOUTUBE_API_KEY,
+  process.env.YOUTUBE_API_KEY2,
+  process.env.YOUTUBE_API_KEY3,
+  process.env.YOUTUBE_API_KEY4,
+  process.env.YOUTUBE_API_KEY5
+];
 
+let currentAPIKeyIndex = 0;
 const fetchData = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`データ取得エラー: ${url}`);
-  return response.json();
+  let retries = 0;
+  const maxRetries = API_KEYS.length;
+  while (retries < maxRetries) {
+    const apiKey = API_KEYS[currentAPIKeyIndex];
+    const finalUrl = url + `&key=${apiKey}`;
+    const response = await fetch(finalUrl);
+    if (!response.ok) {
+      if (response.status === 403) {
+        const errorData = await response.json();
+        if (errorData.error.errors[0].reason === 'quotaExceeded') {
+          // APIキーのインデックス調整
+          currentAPIKeyIndex = (currentAPIKeyIndex + 1) % API_KEYS.length;
+          console.log(`APIキーを切り替えました。新しいキーインデックス: ${currentAPIKeyIndex}`);
+          retries++;
+          continue;
+        }
+      }
+      throw new Error(`データ取得エラー: ${url}`);
+    }
+    return response.json();
+  }
+  throw new Error('全てのAPIキーで1日の利用制限に達しました。');
 };
 
 // デフォルトではISO8601形式の文字列になっているので秒数に変換する関数
@@ -34,14 +61,14 @@ export async function GET(request: Request) {
     
     // validVideosが10件未満の間は検索を繰り返す
     while (validVideos.length < 10) {
-      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${currentPageToken}&key=${API_KEY}`;
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${currentPageToken}`;
       const searchData: SearchData = await fetchData(searchUrl);
 
       const videoIds = searchData.items.map(item => item.id.videoId).join(',');
       const channelIds = searchData.items.map(item => item.snippet.channelId).join(',');
       const [videoData, channelData] = await Promise.all([
-        fetchData(`https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}&key=${API_KEY}`),
-        fetchData(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds}&key=${API_KEY}`)
+        fetchData(`https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}`),
+        fetchData(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds}`)
       ]);
 
       // idに紐づくデータをO(1)で取得するためにMapを使用

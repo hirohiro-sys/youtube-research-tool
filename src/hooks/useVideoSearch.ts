@@ -51,6 +51,8 @@ export const useVideoSearch = () => {
   };
 
   const sortedVideos = useMemo(() => {
+    // これがないとAPIキーが全て切れた際にサイトにエラーメッセージが表示されてしまう
+    if (!Array.isArray(videos)) return [];
     if (sortType === "newest") {
       return [...videos].sort(
         // bの方が新しい場合(引き算の結果が正になる場合)は前に来るようにする
