@@ -24,7 +24,7 @@ export const LoadMoreButton = ({
         hasVideos && (
           <button
             onClick={onClick}
-            className="btn btn-outline rounded-full"
+            className="btn btn-neutral btn-outline px-10"
             disabled={!keyword}
           >
             <Plus />

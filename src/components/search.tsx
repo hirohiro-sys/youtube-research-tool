@@ -42,7 +42,7 @@ export const Search = ({
         <button
           onClick={onSearch}
           disabled={!keyword}
-          className="btn text-gray-800 font-semibold bg-gradient-to-b from-gray-100 via-gray-300 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
+          className="btn text-gray-900 bg-gradient-to-b from-gray-100 via-gray-300 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
         >
           {loading ? (
             <span className="loading loading-ring loading-xl"></span>
