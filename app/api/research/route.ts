@@ -98,7 +98,7 @@ export async function GET(request: Request) {
         const channelId = item.snippet.channelId;
         const viewCount = viewCountMap.get(videoId) ?? 0;
         const likeCount = likeCountMap.get(videoId) ?? 0;
-        const subscriberCount = subscriberCountMap.get(channelId) ?? 1;
+        const subscriberCount = subscriberCountMap.get(channelId) || 1;
         const duration = durationMap.get(videoId) ?? 0;
         // ショート(3分未満)動画は需要がないみたいなので除外
         if (viewCount >= subscriberCount * 3 && duration >= 180) {
