@@ -91,7 +91,8 @@ export async function GET(request: Request) {
         channelId: string; 
         viewCount: number; 
         likeCount: number;
-        subscriberCount: number; 
+        subscriberCount: number;
+        publishedAt: string
       }[]>((acc, item) => {
         const videoId = item.id.videoId;
         const channelId = item.snippet.channelId;
@@ -99,7 +100,6 @@ export async function GET(request: Request) {
         const likeCount = likeCountMap.get(videoId) ?? 0;
         const subscriberCount = subscriberCountMap.get(channelId) ?? 1;
         const duration = durationMap.get(videoId) ?? 0;
-
         // ショート(3分未満)動画は需要がないみたいなので除外
         if (viewCount >= subscriberCount * 3 && duration >= 180) {
           // 現状もっと見るでしか重複削除できてなかったので、ここでも重複削除
@@ -111,6 +111,7 @@ export async function GET(request: Request) {
               viewCount,
               likeCount,
               subscriberCount,
+              publishedAt: item.snippet.publishedAt
             });
           }
         }
