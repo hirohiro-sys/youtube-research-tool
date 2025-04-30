@@ -4,7 +4,6 @@ type LoadMoreButtonProps = {
   onClick: () => void;
   loading: boolean;
   hasNextPage: boolean;
-  hasVideos: boolean;
   keyword: string;
 };
 
@@ -12,7 +11,6 @@ export const LoadMoreButton = ({
   onClick,
   loading,
   hasNextPage,
-  hasVideos,
   keyword,
 }: LoadMoreButtonProps) => {
   return (
@@ -20,8 +18,7 @@ export const LoadMoreButton = ({
       {loading ? (
         <span className="loading loading-dots loading-xl mt-20"></span>
       ) : (
-        hasNextPage &&
-        hasVideos && (
+        hasNextPage && (
           <button
             onClick={onClick}
             className="btn btn-neutral btn-outline px-10"

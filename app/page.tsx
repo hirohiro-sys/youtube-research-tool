@@ -47,8 +47,7 @@ export default function TopPage() {
 
       <LoadMoreButton
         onClick={handleLoadMore}
-        hasNextPage={!!hasNextPage}
-        hasVideos={videos.length > 0}
+        hasNextPage={hasNextPage}
         loading={loading}
         keyword={keyword}
       />

@@ -7,7 +7,7 @@ export const useVideoSearch = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [sortType, setSortType] = useState<"newest" | "popular" | "viewCount" | "likeCount">("newest");
+  const [sortType, setSortType] = useState<"newest" | "popular" | "viewCount" | "likeCount" | "">("");
 
   const handleSearch = async () => {
     setLoading(true);

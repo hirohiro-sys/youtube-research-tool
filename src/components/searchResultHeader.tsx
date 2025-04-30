@@ -63,7 +63,7 @@ export const SearchResultHeader = ({
                 </li>
                 <li>
                   <button onClick={() => setSortType("newest")}>
-                    新しい順(デフォルト)
+                    新しい順
                   </button>
                 </li>
               </ul>
