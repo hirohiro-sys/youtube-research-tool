@@ -27,8 +27,8 @@ export const SearchResultMessage = ({
           <Image
             src="/searchIcon.svg"
             alt="検索アイコン"
-            width={40}
-            height={40}
+            width={60}
+            height={60}
           />
         </div>
         <h3 className="text-xl font-bold mb-2">
