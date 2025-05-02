@@ -1,11 +1,14 @@
-"use client";
-
 import Image from "next/image";
-import { motion } from "motion/react";
+
+import { motion } from "framer-motion";
+import { Play } from "lucide-react";
+import { Range } from "@/types/youtubeApiTypes";
 
 type SearchProps = {
   keyword: string;
   onChange: (value: string) => void;
+  range: Range;
+  setRange: (range: Range) => void;
   onSearch: () => void;
   loading: boolean;
 };
@@ -13,6 +16,8 @@ type SearchProps = {
 export const Search = ({
   keyword,
   onChange,
+  range,
+  setRange,
   onSearch,
   loading,
 }: SearchProps) => {
@@ -23,8 +28,8 @@ export const Search = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 50 }}
     >
-      <div className="card border border-gray-400 shadow-sm p-6 flex flex-col md:flex-row gap-4 rounded-xl">
-        <label className="input">
+      <div className="card border border-gray-400 shadow-sm p-6 flex flex-col md:flex-row  rounded-xl">
+        <label className="input flex items-center gap-2">
           <Image
             src="./searchIcon.svg"
             alt="検索アイコン"
@@ -39,15 +44,27 @@ export const Search = ({
             className="input-lg w-60 md:w-70"
           />
         </label>
+
+        <select
+          className="select select-bordered"
+          value={range}
+          onChange={(e) => setRange(e.target.value as Range)}
+        >
+          <option value="all">全期間</option>
+          <option value="3months">3ヶ月以内</option>
+          <option value="1month">1ヶ月以内</option>
+          <option value="1week">1週間以内</option>
+        </select>
+
         <button
-          onClick={onSearch}
+          onClick={() => onSearch()}
           disabled={!keyword}
-          className="btn text-gray-900 bg-gradient-to-b from-gray-100 via-gray-300 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
+          className="btn text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200 md:ml-5"
         >
           {loading ? (
             <span className="loading loading-ring loading-xl"></span>
           ) : (
-            <>検索</>
+            <Play className="text-white w-5" />
           )}
         </button>
       </div>

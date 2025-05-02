@@ -13,7 +13,9 @@ export default function Header() {
     >
       <div className="container mx-auto p-4">
         <div className="flex items-center justify-between">
-          <motion.div
+          <motion.button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center space-x-2"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -22,7 +24,7 @@ export default function Header() {
             <h1 className="text-base md:text-xl font-bold text-white">
               YouTube需要分析ツール
             </h1>
-          </motion.div>
+          </motion.button>
           <div
             className="tooltip tooltip-left md:tooltip-bottom w-8 md:w-auto"
             data-tip="Youtubeではチャンネル登録者数の3倍の再生数をもつ動画は需要があると言われています。"

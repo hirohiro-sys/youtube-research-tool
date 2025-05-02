@@ -1,4 +1,4 @@
-import { ArrowUpDown, Download, Funnel } from "lucide-react";
+import { ArrowUpDown, Download } from "lucide-react";
 
 type SearchResultHeaderProps = {
   setSortType: (type: "newest" | "popular" | "viewCount" | "likeCount") => void;
@@ -17,24 +17,6 @@ export const SearchResultHeader = ({
         <>
           <p className="md:text-2xl font-bold">検索結果: {videosCount}件</p>
           <div>
-            <div className="dropdown dropdown-center">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn bg-white border border-white shadow-none"
-              >
-                <Funnel />
-                <span className="hidden md:inline">絞り込み</span>
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
-              >
-                <li>
-                  <button>未実装</button>
-                </li>
-              </ul>
-            </div>
             <div className="dropdown dropdown-center">
               <div
                 tabIndex={0}

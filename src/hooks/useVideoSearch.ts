@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Video } from "@/types/youtubeApiTypes";
+import { Range, Video } from "@/types/youtubeApiTypes";
 
 export const useVideoSearch = () => {
   const [keyword, setKeyword] = useState("");
@@ -8,12 +8,37 @@ export const useVideoSearch = () => {
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [sortType, setSortType] = useState<"newest" | "popular" | "viewCount" | "likeCount" | "">("");
+  const [range, setRange] = useState<Range>("all");
+
+  // RangeをISO文字列に変換するユーティリティ関数
+  const getPublishedAfter = (range: Range): string | undefined => {
+    const now = new Date();
+    switch (range) {
+      case "3months":
+        now.setMonth(now.getMonth() - 3);
+        break;
+      case "1month":
+        now.setMonth(now.getMonth() - 1);
+        break;
+      case "1week":
+        now.setDate(now.getDate() - 7);
+        break;
+      default:
+        return undefined;
+    }
+    return now.toISOString();
+  };
 
   const handleSearch = async () => {
     setLoading(true);
     setHasSearched(true);
     try {
-      const response = await fetch(`/api/research?keyword=${keyword}`);
+      const publishedAfter = getPublishedAfter(range);
+      const query = new URLSearchParams({
+        keyword,
+        ...(publishedAfter && { publishedAfter }),
+      });
+      const response = await fetch(`/api/research?${query.toString()}`);
       const data = await response.json();
       setVideos(data.videos);
       setNextPageToken(data.nextPageToken);
@@ -28,20 +53,21 @@ export const useVideoSearch = () => {
     if (!nextPageToken) return;
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/research?keyword=${keyword}&pageToken=${nextPageToken}`
-      );
+      const publishedAfter = getPublishedAfter(range);
+      const query = new URLSearchParams({
+        keyword,
+        pageToken: nextPageToken,
+        ...(publishedAfter && { publishedAfter }),
+      });
+      const response = await fetch(`/api/research?${query.toString()}`);
       const data = await response.json();
-  
       setVideos((prev) => {
-        // 「もっと見る」で追加取得した際に動画が重複しないようにする
         const existingIds = new Set(prev.map((v) => v.videoId));
         const uniqueNewVideos = data.videos.filter(
           (video: Video) => !existingIds.has(video.videoId)
         );
         return [...prev, ...uniqueNewVideos];
       });
-  
       setNextPageToken(data.nextPageToken);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
@@ -51,12 +77,12 @@ export const useVideoSearch = () => {
   };
 
   const sortedVideos = useMemo(() => {
-    // これがないとAPIキーが全て切れた際にサイトにエラーメッセージが表示されてしまう
+    // これないと動画ないときエラる
     if (!Array.isArray(videos)) return [];
     if (sortType === "newest") {
       return [...videos].sort(
-        // bの方が新しい場合(引き算の結果が正になる場合)は前に来るようにする
-        (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        (a, b) =>
+          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
       );
     }
     if (sortType === "popular") {
@@ -67,23 +93,20 @@ export const useVideoSearch = () => {
       });
     }
     if (sortType === "viewCount") {
-      return [...videos].sort((a, b) => {
-        return (b.viewCount ?? 0) - (a.viewCount ?? 0);
-      });
+      return [...videos].sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0));
     }
     if (sortType === "likeCount") {
-      return [...videos].sort((a, b) => {
-        return (b.likeCount ?? 0) - (a.likeCount ?? 0);
-      });
+      return [...videos].sort((a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0));
     }
     return videos;
   }, [videos, sortType]);
-  
-  
+
   return {
     keyword,
     setKeyword,
     setSortType,
+    range,
+    setRange,
     videos: sortedVideos,
     loading,
     hasSearched,

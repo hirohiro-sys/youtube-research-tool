@@ -1,4 +1,10 @@
-import { Eye, ThumbsUp, TrendingUp, Users } from "lucide-react";
+import {
+  BotMessageSquare,
+  Eye,
+  ThumbsUp,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { Video } from "@/types/youtubeApiTypes";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,6 +61,13 @@ export const VideoCard = ({ video }: { video: Video }) => (
             : "倍率なし"}
         </p>
       </div>
+      <button
+        className="btn text-white mt-auto bg-gradient-to-r from-indigo-400 to-cyan-400"
+        onClick={() => alert("現在開発中です。")}
+      >
+        <BotMessageSquare />
+        AI分析
+      </button>
     </div>
   </motion.div>
 );

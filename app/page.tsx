@@ -13,6 +13,8 @@ export default function TopPage() {
     keyword,
     setKeyword,
     setSortType,
+    range,
+    setRange,
     videos,
     loading,
     hasSearched,
@@ -27,6 +29,8 @@ export default function TopPage() {
       <Search
         keyword={keyword}
         onChange={setKeyword}
+        range={range}
+        setRange={setRange}
         onSearch={handleSearch}
         loading={loading}
       />

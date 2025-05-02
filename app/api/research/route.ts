@@ -48,6 +48,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const keyword = url.searchParams.get('keyword');
   const pageToken = url.searchParams.get('pageToken') ?? '';
+  const publishedAfter = url.searchParams.get('publishedAfter') ?? '';
 
   try {
     let validVideos: { 
@@ -62,9 +63,12 @@ export async function GET(request: Request) {
     
     // validVideosが10件未満の間は検索を繰り返す
     while (validVideos.length < 10) {
-      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${currentPageToken}`;
+      let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${currentPageToken}`;
+      
+      // 動画公開日の範囲が指定されている場合
+      if (publishedAfter) searchUrl += `&publishedAfter=${publishedAfter}`
+      
       const searchData: SearchData = await fetchData(searchUrl);
-
       const videoIds = searchData.items.map(item => item.id.videoId).join(',');
       const channelIds = searchData.items.map(item => item.snippet.channelId).join(',');
       const [videoData, channelData] = await Promise.all([

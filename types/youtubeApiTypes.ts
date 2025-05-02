@@ -43,3 +43,6 @@ export interface Video {
     subscriberCount: number;
     publishedAt: string;
   }
+
+// 動画公開日の範囲を指定するための型
+export  type Range = "all" | "3months" | "1month" | "1week"; 
