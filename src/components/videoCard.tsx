@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 
 export const VideoCard = ({ video }: { video: Video }) => (
   <motion.div
-    className="card bg-base-100 shadow-lg"
+    className="card bg-base-100 shadow-lg ring-1 ring-gray-200"
     whileHover={{ scale: 1.03 }}
     transition={{ duration: 0.1 }}
   >
