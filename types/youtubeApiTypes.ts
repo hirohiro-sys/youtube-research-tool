@@ -45,4 +45,4 @@ export interface Video {
   }
 
 // 動画公開日の範囲を指定するための型
-export  type Range = "all" | "3months" | "1month" | "1week"; 
+export  type Range = "all" | "6months" | "3months" | "1month" | "1week"; 

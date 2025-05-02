@@ -14,6 +14,9 @@ export const useVideoSearch = () => {
   const getPublishedAfter = (range: Range): string | undefined => {
     const now = new Date();
     switch (range) {
+      case "6months":
+        now.setMonth(now.getMonth() - 6);
+        break;
       case "3months":
         now.setMonth(now.getMonth() - 3);
         break;

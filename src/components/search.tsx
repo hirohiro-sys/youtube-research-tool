@@ -51,6 +51,7 @@ export const Search = ({
           onChange={(e) => setRange(e.target.value as Range)}
         >
           <option value="all">全期間</option>
+          <option value="6months">6ヶ月以内</option>
           <option value="3months">3ヶ月以内</option>
           <option value="1month">1ヶ月以内</option>
           <option value="1week">1週間以内</option>
