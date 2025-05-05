@@ -47,6 +47,7 @@ const parseDuration = (duration: string): number => {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const keyword = url.searchParams.get('keyword');
+  const scale = Number(url.searchParams.get('scale'));
   const pageToken = url.searchParams.get('pageToken') ?? '';
   const publishedAfter = url.searchParams.get('publishedAfter') ?? '';
 
@@ -106,7 +107,7 @@ export async function GET(request: Request) {
         const subscriberCount = subscriberCountMap.get(channelId) || 1;
         const duration = durationMap.get(videoId) ?? 0;
         // ショート(3分未満)動画は需要がないみたいなので除外
-        if (viewCount >= subscriberCount * 3 && duration >= 180) {
+        if (viewCount >= subscriberCount * scale && duration >= 180) {
           // 現状もっと見るでしか重複削除できてなかったので、ここでも重複削除
           if (!validVideos.some(video => video.videoId === videoId)) {
             acc.push({

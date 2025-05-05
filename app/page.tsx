@@ -15,6 +15,8 @@ export default function TopPage() {
     setSortType,
     range,
     setRange,
+    scale,
+    setScale,
     videos,
     loading,
     hasSearched,
@@ -31,6 +33,8 @@ export default function TopPage() {
         onChange={setKeyword}
         range={range}
         setRange={setRange}
+        scale={scale}
+        setScale={setScale}
         onSearch={handleSearch}
         loading={loading}
       />

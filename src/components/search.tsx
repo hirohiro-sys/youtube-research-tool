@@ -9,6 +9,8 @@ type SearchProps = {
   onChange: (value: string) => void;
   range: Range;
   setRange: (range: Range) => void;
+  scale: string;
+  setScale: (scale: string) => void;
   onSearch: () => void;
   loading: boolean;
 };
@@ -18,6 +20,8 @@ export const Search = ({
   onChange,
   range,
   setRange,
+  scale,
+  setScale,
   onSearch,
   loading,
 }: SearchProps) => {
@@ -55,6 +59,15 @@ export const Search = ({
           <option value="3months">3ヶ月以内</option>
           <option value="1month">1ヶ月以内</option>
           <option value="1week">1週間以内</option>
+        </select>
+
+        <select
+          className="select select-bordered"
+          value={scale}
+          onChange={(e) => setScale(e.target.value)}
+        >
+          <option value="3">3倍</option>
+          <option value="2">2倍</option>
         </select>
 
         <button
