@@ -72,6 +72,9 @@ export async function GET(request: Request) {
       const searchData: SearchData = await fetchData(searchUrl);
       const videoIds = searchData.items.map(item => item.id.videoId).join(',');
       const channelIds = searchData.items.map(item => item.snippet.channelId).join(',');
+      // channelIdsが空でエラーになることがあるため
+      if (!channelIds) continue;
+
       const [videoData, channelData] = await Promise.all([
         fetchData(`https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}`),
         fetchData(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds}`)
