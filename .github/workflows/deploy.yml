@@ -11,6 +11,7 @@ env:
   YOUTUBE_API_KEY4: ${{ secrets.YOUTUBE_API_KEY4 }}
   YOUTUBE_API_KEY5: ${{ secrets.YOUTUBE_API_KEY5 }}
   YOUTUBE_API_KEY6: ${{ secrets.YOUTUBE_API_KEY6 }}
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
 jobs:
   deploy:
