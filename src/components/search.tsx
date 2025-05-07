@@ -31,18 +31,18 @@ export const Search = ({
       transition={{ type: "spring", stiffness: 300, damping: 50 }}
     >
       <div>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center h-[3rem]">
           <input
             type="search"
             value={keyword}
             onChange={(e) => onChange(e.target.value)}
             placeholder="キーワードを入力してください"
-            className="input w-60 md:w-[500px]"
+            className="input input-lg h-full w-60 md:w-[500px]"
           />
           <button
             onClick={onSearch}
             disabled={!keyword || loading}
-            className="btn text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
+            className="btn h-full text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
           >
             {loading ? (
               <span className="loading loading-ring loading-xl"></span>
