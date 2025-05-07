@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { MonitorPlay, Info } from "lucide-react";
+import { MonitorPlay } from "lucide-react";
 
 export default function Header() {
   return (
@@ -25,15 +25,6 @@ export default function Header() {
               YouTube需要分析ツール
             </h1>
           </motion.button>
-          <div
-            className="tooltip tooltip-left md:tooltip-bottom w-8 md:w-auto"
-            data-tip="Youtubeではチャンネル登録者数の3倍の再生数をもつ動画は需要があると言われています。"
-          >
-            <button className="btn rounded-2xl px-2 md:px-4">
-              <Info />
-              <span className="hidden md:inline">需要のある動画とは？</span>
-            </button>
-          </div>
         </div>
       </div>
     </motion.header>
