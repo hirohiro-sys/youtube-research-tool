@@ -1,6 +1,5 @@
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { Play } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import { Range } from "@/types/youtubeApiTypes";
 
 type SearchProps = {
@@ -31,26 +30,31 @@ export const Search = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 50 }}
     >
-      <div className="card border border-gray-400 shadow-sm px-6 pt-6 pb-4 rounded-xl">
-        <div className="flex flex-col md:flex-row md:items-center">
-          <label className="input flex items-center gap-2">
-            <Image
-              src="./searchIcon.svg"
-              alt="検索アイコン"
-              width={20}
-              height={20}
-            />
-            <input
-              type="search"
-              value={keyword}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder="キーワードを入力"
-              className="input-lg w-60 md:w-70"
-            />
-          </label>
+      <div>
+        <div className="flex justify-center items-center">
+          <input
+            type="search"
+            value={keyword}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="キーワードを入力"
+            className="input w-60 md:w-[500px]"
+          />
+          <button
+            onClick={onSearch}
+            disabled={!keyword || loading}
+            className="btn text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
+          >
+            {loading ? (
+              <span className="loading loading-ring loading-xl"></span>
+            ) : (
+              <SearchIcon className="text-white w-5" />
+            )}
+          </button>
+        </div>
 
+        <div className="flex flex-col md:flex-row justify-center mt-5 gap-2">
           <select
-            className="select select-bordered"
+            className="select select-bordered rounded-full w-full md:w-auto"
             value={range}
             onChange={(e) => setRange(e.target.value as Range)}
           >
@@ -62,32 +66,16 @@ export const Search = ({
           </select>
 
           <select
-            className="select select-bordered"
+            className="select select-bordered rounded-full w-full md:w-auto"
             value={scale}
             onChange={(e) => setScale(e.target.value)}
           >
             <option value="3">3倍</option>
             <option value="2">2倍</option>
           </select>
-
           <button
-            onClick={onSearch}
-            disabled={!keyword || loading}
-            className="btn text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200 md:ml-5"
-          >
-            {loading ? (
-              <span className="loading loading-ring loading-xl"></span>
-            ) : (
-              <Play className="text-white w-5" />
-            )}
-          </button>
-        </div>
-
-        <div className="text-center mt-3">
-          <button
-            className="btn btn-link"
+            className="btn btn-active rounded-full"
             onClick={() => {
-              onChange("");
               setRange("all");
               setScale("3");
             }}
