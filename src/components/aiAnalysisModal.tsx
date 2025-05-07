@@ -23,7 +23,7 @@ export const AiAnalysisModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-8 max-w-3xl w-full">
+      <div className="bg-white rounded-xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between">
           <div className="flex items-center gap-1 mb-3 text-blue-700">
             <BotMessageSquare />
@@ -61,7 +61,7 @@ export const AiAnalysisModal = ({
             </>
           )}
           {errorMessage && (
-            <p className="text-red-600 font-bold text-center">{errorMessage}</p>
+            <p className="text-center text-gray-800">{errorMessage}</p>
           )}
         </>
       </div>
