@@ -25,7 +25,7 @@ export const Search = ({
 }: SearchProps) => {
   return (
     <motion.div
-      className="flex justify-center md:mt-6"
+      className="flex justify-center"
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 50 }}

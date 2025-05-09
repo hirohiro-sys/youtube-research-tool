@@ -1,6 +1,7 @@
+import { Video } from "@/types/youtubeApiTypes";
 import { useState } from "react";
 
-export const useAiAnalysis = (videoId: string) => {
+export const useAiAnalysis = (video: Video) => {
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -13,7 +14,11 @@ export const useAiAnalysis = (videoId: string) => {
       const res = await fetch("/api/ai-analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ videoId }),
+        body: JSON.stringify({
+          videoId: video.videoId,
+          title: video.title,
+          thumbnailUrl: `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`,
+        }),
       });
       const data = await res.json();
 

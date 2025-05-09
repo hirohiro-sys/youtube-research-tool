@@ -24,7 +24,7 @@ export const VideoCard = ({ video }: { video: Video }) => {
       >
         <figure className="relative">
           <Image
-            src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
+            src={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`}
             alt={video.title}
             className="w-full h-48 object-cover"
             width={480}

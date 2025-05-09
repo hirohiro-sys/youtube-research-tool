@@ -3,6 +3,7 @@
 import { Video } from "@/types/youtubeApiTypes";
 import { BotMessageSquare, SquareX } from "lucide-react";
 import { useAiAnalysis } from "../hooks/useAiAnalysis";
+import ReactMarkdown from "react-markdown";
 
 interface AiAnalysisModalProps {
   isOpen: boolean;
@@ -15,9 +16,7 @@ export const AiAnalysisModal = ({
   setIsOpen,
   video,
 }: AiAnalysisModalProps) => {
-  const { loading, summary, errorMessage, analyze } = useAiAnalysis(
-    video.videoId
-  );
+  const { loading, summary, errorMessage, analyze } = useAiAnalysis(video);
 
   if (!isOpen) return null;
 
@@ -56,7 +55,7 @@ export const AiAnalysisModal = ({
             <>
               <p className="font-bold mb-3">分析結果</p>
               <div className="bg-gray-100 p-4 rounded-md text-gray-800 prose max-w-none text-sm md:text-base">
-                {summary}
+                <ReactMarkdown>{summary}</ReactMarkdown>
               </div>
             </>
           )}
