@@ -39,7 +39,7 @@ export const AiAnalysisModal = ({
         </div>
 
         <>
-          {!summary ? (
+          {!summary && !errorMessage ? (
             <button
               className="btn bg-gray-600 text-white m-auto block"
               onClick={analyze}
@@ -54,13 +54,10 @@ export const AiAnalysisModal = ({
           ) : (
             <>
               <p className="font-bold mb-3">分析結果</p>
-              <div className="bg-gray-100 p-4 rounded-md text-gray-800 prose max-w-none text-sm md:text-base">
-                <ReactMarkdown>{summary}</ReactMarkdown>
+              <div className="bg-gray-100 p-4 rounded-md text-gray-800 prose max-w-none text-sm md:text-base break-words">
+                <ReactMarkdown>{errorMessage || summary || ""}</ReactMarkdown>
               </div>
             </>
-          )}
-          {errorMessage && (
-            <p className="text-center text-gray-800">{errorMessage}</p>
           )}
         </>
       </div>
