@@ -91,6 +91,7 @@ export const Search = ({
           onClick={() => {
             setRange("all");
             setScale("3");
+            setTimeOption("default");
           }}
         >
           検索条件をクリア
