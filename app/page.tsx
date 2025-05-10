@@ -17,6 +17,8 @@ export default function TopPage() {
     setRange,
     scale,
     setScale,
+    timeOption,
+    setTimeOption,
     videos,
     loading,
     hasSearched,
@@ -35,6 +37,8 @@ export default function TopPage() {
         setRange={setRange}
         scale={scale}
         setScale={setScale}
+        timeOption={timeOption}
+        setTimeOption={setTimeOption}
         onSearch={handleSearch}
         loading={loading}
       />

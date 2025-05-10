@@ -1,18 +1,11 @@
-import { fetchData } from "@/src/lib/fetchData";
+import { fetchData, parseDuration } from "@/src/lib/fetchData";
 import { SearchData } from "@/types/youtubeApiTypes";
-
-// デフォルトではISO8601形式の文字列になっているので秒数に変換する関数
-const parseDuration = (duration: string): number => {
-  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!match) return 0;
-  const [, hours, minutes, seconds] = match.map(v => parseInt(v ?? "0", 10));
-  return (hours || 0) * 3600 + (minutes || 0) * 60 + (seconds || 0);
-};
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const keyword = url.searchParams.get('keyword');
   const scale = Number(url.searchParams.get('scale'));
+  const isShort = url.searchParams.get('timeOption') === "short"
   const pageToken = url.searchParams.get('pageToken') ?? '';
   const publishedAfter = url.searchParams.get('publishedAfter') ?? '';
 
@@ -27,18 +20,16 @@ export async function GET(request: Request) {
     }[] = [];
     let currentPageToken = pageToken;
     
-    // validVideosが10件未満の間は検索を繰り返す
     while (validVideos.length < 10) {
       let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${keyword}&type=video&maxResults=50&pageToken=${currentPageToken}`;
       
-      // 動画公開日の範囲が指定されている場合
       if (publishedAfter) searchUrl += `&publishedAfter=${publishedAfter}`
       
       const searchData: SearchData = await fetchData(searchUrl);
       const videoIds = searchData.items.map(item => item.id.videoId).join(',');
       const channelIds = searchData.items.map(item => item.snippet.channelId).join(',');
       // channelIdsが空でエラーになることがあるため
-      if (!channelIds) continue;
+      if (!channelIds) break;
 
       const [videoData, channelData] = await Promise.all([
         fetchData(`https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}`),
@@ -75,7 +66,7 @@ export async function GET(request: Request) {
         const subscriberCount = subscriberCountMap.get(channelId) || 1;
         const duration = durationMap.get(videoId) ?? 0;
         // ショート(3分未満)動画は需要がないみたいなので除外
-        if (viewCount >= subscriberCount * scale && duration >= 180) {
+        if (viewCount >= subscriberCount * scale && (isShort ? duration < 180 : duration >= 180)) {
           // 現状もっと見るでしか重複削除できてなかったので、ここでも重複削除
           if (!validVideos.some(video => video.videoId === videoId)) {
             acc.push({

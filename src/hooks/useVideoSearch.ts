@@ -10,6 +10,7 @@ export const useVideoSearch = () => {
   const [sortType, setSortType] = useState<"newest" | "popular" | "viewCount" | "likeCount" | "">("");
   const [range, setRange] = useState<Range>("all");
   const [scale,setScale] = useState("3")
+  const [timeOption, setTimeOption] = useState("default");
 
   // RangeをISO文字列に変換するユーティリティ関数
   const getPublishedAfter = (range: Range): string | undefined => {
@@ -41,6 +42,7 @@ export const useVideoSearch = () => {
       const query = new URLSearchParams({
         keyword,
         scale,
+        timeOption,
         ...(publishedAfter && { publishedAfter }),
       });
       const response = await fetch(`/api/research?${query.toString()}`);
@@ -62,6 +64,7 @@ export const useVideoSearch = () => {
       const query = new URLSearchParams({
         keyword,
         scale,
+        timeOption,
         pageToken: nextPageToken,
         ...(publishedAfter && { publishedAfter }),
       });
@@ -115,6 +118,8 @@ export const useVideoSearch = () => {
     setRange,
     scale,
     setScale,
+    timeOption,
+    setTimeOption,
     videos: sortedVideos,
     loading,
     hasSearched,

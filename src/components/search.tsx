@@ -9,6 +9,8 @@ type SearchProps = {
   setRange: (range: Range) => void;
   scale: string;
   setScale: (scale: string) => void;
+  timeOption: string;
+  setTimeOption: (time: string) => void;
   onSearch: () => void;
   loading: boolean;
 };
@@ -18,6 +20,8 @@ export const Search = ({
   onChange,
   range,
   setRange,
+  timeOption,
+  setTimeOption,
   scale,
   setScale,
   onSearch,
@@ -53,6 +57,14 @@ export const Search = ({
         </div>
 
         <div className="flex flex-col md:flex-row justify-center mt-5 gap-2">
+          <select
+            className="select select-bordered rounded-full w-full md:w-auto"
+            value={timeOption}
+            onChange={(e) => setTimeOption(e.target.value)}
+          >
+            <option value="default">3分以上</option>
+            <option value="short">3分以内(ショート)</option>
+          </select>
           <select
             className="select select-bordered rounded-full w-full md:w-auto"
             value={range}
