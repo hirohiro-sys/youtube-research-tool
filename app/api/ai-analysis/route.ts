@@ -1,5 +1,5 @@
 import { fetchData } from "@/src/lib/fetchData";
-import { CommentItem } from "@/types/youtubeApiTypes";
+import { CommentItem } from "@/src/types/youtubeApiTypes";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 

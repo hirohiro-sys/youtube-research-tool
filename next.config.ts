@@ -4,7 +4,13 @@ const nextConfig: NextConfig = {
   // 開発環境でNextのインジケーターを消す
   devIndicators: false,
   images: {
-    domains: ['img.youtube.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+        pathname: '/**',
+      },
+    ],
   },
 };
 

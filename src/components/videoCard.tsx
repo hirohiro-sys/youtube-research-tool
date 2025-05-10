@@ -5,7 +5,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { Video } from "@/types/youtubeApiTypes";
+import { Video } from "@/src/types/youtubeApiTypes";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";

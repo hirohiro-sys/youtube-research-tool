@@ -1,6 +1,6 @@
 "use client";
 
-import { Video } from "@/types/youtubeApiTypes";
+import { Video } from "@/src/types/youtubeApiTypes";
 import { BotMessageSquare, SquareX } from "lucide-react";
 import { useAiAnalysis } from "../hooks/useAiAnalysis";
 import ReactMarkdown from "react-markdown";

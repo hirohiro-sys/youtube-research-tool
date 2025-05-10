@@ -1,5 +1,6 @@
-import { fetchData, parseDuration } from "@/src/lib/fetchData";
-import { SearchData } from "@/types/youtubeApiTypes";
+import { fetchData } from "@/src/lib/fetchData";
+import { parseDuration } from "@/src/utils/parseDuration";
+import { SearchData } from "@/src/types/youtubeApiTypes";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
