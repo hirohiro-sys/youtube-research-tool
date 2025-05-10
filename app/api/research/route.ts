@@ -66,7 +66,9 @@ export async function GET(request: Request) {
         const subscriberCount = subscriberCountMap.get(channelId) || 1;
         const duration = durationMap.get(videoId) ?? 0;
         // ショート(3分未満)動画は需要がないみたいなので除外
-        if (viewCount >= subscriberCount * scale && (isShort ? duration < 180 : duration >= 180)) {
+        if (viewCount >= subscriberCount * scale
+            && (isShort ? duration < 180 : duration >= 180) 
+            &&  subscriberCount >= 100) {
           // 現状もっと見るでしか重複削除できてなかったので、ここでも重複削除
           if (!validVideos.some(video => video.videoId === videoId)) {
             acc.push({
