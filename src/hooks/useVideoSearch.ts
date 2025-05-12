@@ -86,8 +86,6 @@ export const useVideoSearch = () => {
   };
 
   const sortedVideos = useMemo(() => {
-    // これないと動画ないときエラる
-    if (!Array.isArray(videos)) return [];
     if (sortType === "newest") {
       return [...videos].sort(
         (a, b) =>

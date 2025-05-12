@@ -100,6 +100,13 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     console.error("データ取得エラー:", error);
-    return new Response(JSON.stringify({ error: "データの取得に失敗しました" }), { status: 500 });
+    return new Response(
+      JSON.stringify({
+        videos: [],
+        nextPageToken: null,
+        error: "データの取得に失敗しました",
+      }),
+      { status: 500 }
+    );
   }
 }
