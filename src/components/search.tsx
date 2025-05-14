@@ -46,7 +46,7 @@ export const Search = ({
           <button
             onClick={onSearch}
             disabled={!keyword || loading}
-            className="btn h-full text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
+            className="btn h-full hidden md:block text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
           >
             {loading ? (
               <span className="loading loading-ring loading-xl"></span>
@@ -85,6 +85,17 @@ export const Search = ({
             <option value="3">3倍</option>
             <option value="2">2倍</option>
           </select>
+          <button
+            onClick={onSearch}
+            disabled={!keyword || loading}
+            className="btn h-full  py-1 md:hidden text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-300 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
+          >
+            {loading ? (
+              <span className="loading loading-ring loading-xl"></span>
+            ) : (
+              <SearchIcon className="text-white w-5" />
+            )}
+          </button>
         </div>
         <button
           className="btn btn-link rounded-full block mx-auto"
