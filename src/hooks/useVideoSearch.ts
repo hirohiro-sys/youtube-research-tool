@@ -11,6 +11,7 @@ export const useVideoSearch = () => {
   const [range, setRange] = useState<Range>("all");
   const [scale,setScale] = useState("3")
   const [timeOption, setTimeOption] = useState("default");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   // RangeをISO文字列に変換するユーティリティ関数
   const getPublishedAfter = (range: Range): string | undefined => {
@@ -49,6 +50,7 @@ export const useVideoSearch = () => {
       const data = await response.json();
       setVideos(data.videos);
       setNextPageToken(data.nextPageToken);
+      setSuggestions(data.suggestions);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
     } finally {
@@ -78,6 +80,7 @@ export const useVideoSearch = () => {
         return [...prev, ...uniqueNewVideos];
       });
       setNextPageToken(data.nextPageToken);
+      setSuggestions(data.suggestions);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
     } finally {
@@ -124,5 +127,6 @@ export const useVideoSearch = () => {
     hasNextPage: !!nextPageToken,
     handleSearch,
     handleLoadMore,
+    suggestions
   };
 };

@@ -1,6 +1,7 @@
 import { fetchData } from "@/src/lib/fetchData";
 import { parseDuration } from "@/src/utils/parseDuration";
 import { SearchData } from "@/src/types/youtubeApiTypes";
+import {  fetchYoutubeSuggestions } from "@/src/lib/fetchSuggestions";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -9,7 +10,9 @@ export async function GET(request: Request) {
   const isShort = url.searchParams.get('timeOption') === "short"
   const pageToken = url.searchParams.get('pageToken') ?? '';
   const publishedAfter = url.searchParams.get('publishedAfter') ?? '';
-
+  
+  const suggestions = await fetchYoutubeSuggestions(keyword!);
+  
   try {
     let validVideos: { 
       title: string; 
@@ -94,6 +97,7 @@ export async function GET(request: Request) {
     return new Response(
       JSON.stringify({
         videos: validVideos,
+        suggestions,
         nextPageToken: currentPageToken || null,
       }),
       { status: 200 }

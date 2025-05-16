@@ -7,6 +7,7 @@ import { VideoList } from "@/src/components/videoList";
 import { SearchResultHeader } from "@/src/components/searchResultHeader";
 import { SearchResultMessage } from "@/src/components/searchResultMessage";
 import { useVideoSearch } from "@/src/hooks/useVideoSearch";
+import SuggestWords from "@/src/components/suggestWords";
 
 export default function TopPage() {
   const {
@@ -25,6 +26,7 @@ export default function TopPage() {
     hasNextPage,
     handleSearch,
     handleLoadMore,
+    suggestions,
   } = useVideoSearch();
   const { downloadCSV } = useDownloadCSV();
 
@@ -63,6 +65,13 @@ export default function TopPage() {
         loading={loading}
         keyword={keyword}
       />
+
+      {videos.length !== 0 && (
+        <SuggestWords
+          suggestions={suggestions}
+          onChange={setKeyword}
+        />
+      )}
     </div>
   );
 }
