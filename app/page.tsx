@@ -69,6 +69,7 @@ export default function TopPage() {
       {videos.length !== 0 && (
         <SuggestWords
           suggestions={suggestions}
+          onSearch={handleSearch}
           onChange={setKeyword}
         />
       )}

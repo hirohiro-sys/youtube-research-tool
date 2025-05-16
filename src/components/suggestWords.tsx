@@ -2,11 +2,13 @@ import { Search } from "lucide-react";
 
 type suggestWordsProps = {
   suggestions: string[];
+  onSearch: (value?: string) => void;
   onChange: (value: string) => void;
 };
 
 export default function SuggestWords({
   suggestions,
+  onSearch,
   onChange,
 }: suggestWordsProps) {
   return (
@@ -27,9 +29,10 @@ export default function SuggestWords({
             {suggestions.map((keyword, index) => (
               <span
                 key={index}
-                className="px-3 py-2 text-sm bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
+                className="px-3 py-2 text-sm bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors text-blue-600"
                 onClick={() => {
                   onChange(keyword);
+                  onSearch(keyword);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               >

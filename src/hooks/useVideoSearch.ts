@@ -35,13 +35,13 @@ export const useVideoSearch = () => {
     return now.toISOString();
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (suggestKeyword?: string) => {
     setLoading(true);
     setHasSearched(true);
     try {
       const publishedAfter = getPublishedAfter(range);
       const query = new URLSearchParams({
-        keyword,
+        keyword: suggestKeyword ?? keyword,
         scale,
         timeOption,
         ...(publishedAfter && { publishedAfter }),

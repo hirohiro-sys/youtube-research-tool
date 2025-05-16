@@ -14,7 +14,8 @@ export async function fetchYoutubeSuggestions(keyword: string) {
   
       const suggestJson = JSON.parse(match[1]);
       // suggestJson[1] は [["候補1", 0, [...]], ["候補2", 0, [...]], ...] の形式なので候補文字列だけ取り出す
-      const suggestions = suggestJson[1].map((item: string) => item[0]);
+      let suggestions = suggestJson[1].map((item: string) => item[0]);
+      suggestions = suggestions.filter((word: string) => word !== keyword);
       return suggestions;
   
     } catch (error) {

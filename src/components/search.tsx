@@ -11,7 +11,7 @@ type SearchProps = {
   setScale: (scale: string) => void;
   timeOption: string;
   setTimeOption: (time: string) => void;
-  onSearch: () => void;
+  onSearch: (suggestKeyword?: string) => void;
   loading: boolean;
 };
 
@@ -44,7 +44,7 @@ export const Search = ({
             className="input input-lg h-full w-60 md:w-[500px]"
           />
           <button
-            onClick={onSearch}
+            onClick={() => onSearch()}
             disabled={!keyword || loading}
             className="btn h-full hidden md:block text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-200 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
           >
@@ -86,7 +86,7 @@ export const Search = ({
             <option value="2">2倍</option>
           </select>
           <button
-            onClick={onSearch}
+            onClick={() => onSearch()}
             disabled={!keyword || loading}
             className="btn h-full  py-1 md:hidden text-gray-900 bg-gradient-to-b from-gray-200 via-gray-00 to-gray-500 border border-gray-400 shadow-md hover:from-gray-300 hover:via-gray-400 hover:to-gray-600 active:scale-95 transition-all duration-200"
           >
