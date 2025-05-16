@@ -18,20 +18,26 @@ export default function SuggestWords({
             関連キーワード
           </h2>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {suggestions.map((keyword, index) => (
-            <span
-              key={index}
-              className="px-3 py-2 text-sm bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
-              onClick={() => {
-                onChange(keyword);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              {keyword}
-            </span>
-          ))}
-        </div>
+        {suggestions.length === 0 ? (
+          <p className="text-gray-500 text-sm md:text-lg md:text-center">
+            関連キーワードが見つかりませんでした
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {suggestions.map((keyword, index) => (
+              <span
+                key={index}
+                className="px-3 py-2 text-sm bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
+                onClick={() => {
+                  onChange(keyword);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                {keyword}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
