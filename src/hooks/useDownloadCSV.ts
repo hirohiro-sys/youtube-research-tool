@@ -1,10 +1,17 @@
 import { Video } from "@/src/types/youtubeApiTypes";
 
-import Papa from 'papaparse';
+import Papa from "papaparse";
 
 export const useDownloadCSV = () => {
   const downloadCSV = (videos: Video[], keyword: string) => {
-    const header = ["タイトル", "URL","いいね数","再生回数", "登録者数","倍率"];
+    const header = [
+      "タイトル",
+      "URL",
+      "いいね数",
+      "再生回数",
+      "登録者数",
+      "倍率",
+    ];
     const rows = videos.map((video) => [
       video.title,
       `https://www.youtube.com/watch?v=${video.videoId}`,
@@ -12,15 +19,15 @@ export const useDownloadCSV = () => {
       video.viewCount,
       video.subscriberCount,
       Number(video.subscriberCount) > 0
-        ? `${(
-            Number(video.viewCount) / Number(video.subscriberCount)
-          ).toFixed(1)} 倍`
+        ? `${(Number(video.viewCount) / Number(video.subscriberCount)).toFixed(
+            1,
+          )} 倍`
         : "倍率なし",
     ]);
 
     const csvContent = Papa.unparse({
       fields: header,
-      data: rows
+      data: rows,
     });
 
     const BOM = "\uFEFF";

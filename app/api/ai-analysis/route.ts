@@ -9,10 +9,16 @@ export async function POST(req: NextRequest) {
   try {
     const data = await fetchData(url);
     const comments: string[] =
-      data.items?.map((item: CommentItem) => item.snippet.topLevelComment.snippet.textDisplay) ?? [];
-      if (comments.length === 0) return NextResponse.json({ error: "コメントが見つかりませんでした" }, { status: 404 });
+      data.items?.map(
+        (item: CommentItem) => item.snippet.topLevelComment.snippet.textDisplay,
+      ) ?? [];
+    if (comments.length === 0)
+      return NextResponse.json(
+        { error: "コメントが見つかりませんでした" },
+        { status: 404 },
+      );
 
-    const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
       contents: [
@@ -56,9 +62,9 @@ export async function POST(req: NextRequest) {
         },
       ],
     });
-      
+
     return NextResponse.json({
-        response: response.text,
+      response: response.text,
     });
   } catch (error) {
     console.error("分析に失敗しました:", error);

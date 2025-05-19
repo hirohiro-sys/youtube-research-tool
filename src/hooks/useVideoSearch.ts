@@ -7,9 +7,11 @@ export const useVideoSearch = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [sortType, setSortType] = useState<"newest" | "popular" | "viewCount" | "likeCount" | "">("");
+  const [sortType, setSortType] = useState<
+    "newest" | "popular" | "viewCount" | "likeCount" | ""
+  >("");
   const [range, setRange] = useState<Range>("all");
-  const [scale,setScale] = useState("3")
+  const [scale, setScale] = useState("3");
   const [timeOption, setTimeOption] = useState("default");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -75,7 +77,7 @@ export const useVideoSearch = () => {
       setVideos((prev) => {
         const existingIds = new Set(prev.map((v) => v.videoId));
         const uniqueNewVideos = data.videos.filter(
-          (video: Video) => !existingIds.has(video.videoId)
+          (video: Video) => !existingIds.has(video.videoId),
         );
         return [...prev, ...uniqueNewVideos];
       });
@@ -92,7 +94,7 @@ export const useVideoSearch = () => {
     if (sortType === "newest") {
       return [...videos].sort(
         (a, b) =>
-          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
       );
     }
     if (sortType === "popular") {
@@ -103,10 +105,14 @@ export const useVideoSearch = () => {
       });
     }
     if (sortType === "viewCount") {
-      return [...videos].sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0));
+      return [...videos].sort(
+        (a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0),
+      );
     }
     if (sortType === "likeCount") {
-      return [...videos].sort((a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0));
+      return [...videos].sort(
+        (a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0),
+      );
     }
     return videos;
   }, [videos, sortType]);
@@ -127,6 +133,6 @@ export const useVideoSearch = () => {
     hasNextPage: !!nextPageToken,
     handleSearch,
     handleLoadMore,
-    suggestions
+    suggestions,
   };
 };
