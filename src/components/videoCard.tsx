@@ -72,7 +72,7 @@ export const VideoCard = ({ video }: { video: Video }) => {
             onClick={() => setIsOpen(true)}
           >
             <BotMessageSquare />
-            AI分析(Beta版)
+            AI分析
           </button>
         </div>
       </motion.div>

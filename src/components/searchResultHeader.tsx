@@ -1,8 +1,8 @@
-import { ArrowUpDown, Download } from "lucide-react";
+import { ArrowUpDown, Download, Info } from "lucide-react";
 
 type SearchResultHeaderProps = {
   setSortType: (
-    type: "newest" | "popular" | "viewCount" | "likeCount" | "",
+    type: "newest" | "popular" | "viewCount" | "likeCount" | ""
   ) => void;
   videosCount: number;
   onDownloadCSV: () => void;
@@ -17,7 +17,17 @@ export const SearchResultHeader = ({
     <div className="flex justify-between items-center px-5 md:px-20 mt-10">
       {videosCount > 0 && (
         <>
-          <p className="md:text-2xl font-bold">検索結果: {videosCount}件</p>
+          <div className="flex items-center">
+            <p className="md:text-2xl font-bold">検索結果: {videosCount}件</p>
+            <div
+              className="tooltip md:tooltip-right"
+              data-tip="動画の取得数が少ない場合は、英語で検索するなどキーワードを変えてみてください"
+            >
+              <button className="btn bg-transparent border-none">
+                <Info className="mt-1" />
+              </button>
+            </div>
+          </div>
           <div>
             <div className="dropdown dropdown-center">
               <div
