@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { BookOpen, MonitorPlay } from "lucide-react";
+import { MonitorPlay, UserRound } from "lucide-react";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -25,10 +26,15 @@ export default function Header() {
               YouTube需要分析ツール
             </h1>
           </motion.button>
-          <button className="btn text-white bg-stone-500 border-none">
-            <BookOpen />
-            <span className="hidden md:block">このツールでできること （準備中）</span>
-          </button>
+          <Link
+            href="https://x.com/qhcSEiFAQg5454"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn text-white bg-stone-500 border-none flex items-center space-x-2 px-4 py-2 rounded"
+          >
+            <UserRound />
+            <span className="hidden md:block">お問い合わせ</span>
+          </Link>
         </div>
       </div>
     </motion.header>

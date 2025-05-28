@@ -23,7 +23,7 @@ export const SearchResultHeader = ({
               className="tooltip md:tooltip-right"
               data-tip="動画の取得数が少ない場合は、英語で検索するなどキーワードを変えてみてください"
             >
-              <button className="btn bg-transparent border-none">
+              <button className="btn bg-transparent border-none shadow-none">
                 <Info className="mt-1" />
               </button>
             </div>
