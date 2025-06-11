@@ -26,7 +26,7 @@ export const AiAnalysisModal = ({
         <div className="flex justify-between">
           <div className="flex items-center gap-1 mb-3 text-blue-700">
             <BotMessageSquare />
-            <h1 className="text-2xl font-bold">AI分析(Beta版)</h1>
+            <h1 className="text-2xl font-bold">AI分析</h1>
           </div>
           <SquareX onClick={() => setIsOpen(false)} />
         </div>
