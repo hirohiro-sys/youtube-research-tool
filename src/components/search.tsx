@@ -27,6 +27,10 @@ export const Search = ({
   onSearch,
   loading,
 }: SearchProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) onSearch();
+  };
+
   return (
     <motion.div
       className="flex justify-center"
@@ -40,6 +44,7 @@ export const Search = ({
             type="search"
             value={keyword}
             onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="キーワードを入力してください"
             className="input input-lg h-full w-60 md:w-[500px]"
           />
