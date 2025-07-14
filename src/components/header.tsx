@@ -4,8 +4,6 @@ import { motion } from "motion/react";
 import { MonitorPlay, UserRound } from "lucide-react";
 import Link from "next/link";
 
-const CONTACT_URL = process.env.NEXT_PUBLIC_CONTACT_URL!;
-
 export default function Header() {
   return (
     <motion.header
@@ -29,7 +27,7 @@ export default function Header() {
             </h1>
           </motion.button>
           <Link
-            href={CONTACT_URL}
+            href="https://x.com/qhcSEiFAQg5454" // envに入れた方が良い？
             target="_blank"
             rel="noopener noreferrer"
             className="btn text-white bg-stone-500 border-none flex items-center space-x-2 px-4 py-2 rounded"
