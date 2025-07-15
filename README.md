@@ -1,17 +1,20 @@
 ![Add a subheading](https://github.com/user-attachments/assets/3a78acf9-a7e8-413a-a4e3-6ccd8d0e5d6f)
 
-## URL
+## 技術スタック
 
-[youtuberesarchtool.vercel.app/
-](https://youtuberesarchtool.vercel.app/)
+- フロントエンド: Next.js / TypeScript / TailwindCSSなど
 
-## アプリ概要
+- バックエンド: Next.js（Route hundlers）
 
-Youtubeではチャンネル登録者数の3倍以上の再生数を持つ動画は需要のある動画とされています。
-このツールではYoutubeから需要のある動画のみを検索条件を指定して抽出したり、なぜその動画が再生されているのかをAIで分析できます。
+- 外部API: Youtube Data API V3 / Gemini API
 
-## 紹介記事
+## セットアップ
 
-以前開発背景や技術スタック等も載せた記事を投稿したので是非ご覧ください
+.env.sampleを参考に環境変数を設定してください。
 
-[Qiita記事](https://qiita.com/bisketoriba/items/e1afb5d967295f3a16fc)
+```bash
+git clone 〜
+cd 〜
+npm i
+npm run dev
+```
