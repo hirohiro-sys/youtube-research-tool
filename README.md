@@ -2,11 +2,11 @@
 
 ## 技術スタック
 
-- フロントエンド: Next.js / TypeScript / TailwindCSSなど
+- **フロントエンド**: Next.js / TypeScript / TailwindCSSなど
 
-- バックエンド: Next.js（Route hundlers）
+- **バックエンド**: Next.js（Route hundlers）
 
-- 外部API: Youtube Data API V3 / Gemini API
+- **外部API**: Youtube Data API V3 / Gemini API
 
 ## セットアップ
 
@@ -18,3 +18,7 @@ cd 〜
 npm i
 npm run dev
 ```
+
+## プロジェクト構成
+
+...
