@@ -23,7 +23,7 @@ export default function Header() {
           >
             <MonitorPlay className="h-8 w-8 text-red-500" />
             <h1 className="text-base md:text-2xl font-bold text-white">
-              YouTube需要分析ツール
+              YouTube動画作成支援ツール
             </h1>
           </motion.button>
           <Link
