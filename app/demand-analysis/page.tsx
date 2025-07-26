@@ -8,8 +8,9 @@ import { SearchResultHeader } from "@/src/components/searchResultHeader";
 import { SearchResultMessage } from "@/src/components/searchResultMessage";
 import { useVideoSearch } from "@/src/hooks/useVideoSearch";
 import SuggestWords from "@/src/components/suggestWords";
+import Breadcrumb from "@/src/components/breadcrumb";
 
-export default function TopPage() {
+export default function Page() {
   const {
     keyword,
     setKeyword,
@@ -31,7 +32,14 @@ export default function TopPage() {
   const { downloadCSV } = useDownloadCSV();
 
   return (
-    <div className="pt-30 flex-grow">
+    <div className="pt-22 flex-grow">
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "AI需要分析", href: "/demand-analysis" },
+        ]}
+      />
+
       <Search
         keyword={keyword}
         onChange={setKeyword}

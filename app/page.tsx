@@ -24,7 +24,7 @@ export default function TopPage() {
     },
     {
       id: "thumbnail-tool",
-      title: "AIサムネイル分析ツール",
+      title: "AIサムネイル比較ツール",
       description:
         "魅力的なサムネイルを作成し、クリック率を向上させるためのデザインツールです。",
       icon: <GalleryThumbnails />,
@@ -36,19 +36,19 @@ export default function TopPage() {
 
   return (
     <div className="pt-30 flex-grow">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-gray-900 mb-4">
+      <div className="text-center mb-18">
+        <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-400 mb-4">
           プロフェッショナルな動画制作ツール
         </h2>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-          需要分析からサムネイル最適化まで、YouTubeチャンネルの成長に必要なすべてのツールを一つのプラットフォームで提供します。
+        <p className="text-xl text-gray-500 max-w-3xl mx-auto">
+          需要分析からサムネイル最適化まで、YouTubeチャンネルの成長に必要なすべてのツールを1つのプラットフォームで提供します。
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         {tools.map((tool) => (
           <div
             key={tool.id}
-            className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-start border border-gray-100"
+            className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-start border border-gray-100 transition-shadow hover:shadow-xl"
           >
             <div className="flex items-center gap-2 mb-4">
               <div>{tool.icon}</div>
@@ -67,12 +67,7 @@ export default function TopPage() {
                 tool.status === "available" && router.push(tool.route)
               }
               disabled={tool.status !== "available"}
-              className={`btn flex items-center gap-2 px-4 py-2 rounded-md font-medium text-white transition
-                ${
-                  tool.status === "available"
-                    ? "bg-gradient-to-r from-red-500 to-orange-500"
-                    : "bg-gray-600 cursor-not-allowed" // cssが当たってないかも
-                }`}
+              className="btn flex items-center gap-2 px-4 py-2 rounded-md font-medium text-white transition bg-gray-600"
             >
               {tool.status === "available" ? (
                 <DoorOpen size={18} />

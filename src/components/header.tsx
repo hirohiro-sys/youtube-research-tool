@@ -21,16 +21,17 @@ export default function Header() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
-            <MonitorPlay className="h-8 w-8 text-red-500" />
+            <MonitorPlay className="h-6 w-6 text-red-500 mt-1 md:h-8 md:w-8" />
             <h1 className="text-base md:text-2xl font-bold text-white">
               YouTube動画作成支援ツール
             </h1>
           </motion.button>
           <Link
-            href="https://x.com/qhcSEiFAQg5454" // envに入れた方が良い？
+            // envに入れた方がいいかも
+            href="https://x.com/qhcSEiFAQg5454"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn text-white bg-stone-500 border-none flex items-center space-x-2 px-4 py-2 rounded"
+            className="btn text-white bg-stone-500 border-none flex items-center space-x-2 rounded p-2 md:p-4"
           >
             <UserRound />
             <span className="hidden md:block">お問い合わせ</span>
