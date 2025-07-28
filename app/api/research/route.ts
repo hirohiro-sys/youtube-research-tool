@@ -1,7 +1,7 @@
-import { fetchData } from "@/src/utils/fetchData";
-import { parseDuration } from "@/src/utils/parseDuration";
+import { fetchData } from "@/src/tools/demand-analysis/utils/fetchData";
+import { parseDuration } from "@/src/tools/demand-analysis/utils/parseDuration";
 import { SearchData } from "@/src/types/youtubeApiTypes";
-import { fetchYoutubeSuggestions } from "@/src/utils/fetchSuggestions";
+import { fetchYoutubeSuggestions } from "@/src/tools/demand-analysis/utils/fetchSuggestions";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

@@ -1,7 +1,7 @@
-import { Video } from "@/src/types/youtubeApiTypes";
 import { BotMessageSquare, SquareX } from "lucide-react";
-import { useAiAnalysis } from "../hooks/useAiAnalysis";
 import ReactMarkdown from "react-markdown";
+import { Video } from "../types/youtubeApiTypes";
+import { useAiAnalysis } from "../hooks/useAiAnalysis";
 
 interface AiAnalysisModalProps {
   isOpen: boolean;

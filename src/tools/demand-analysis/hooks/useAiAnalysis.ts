@@ -1,5 +1,5 @@
-import { Video } from "@/src/types/youtubeApiTypes";
 import { useState } from "react";
+import { Video } from "../types/youtubeApiTypes";
 
 export const useAiAnalysis = (video: Video) => {
   const [loading, setLoading] = useState(false);

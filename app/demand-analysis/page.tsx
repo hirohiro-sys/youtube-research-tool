@@ -1,14 +1,14 @@
 "use client";
 
-import { useDownloadCSV } from "@/src/hooks/useDownloadCSV";
-import { Search } from "@/src/components/search";
-import { LoadMoreButton } from "@/src/components/loadMoreButton";
-import { VideoList } from "@/src/components/videoList";
-import { SearchResultHeader } from "@/src/components/searchResultHeader";
-import { SearchResultMessage } from "@/src/components/searchResultMessage";
-import { useVideoSearch } from "@/src/hooks/useVideoSearch";
-import SuggestWords from "@/src/components/suggestWords";
 import Breadcrumb from "@/src/components/breadcrumb";
+import { LoadMoreButton } from "@/src/tools/demand-analysis/components/loadMoreButton";
+import { Search } from "@/src/tools/demand-analysis/components/search";
+import { SearchResultHeader } from "@/src/tools/demand-analysis/components/searchResultHeader";
+import { SearchResultMessage } from "@/src/tools/demand-analysis/components/searchResultMessage";
+import SuggestWords from "@/src/tools/demand-analysis/components/suggestWords";
+import { VideoList } from "@/src/tools/demand-analysis/components/videoList";
+import { useDownloadCSV } from "@/src/tools/demand-analysis/hooks/useDownloadCSV";
+import { useVideoSearch } from "@/src/tools/demand-analysis/hooks/useVideoSearch";
 
 export default function Page() {
   const {
