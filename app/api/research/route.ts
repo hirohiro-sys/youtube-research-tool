@@ -1,7 +1,7 @@
 import { fetchData } from "@/src/tools/demand-analysis/utils/fetchData";
 import { parseDuration } from "@/src/tools/demand-analysis/utils/parseDuration";
-import { SearchData } from "@/src/types/youtubeApiTypes";
 import { fetchYoutubeSuggestions } from "@/src/tools/demand-analysis/utils/fetchSuggestions";
+import { SearchData } from "@/src/tools/demand-analysis/types/youtubeApiTypes";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

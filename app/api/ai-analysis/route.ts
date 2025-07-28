@@ -1,5 +1,5 @@
+import { CommentItem } from "@/src/tools/demand-analysis/types/youtubeApiTypes";
 import { fetchData } from "@/src/tools/demand-analysis/utils/fetchData";
-import { CommentItem } from "@/src/types/youtubeApiTypes";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
