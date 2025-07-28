@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { SearchIcon } from "lucide-react";
-import { Range } from "@/src/types/youtubeApiTypes";
+import { Range } from "../types/youtubeApiTypes";
 
 type SearchProps = {
   keyword: string;

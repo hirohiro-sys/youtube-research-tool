@@ -1,6 +1,5 @@
-import { Video } from "@/src/types/youtubeApiTypes";
-
 import Papa from "papaparse";
+import { Video } from "../types/youtubeApiTypes";
 
 export const useDownloadCSV = () => {
   const downloadCSV = (videos: Video[], keyword: string) => {

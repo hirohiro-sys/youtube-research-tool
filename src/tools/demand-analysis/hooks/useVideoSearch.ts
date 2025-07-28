@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Range, Video } from "@/src/types/youtubeApiTypes";
+import { Range, Video } from "../types/youtubeApiTypes";
 
 export const useVideoSearch = () => {
   const [keyword, setKeyword] = useState("");

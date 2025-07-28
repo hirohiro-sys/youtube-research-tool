@@ -5,12 +5,12 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { Video } from "@/src/types/youtubeApiTypes";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { AiAnalysisModal } from "./aiAnalysisModal";
+import { Video } from "../types/youtubeApiTypes";
 
 export const VideoCard = ({ video }: { video: Video }) => {
   const [isOpen, setIsOpen] = useState(false);

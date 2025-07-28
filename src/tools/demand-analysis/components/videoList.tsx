@@ -1,5 +1,5 @@
+import { Video } from "../types/youtubeApiTypes";
 import { VideoCard } from "./videoCard";
-import { Video } from "@/src/types/youtubeApiTypes";
 
 type VideoListProps = {
   videos: Video[];
