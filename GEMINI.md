@@ -6,11 +6,28 @@
 
 1. 需要分析ツール
     - パス: app/demand-analysis
-    - 概要: Youtube上から需要のある動画を取得・分析できるツール
+    - 概要: Youtube上から需要のある動画を取得・AI分析できるツール
+2. サムネイル分析ツール
+    - パス: app/thumbnail-analysis
+    - 概要: アップロードしたサムネイル画像をAI分析したり、Youtube上でどのように表示されるか確認できるツール
 
 # フォルダ構成
 
-現在大幅にリファクタリング中のため省略
+```
+.
+├── app
+│   ├── api                    # route hundlers
+│   ├── demand-analysis        # 需要分析
+│   ├── globals.css            # グローバルスタイル
+│   ├── layout.tsx             # 共通レイアウト
+│   ├── page.tsx               # トップページ
+│   └── thumbnail-analysis     # サムネイル分析
+├── src
+│   ├── components             # 共通コンポーネント
+│   └── tools
+│       ├── demand-analysis    # 需要分析関連のコンポーネント
+│       └── thumbnail-analysis # サムネイル分析関連のコンポーネント
+```
 
 # 技術スタック
 
@@ -18,7 +35,7 @@
 
 - **フロントエンド**: Next.js / TypeScript / TailwindCSS
 
-- **バックエンド**: Next.js（Route hundlers）
+- **バックエンド**: Next.js（route hundlers）
 
 - **外部API**: Youtube Data API V3 / Gemini API
 
