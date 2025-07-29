@@ -19,12 +19,22 @@ export async function POST(req: NextRequest) {
       );
 
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const thumbnail = await fetch(thumbnailUrl);
+    const imageArrayBuffer = await thumbnail.arrayBuffer();
+    const base64ImageData = Buffer.from(imageArrayBuffer).toString('base64');
+
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
       contents: [
         {
           role: "user",
           parts: [
+            {
+              inlineData: {
+                mimeType: 'image/jpeg',
+                data: base64ImageData,
+              },
+            },
             {
               text: `
     # 命令
