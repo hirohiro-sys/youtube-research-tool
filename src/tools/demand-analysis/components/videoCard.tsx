@@ -24,11 +24,11 @@ export const VideoCard = ({ video }: { video: Video }) => {
       >
         <figure className="relative">
           <Image
-            src={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`}
+            src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
             alt={video.title}
-            className="w-full h-48 object-cover"
-            width={480}
-            height={270}
+            className="w-full h-full object-cover"
+            width={1280}
+            height={720}
           />
           <div className="absolute bottom-2 right-2 bg-gray-800 bg-opacity-50 text-white font-bold font-mono p-2 rounded-xl flex items-center text-sm">
             <ThumbsUp className="inline-block mr-2 text-pink-500" />
