@@ -28,7 +28,7 @@ export default function TopPage() {
       description:
         "魅力的なサムネイルを作成し、クリック率を向上させるためのデザインツールです。",
       icon: <GalleryThumbnails />,
-      route: "/thumbnail-tool",
+      route: "/thumbnail-analysis",
       status: "coming-soon",
       features: ["テンプレート", "AI最適化", "A/Bテスト"],
     },
