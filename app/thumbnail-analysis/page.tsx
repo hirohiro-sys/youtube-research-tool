@@ -56,6 +56,7 @@ const rejectStyle = {
 
 export default function Page() {
   const [files, setFiles] = useState<PreviewFile[]>([]);
+  const [title, setTitle] = useState("");
   const [previewMode, setPreviewMode] = useState<"pc" | "sp">("pc");
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
@@ -95,8 +96,9 @@ export default function Page() {
         ]}
       />
 
-      {/* 以下v0に作らせたUI */}
+      {/* 以下v0に作らせたUI(改良してなるべく実際のYoutubeに近づける) */}
       <div className="max-w-4xl mx-auto p-3 sm:p-4">
+        <p className="font-bold text-xl mb-2">サムネイルと動画タイトル</p>
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 mb-4">
           <div
             {...getRootProps({
@@ -111,6 +113,12 @@ export default function Page() {
             <p className="text-xs text-gray-500">JPEG/PNG形式、1ファイルまで</p>
           </div>
         </div>
+        <input
+          type="text"
+          placeholder="タイトルを入力"
+          className="input"
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
 
       {files.length > 0 && (
@@ -202,8 +210,7 @@ export default function Page() {
                   <h1
                     className={`${previewMode === "sp" ? "text-sm" : "text-lg"} font-semibold text-gray-900 mb-2 leading-tight`}
                   >
-                    サンプル動画タイトル -
-                    AIサムネイル分析で効果的なサムネイルを作成
+                    {title || "タイトル未設定"}
                   </h1>
 
                   <div
@@ -328,11 +335,7 @@ export default function Page() {
                         <div className="w-20 h-12 bg-gray-200 rounded flex-shrink-0 relative overflow-hidden">
                           <div className="absolute inset-0 bg-gradient-to-br from-[#ff0000]/20 to-transparent"></div>
                           <div className="absolute bottom-1 right-1 bg-black/80 text-white text-xs px-1 rounded">
-                            {Math.floor(Math.random() * 10) + 1}:
-                            {String(Math.floor(Math.random() * 60)).padStart(
-                              2,
-                              "0"
-                            )}
+                            8:06
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
@@ -344,8 +347,7 @@ export default function Page() {
                             AIチャンネル
                           </p>
                           <p className="text-xs text-gray-600">
-                            {Math.floor(Math.random() * 500) + 10}万回視聴 •{" "}
-                            {Math.floor(Math.random() * 30) + 1}日前
+                            100万回視聴・1週間前
                           </p>
                         </div>
                       </div>
@@ -368,11 +370,7 @@ export default function Page() {
                         <div className="w-16 h-10 bg-gray-200 rounded flex-shrink-0 relative overflow-hidden">
                           <div className="absolute inset-0 bg-gradient-to-br from-[#ff0000]/20 to-transparent"></div>
                           <div className="absolute bottom-0.5 right-0.5 bg-black/80 text-white text-xs px-1 rounded">
-                            {Math.floor(Math.random() * 10) + 1}:
-                            {String(Math.floor(Math.random() * 60)).padStart(
-                              2,
-                              "0"
-                            )}
+                            8:06
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
@@ -383,7 +381,7 @@ export default function Page() {
                             AIチャンネル
                           </p>
                           <p className="text-xs text-gray-600">
-                            {Math.floor(Math.random() * 100) + 10}万回視聴
+                            100万回視聴・1週間前
                           </p>
                         </div>
                       </div>

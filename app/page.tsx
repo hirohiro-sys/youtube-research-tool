@@ -26,11 +26,11 @@ export default function TopPage() {
       id: "thumbnail-tool",
       title: "AIサムネイル比較ツール",
       description:
-        "魅力的なサムネイルを作成し、クリック率を向上させるためのデザインツールです。",
+        "魅力的なサムネイルを作成し、クリック率を向上させるためのデザインツールです。以下のURLから開発中のデモを確認できます。https://youtuberesarchtool.vercel.app/thumbnail-analysis",
       icon: <GalleryThumbnails />,
       route: "/thumbnail-analysis",
       status: "coming-soon",
-      features: ["テンプレート", "AI最適化", "A/Bテスト"],
+      features: ["テンプレート", "AI投票 & 改善", "プレビュー"],
     },
   ];
 
