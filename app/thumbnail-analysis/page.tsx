@@ -39,6 +39,7 @@ const baseStyle: React.CSSProperties = {
   outline: "none",
   transition: "border .24s ease-in-out",
   height: 200,
+  marginBottom: 20,
 };
 
 const focusedStyle = {
@@ -111,13 +112,13 @@ export default function Page() {
             </p>
             <p className="text-xs text-gray-500">JPEG/PNG形式、1ファイルまで</p>
           </div>
+          <input
+            type="text"
+            placeholder="タイトルを入力"
+            className="input"
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
-        <input
-          type="text"
-          placeholder="タイトルを入力"
-          className="input"
-          onChange={(e) => setTitle(e.target.value)}
-        />
       </div>
 
       {files.length > 0 && (
@@ -157,8 +158,8 @@ export default function Page() {
                 <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
                   <Image
                     src={files[0].preview || "/placeholder.svg"}
-                    fill
-                    className="object-cover"
+                    width={640}
+                    height={480}
                     alt="アップロードされた画像"
                     onLoad={() => {
                       URL.revokeObjectURL(files[0].preview);
