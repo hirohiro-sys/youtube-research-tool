@@ -19,7 +19,6 @@ import {
   ThumbsDown,
   Share,
   Download,
-  Bell,
 } from "lucide-react";
 
 type PreviewFile = File & { preview: string };
@@ -122,14 +121,14 @@ export default function Page() {
       </div>
 
       {files.length > 0 && (
-        <div className="max-w-5xl mx-auto p-3 sm:p-4">
+        <div className="max-w-4xl mx-auto p-3 sm:p-4">
           <div className="mb-4">
-            <div className="bg-gray-100 rounded-lg shadow-sm p-1 inline-flex">
+            <div className="bg-gray-200 rounded-lg shadow-md inline-flex">
               <button
                 onClick={() => setPreviewMode("pc")}
                 className={`flex items-center space-x-2 px-3 py-1.5 rounded-md transition-colors text-sm ${
                   previewMode === "pc"
-                    ? "bg-[#ff0000] text-white"
+                    ? "bg-white text-black font-bold"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
                 }`}
               >
@@ -140,7 +139,7 @@ export default function Page() {
                 onClick={() => setPreviewMode("sp")}
                 className={`flex items-center space-x-2 px-3 py-1.5 rounded-md transition-colors text-sm ${
                   previewMode === "sp"
-                    ? "bg-[#ff0000] text-white"
+                    ? "bg-white text-black font-bold"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
                 }`}
               >
@@ -224,12 +223,12 @@ export default function Page() {
                   >
                     <div className="flex items-center space-x-2">
                       <div
-                        className={`${previewMode === "sp" ? "w-7 h-7" : "w-9 h-9"} bg-[#ff0000] rounded-full flex items-center justify-center`}
+                        className={`${previewMode === "sp" ? "w-7 h-7" : "w-9 h-9"} bg-white border rounded-full flex items-center justify-center`}
                       >
                         <span
-                          className={`text-white font-bold ${previewMode === "sp" ? "text-xs" : "text-sm"}`}
+                          className={`text-black font-bold ${previewMode === "sp" ? "text-xs" : "text-sm"}`}
                         >
-                          AI
+                          -
                         </span>
                       </div>
                       <div>
@@ -247,12 +246,9 @@ export default function Page() {
                     </div>
 
                     <button
-                      className={`bg-[#ff0000] hover:bg-[#cc0000] text-white ${previewMode === "sp" ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm"} rounded-full font-medium transition-colors flex items-center space-x-1`}
+                      className={`bg-black text-white ${previewMode === "sp" ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm"} rounded-full font-medium transition-colors flex items-center space-x-1`}
                     >
-                      <Bell
-                        className={`${previewMode === "sp" ? "w-3 h-3" : "w-4 h-4"}`}
-                      />
-                      <span>登録</span>
+                      <span>チャンネル登録</span>
                     </button>
                   </div>
 
@@ -323,7 +319,7 @@ export default function Page() {
             {previewMode === "pc" ? (
               <div className="space-y-3">
                 <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-3">
-                  <h3 className="font-semibold text-gray-900 mb-3 text-sm">
+                  <h3 className="font-semibold text-gray-900 mb-1 text-sm">
                     関連動画
                   </h3>
                   <div className="space-y-2">
