@@ -3,8 +3,6 @@
 import type React from "react";
 
 import Breadcrumb from "@/src/components/breadcrumb";
-import { useDropzone } from "react-dropzone";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Play,
@@ -20,72 +18,19 @@ import {
   Share,
   Download,
 } from "lucide-react";
-
-type PreviewFile = File & { preview: string };
-
-const baseStyle: React.CSSProperties = {
-  flex: 1,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "20px",
-  borderWidth: 2,
-  borderRadius: 2,
-  borderColor: "#eeeeee",
-  borderStyle: "dashed",
-  backgroundColor: "#fafafa",
-  color: "#bdbdbd",
-  outline: "none",
-  transition: "border .24s ease-in-out",
-  height: 200,
-  marginBottom: 20,
-};
-
-const focusedStyle = {
-  borderColor: "#2196f3",
-};
-
-const acceptStyle = {
-  borderColor: "#00e676",
-};
-
-const rejectStyle = {
-  borderColor: "#ff1744",
-};
+import { useFileUpload } from "@/src/tools/thumbnail-analysis/hooks/useFileUpload";
+import { useVideoSearch } from "@/src/tools/thumbnail-analysis/hooks/useVideoSearch";
 
 export default function Page() {
-  const [files, setFiles] = useState<PreviewFile[]>([]);
-  const [title, setTitle] = useState("");
-  const [previewMode, setPreviewMode] = useState<"pc" | "sp">("pc");
-  const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
-    useDropzone({
-      accept: {
-        "image/jpeg": [".jpeg", ".jpg"],
-        "image/png": [".png"],
-      },
-      onDrop: (acceptedFiles) => {
-        setFiles(
-          acceptedFiles.map((file) =>
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-            })
-          )
-        );
-      },
-      maxFiles: 1,
-    });
-
-  const style: React.CSSProperties = {
-    ...baseStyle,
-    ...(isFocused ? focusedStyle : {}),
-    ...(isDragAccept ? acceptStyle : {}),
-    ...(isDragReject ? rejectStyle : {}),
-  };
-
-  useEffect(() => {
-    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
-  }, [files]);
+  const {
+    files,
+    previewMode,
+    setPreviewMode,
+    getRootProps,
+    getInputProps,
+    style,
+  } = useFileUpload();
+  const { title, setTitle, channelId, setChannelId } = useVideoSearch();
 
   return (
     <div className="pt-22 flex-grow bg-white min-h-screen">
@@ -420,6 +365,8 @@ export default function Page() {
                 type="text"
                 className="input"
                 placeholder="チャンネルIDを入力"
+                value={channelId}
+                onChange={(e) => setChannelId(e.target.value)}
               />
             </div>
           </div>
