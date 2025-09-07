@@ -30,7 +30,14 @@ export default function Page() {
     getInputProps,
     style,
   } = useFileUpload();
-  const { title, setTitle, channelId, setChannelId } = useVideoSearch();
+  const {
+    title,
+    setTitle,
+    channelId,
+    setChannelId,
+    channelVideos,
+    handleSearchchannelVideos,
+  } = useVideoSearch();
 
   return (
     <div className="pt-22 flex-grow bg-white min-h-screen">
@@ -353,7 +360,7 @@ export default function Page() {
               />
             </div>
 
-            {/* チャンネルIDを入れると過去の動画とサムネイル比較できる */}
+            {/* チャンネルIDを入れると過去の動画とサムネイル比較できるようにしたい */}
             <div>
               <p className="font-bold text-xl mt-10">
                 チャンネルプレビュー(未実装)
@@ -368,7 +375,21 @@ export default function Page() {
                 value={channelId}
                 onChange={(e) => setChannelId(e.target.value)}
               />
+              <button
+                className="btn"
+                onClick={() => handleSearchchannelVideos()}
+                disabled={!channelId}
+              >
+                取得
+              </button>
             </div>
+            {channelVideos?.length !== 0 &&
+              channelVideos.map((video) => (
+                <div key={video.videoId}>
+                  <p>{video.videoId}</p>
+                  <p>{video.title}</p>
+                </div>
+              ))}
           </div>
         </>
       )}
