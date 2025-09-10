@@ -3,6 +3,9 @@ import { useState } from "react";
 export type channelVideo = {
     videoId: string;
     title: string;
+    duration: string 
+    viewCount: string 
+    daysAgo: number;
 }
 
 export const useVideoSearch = () => {

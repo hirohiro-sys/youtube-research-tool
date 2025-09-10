@@ -21,6 +21,28 @@ import {
 import { useFileUpload } from "@/src/tools/thumbnail-analysis/hooks/useFileUpload";
 import { useVideoSearch } from "@/src/tools/thumbnail-analysis/hooks/useVideoSearch";
 
+// 後でutilsとかに切り出す
+function formatDaysAgo(daysAgo: number): string {
+  if (daysAgo === 0) return "今日";
+  if (daysAgo < 7) return `${daysAgo}日前`;
+
+  // 1週間以上1ヶ月未満
+  if (daysAgo < 30) {
+    const weeks = Math.floor(daysAgo / 7);
+    return `${weeks}週間前`;
+  }
+
+  // 1ヶ月以上1年未満
+  if (daysAgo < 365) {
+    const months = Math.floor(daysAgo / 30);
+    return `${months}ヶ月前`;
+  }
+
+  // 1年以上
+  const years = Math.floor(daysAgo / 365);
+  return `${years}年前`;
+}
+
 export default function Page() {
   const {
     files,
@@ -118,9 +140,6 @@ export default function Page() {
                       width={640}
                       height={480}
                       alt="アップロードされた画像"
-                      onLoad={() => {
-                        URL.revokeObjectURL(files[0].preview);
-                      }}
                     />
 
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-2 sm:p-3">
@@ -346,25 +365,9 @@ export default function Page() {
               )}
             </div>
 
-            {/* キーワード検索 */}
-
-            <div>
-              <p className="font-bold text-xl mt-10">キーワード検索(未実装)</p>
-              <p className="mb-2 text-gray-500">
-                キーワードを入力すると、そのキーワードを含む動画のサムネイルと比較できます
-              </p>
-              <input
-                type="text"
-                className="input"
-                placeholder="キーワードを入力"
-              />
-            </div>
-
             {/* チャンネルIDを入れると過去の動画とサムネイル比較できるようにしたい */}
             <div>
-              <p className="font-bold text-xl mt-10">
-                チャンネルプレビュー(未実装)
-              </p>
+              <p className="font-bold text-xl mt-10">チャンネルプレビュー</p>
               <p className="mb-2 text-gray-500">
                 チャンネルIDは、YouTubeチャンネルのURLから取得できます（例:youtube.com/channel/UCxxxxxxx）
               </p>
@@ -383,13 +386,98 @@ export default function Page() {
                 取得
               </button>
             </div>
-            {channelVideos?.length !== 0 &&
-              channelVideos.map((video) => (
-                <div key={video.videoId}>
-                  <p>{video.videoId}</p>
-                  <p>{video.title}</p>
+            {channelVideos?.length > 0 && (
+              <div className="mt-6">
+                <h3 className="font-semibold text-lg mb-4 text-gray-900">
+                  チャンネル動画一覧 ({channelVideos.length}件)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+                    <div className="relative aspect-video bg-gray-200">
+                      <Image
+                        src={files[0].preview || "/placeholder.svg"}
+                        fill
+                        className="object-cover"
+                        alt="アップロードされた画像"
+                      />
+
+                      <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+                        5:30
+                      </div>
+                    </div>
+
+                    <div className="p-4">
+                      <h4 className="font-medium text-gray-900 text-sm line-clamp-2 mb-2 leading-tight">
+                        {title || "タイトル未設定"}
+                      </h4>
+
+                      <div className="flex items-center justify-between text-xs text-gray-600 mb-3">
+                        <span>100回視聴・ 1日前</span>
+                      </div>
+                    </div>
+                  </div>
+                  {channelVideos.map((video) => (
+                    <div
+                      key={video.videoId}
+                      className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+                    >
+                      <div className="relative aspect-video bg-gray-200">
+                        <Image
+                          src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
+                          alt={video.title}
+                          fill
+                          className="object-cover"
+                        />
+
+                        <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+                          {video.duration}
+                        </div>
+                      </div>
+
+                      <div className="p-4">
+                        <a
+                          href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-gray-900 text-sm line-clamp-2 mb-2 leading-tight hover:underline hover:text-blue-600"
+                        >
+                          {video.title}
+                        </a>
+
+                        <div className="flex items-center justify-between text-xs text-gray-600 mb-3">
+                          <span>
+                            {Number(video.viewCount).toLocaleString()}回視聴・
+                            {formatDaysAgo(video.daysAgo)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+
+                {channelVideos.length === 0 && (
+                  <div className="text-center py-8">
+                    <div className="text-gray-400 mb-2">
+                      <Play className="w-12 h-12 mx-auto" />
+                    </div>
+                    <p className="text-gray-600">動画が見つかりませんでした</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* キーワード検索 */}
+            <div>
+              <p className="font-bold text-xl mt-10">キーワード検索(未実装)</p>
+              <p className="mb-2 text-gray-500">
+                キーワードを入力すると、そのキーワードを含む動画のサムネイルと比較できます
+              </p>
+              <input
+                type="text"
+                className="input"
+                placeholder="キーワードを入力"
+              />
+            </div>
           </div>
         </>
       )}
