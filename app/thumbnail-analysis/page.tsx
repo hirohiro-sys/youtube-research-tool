@@ -20,28 +20,7 @@ import {
 } from "lucide-react";
 import { useFileUpload } from "@/src/tools/thumbnail-analysis/hooks/useFileUpload";
 import { useVideoSearch } from "@/src/tools/thumbnail-analysis/hooks/useVideoSearch";
-
-// 後でutilsとかに切り出す
-function formatDaysAgo(daysAgo: number): string {
-  if (daysAgo === 0) return "今日";
-  if (daysAgo < 7) return `${daysAgo}日前`;
-
-  // 1週間以上1ヶ月未満
-  if (daysAgo < 30) {
-    const weeks = Math.floor(daysAgo / 7);
-    return `${weeks}週間前`;
-  }
-
-  // 1ヶ月以上1年未満
-  if (daysAgo < 365) {
-    const months = Math.floor(daysAgo / 30);
-    return `${months}ヶ月前`;
-  }
-
-  // 1年以上
-  const years = Math.floor(daysAgo / 365);
-  return `${years}年前`;
-}
+import { formatDaysAgo } from "@/src/tools/thumbnail-analysis/utils/formatDayAgo";
 
 export default function Page() {
   const {
