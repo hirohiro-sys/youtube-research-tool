@@ -10,7 +10,6 @@ import {
   Settings,
   Maximize,
   MoreHorizontal,
-  Upload,
   Monitor,
   Smartphone,
   ThumbsUp,
@@ -21,6 +20,7 @@ import {
 import { useFileUpload } from "@/src/tools/thumbnail-analysis/hooks/useFileUpload";
 import { useVideoSearch } from "@/src/tools/thumbnail-analysis/hooks/useVideoSearch";
 import { formatDaysAgo } from "@/src/tools/thumbnail-analysis/utils/formatDayAgo";
+import { FileUploader } from "@/src/tools/thumbnail-analysis/components/fileUploader";
 
 export default function Page() {
   const {
@@ -49,33 +49,13 @@ export default function Page() {
         ]}
       />
 
-      <div className="max-w-4xl mx-auto p-3 sm:p-4">
-        <p className="font-bold text-xl mb-2">サムネイルと動画タイトル</p>
-        <p className="mb-2 text-gray-500">
-          サムネイルをアップロードすると、Youtube上での見え方をプレビュー、AI投票やFB改善を行います
-        </p>
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 mb-4">
-          <div
-            {...getRootProps({
-              style,
-            })}
-          >
-            <input {...getInputProps()} />
-            <Upload className="w-8 h-8 text-gray-400 mb-2" />
-            <p className="text-center text-sm font-medium text-gray-700 mb-1">
-              ここにファイルをドラッグするか、クリックしてファイルを選択
-            </p>
-            <p className="text-xs text-gray-500">JPEG/PNG形式、1ファイルまで</p>
-          </div>
-          <input
-            type="text"
-            placeholder="タイトルを入力"
-            className="input"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-      </div>
+      <FileUploader
+        getRootProps={getRootProps}
+        getInputProps={getInputProps}
+        title={title}
+        setTitle={setTitle}
+        style={style}
+      />
 
       {/* 画像をアップロードするとPC・SPそれぞれのプレビュー表示を行う */}
       {files.length > 0 && (
