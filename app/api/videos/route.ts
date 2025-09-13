@@ -4,16 +4,26 @@ import { formatDuration } from "@/src/tools/thumbnail-analysis/utils/formatDurat
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const channelId = url.searchParams.get("channelId");
+  const keyword = url.searchParams.get("keyword");
 
-  if (!channelId) {
+  if (!channelId && !keyword) {
     return new Response(
-      JSON.stringify({ error: "channelIdが必要です" }),
+      JSON.stringify({ error: "channelId または keyword が必要です" }),
       { status: 400 }
     );
   }
 
   try {
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=8&type=video`;
+    let searchUrl = "";
+
+    if (channelId) {
+      searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=8&type=video`;
+    } else if (keyword) {
+      searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+        keyword
+      )}&order=relevance&maxResults=15&type=video`;
+    }
+
     const searchData = await fetchData(searchUrl);
 
     const videoIds = searchData.items.map(
@@ -30,7 +40,7 @@ export async function GET(request: Request) {
     const videos = detailsData.items.map(
       (item: {
         id: string;
-        snippet: { title: string; publishedAt: string };
+        snippet: { title: string; channelTitle: string; publishedAt: string };
         contentDetails: { duration: string };
         statistics: { viewCount: string };
       }) => {
@@ -42,6 +52,7 @@ export async function GET(request: Request) {
         return {
           videoId: item.id,
           title: item.snippet.title,
+          channelName: item.snippet.channelTitle,
           duration: formatDuration(item.contentDetails.duration),
           viewCount: item.statistics.viewCount,
           daysAgo,

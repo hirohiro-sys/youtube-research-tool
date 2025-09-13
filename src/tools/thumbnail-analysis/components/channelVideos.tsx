@@ -2,12 +2,12 @@ import { Play } from "lucide-react";
 import { formatDaysAgo } from "../utils/formatDayAgo";
 import Image from "next/image";
 import { PreviewFile } from "../types/fileTypes";
-import { channelVideo } from "../hooks/useVideoSearch";
+import { VideoView } from "../hooks/useVideoSearch";
 
 type ChannelVideosProps = {
   channelId: string;
   setChannelId: (channelId: string) => void;
-  channelVideos: channelVideo[];
+  channelVideos: VideoView[];
   handleSearchchannelVideos: () => void;
   files: PreviewFile[];
   title: string;
