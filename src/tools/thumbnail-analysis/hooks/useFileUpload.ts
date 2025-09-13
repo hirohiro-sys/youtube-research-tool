@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
 import { useDropzone } from "react-dropzone";
@@ -38,8 +36,6 @@ const rejectStyle = {
 
 export const useFileUpload = () => {
     const [files, setFiles] = useState<PreviewFile[]>([]);
-
-    const [previewMode, setPreviewMode] = useState<"pc" | "sp">("pc");
     const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
       useDropzone({
         accept: {
@@ -71,8 +67,6 @@ export const useFileUpload = () => {
 
     return {
         files,
-        previewMode,
-        setPreviewMode,
         getRootProps,
         getInputProps,
         style,

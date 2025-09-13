@@ -10,6 +10,7 @@ export type VideoView = {
 }
 
 export const useVideoSearch = () => {
+    const [previewMode, setPreviewMode] = useState<"pc" | "sp">("pc");
     const [title, setTitle] = useState("");
     const [channelId, setChannelId] = useState("");
     const [videos, setVideos] = useState<VideoView[]>([]);
@@ -44,6 +45,8 @@ export const useVideoSearch = () => {
     
 
     return {
+        previewMode,
+        setPreviewMode,
         title,
         setTitle,
         channelId,

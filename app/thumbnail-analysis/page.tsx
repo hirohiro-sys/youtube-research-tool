@@ -11,15 +11,10 @@ import { ThumbnailPreview } from "@/src/tools/thumbnail-analysis/components/thum
 import { TimeLine } from "@/src/tools/thumbnail-analysis/components/timeline";
 
 export default function Page() {
+  const { files, getRootProps, getInputProps, style } = useFileUpload();
   const {
-    files,
     previewMode,
     setPreviewMode,
-    getRootProps,
-    getInputProps,
-    style,
-  } = useFileUpload();
-  const {
     title,
     setTitle,
     channelId,
@@ -68,11 +63,21 @@ export default function Page() {
             />
 
             <TimeLine
+              previewMode={previewMode}
               keyword={keyword}
               setKeyword={setKeyword}
               handleSearchchannelVideos={handleSearchchannelVideos}
               videos={videos}
+              files={files}
+              title={title}
             />
+
+            <div>
+              <p className="font-bold text-xl mt-10">AI投票(実装中🚧)</p>
+              <p className="mb-2 text-gray-500">
+                アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
+              </p>
+            </div>
           </div>
         </>
       )}
