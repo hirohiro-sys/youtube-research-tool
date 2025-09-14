@@ -1,5 +1,6 @@
 "use client";
 
+// import HeroSection from "@/src/components/heroSection";
 import {
   ChartLine,
   DoorOpen,
@@ -36,6 +37,7 @@ export default function TopPage() {
 
   return (
     <div className="pt-30 flex-grow">
+      {/* <HeroSection /> */}
       <div className="text-center mb-18">
         <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-400 mb-4">
           プロフェッショナルな動画制作ツール
