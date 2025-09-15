@@ -1,10 +1,13 @@
-"use client";
-
 import { motion } from "motion/react";
-import { MonitorPlay, UserRound } from "lucide-react";
+import { UserRound } from "lucide-react";
 import Link from "next/link";
 
-export default function Header() {
+type HeaderProps = {
+  toolName: string;
+  icon: React.ReactNode;
+};
+
+export default function Header({ toolName, icon }: HeaderProps) {
   return (
     <motion.header
       className="fixed top-0 w-full bg-black/80 shadow-lg z-50"
@@ -21,9 +24,9 @@ export default function Header() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
-            <MonitorPlay className="h-6 w-6 text-red-500 mt-1 md:h-8 md:w-8" />
+            {icon}
             <h1 className="text-base md:text-2xl font-bold text-white">
-              YouTube動画作成支援ツール
+              {toolName}
             </h1>
           </motion.button>
           <Link

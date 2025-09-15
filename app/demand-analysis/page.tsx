@@ -1,6 +1,7 @@
 "use client";
 
 import Breadcrumb from "@/src/components/breadcrumb";
+import Header from "@/src/components/header";
 import { LoadMoreButton } from "@/src/tools/demand-analysis/components/loadMoreButton";
 import { Search } from "@/src/tools/demand-analysis/components/search";
 import { SearchResultHeader } from "@/src/tools/demand-analysis/components/searchResultHeader";
@@ -9,6 +10,7 @@ import SuggestWords from "@/src/tools/demand-analysis/components/suggestWords";
 import { VideoList } from "@/src/tools/demand-analysis/components/videoList";
 import { useDownloadCSV } from "@/src/tools/demand-analysis/hooks/useDownloadCSV";
 import { useVideoSearch } from "@/src/tools/demand-analysis/hooks/useVideoSearch";
+import { ChartLine } from "lucide-react";
 
 export default function Page() {
   const {
@@ -32,55 +34,61 @@ export default function Page() {
   const { downloadCSV } = useDownloadCSV();
 
   return (
-    <div className="pt-22 flex-grow">
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "AI需要分析", href: "/demand-analysis" },
-        ]}
+    <>
+      <Header
+        toolName="AI需要分析ツール"
+        icon={<ChartLine className="h-8 w-8 text-green-600" />}
       />
-
-      <Search
-        keyword={keyword}
-        onChange={setKeyword}
-        range={range}
-        setRange={setRange}
-        scale={scale}
-        setScale={setScale}
-        timeOption={timeOption}
-        setTimeOption={setTimeOption}
-        onSearch={handleSearch}
-        loading={loading}
-      />
-
-      <SearchResultHeader
-        setSortType={setSortType}
-        videosCount={videos.length}
-        onDownloadCSV={() => downloadCSV(videos, keyword)}
-      />
-
-      <SearchResultMessage
-        hasSearched={hasSearched}
-        hasVideos={videos.length > 0}
-        loading={loading}
-      />
-
-      <VideoList videos={videos} />
-
-      <LoadMoreButton
-        onClick={handleLoadMore}
-        hasNextPage={hasNextPage}
-        loading={loading}
-        keyword={keyword}
-      />
-
-      {videos.length !== 0 && (
-        <SuggestWords
-          suggestions={suggestions}
-          onSearch={handleSearch}
-          onChange={setKeyword}
+      <div className="pt-22 flex-grow">
+        <Breadcrumb
+          items={[
+            { label: "ホーム", href: "/" },
+            { label: "AI需要分析", href: "/demand-analysis" },
+          ]}
         />
-      )}
-    </div>
+
+        <Search
+          keyword={keyword}
+          onChange={setKeyword}
+          range={range}
+          setRange={setRange}
+          scale={scale}
+          setScale={setScale}
+          timeOption={timeOption}
+          setTimeOption={setTimeOption}
+          onSearch={handleSearch}
+          loading={loading}
+        />
+
+        <SearchResultHeader
+          setSortType={setSortType}
+          videosCount={videos.length}
+          onDownloadCSV={() => downloadCSV(videos, keyword)}
+        />
+
+        <SearchResultMessage
+          hasSearched={hasSearched}
+          hasVideos={videos.length > 0}
+          loading={loading}
+        />
+
+        <VideoList videos={videos} />
+
+        <LoadMoreButton
+          onClick={handleLoadMore}
+          hasNextPage={hasNextPage}
+          loading={loading}
+          keyword={keyword}
+        />
+
+        {videos.length !== 0 && (
+          <SuggestWords
+            suggestions={suggestions}
+            onSearch={handleSearch}
+            onChange={setKeyword}
+          />
+        )}
+      </div>
+    </>
   );
 }
