@@ -29,6 +29,7 @@ export default function Page() {
     channelVideos,
     setChannelVideos,
     handleSearchchannelVideos,
+    shuffleVideos,
   } = useVideoSearch(files);
 
   return (
@@ -84,6 +85,7 @@ export default function Page() {
                 handleSearchchannelVideos={handleSearchchannelVideos}
                 videos={videos}
                 title={title}
+                shuffleVideos={shuffleVideos}
               />
 
               <div>

@@ -9,6 +9,7 @@ type TimeLineProps = {
   handleSearchchannelVideos: () => void;
   videos: VideoView[];
   title: string;
+  shuffleVideos: () => void;
 };
 
 export const TimeLine = ({
@@ -18,6 +19,7 @@ export const TimeLine = ({
   handleSearchchannelVideos,
   videos,
   title,
+  shuffleVideos,
 }: TimeLineProps) => {
   return (
     <>
@@ -39,6 +41,13 @@ export const TimeLine = ({
           disabled={!keyword}
         >
           検索
+        </button>
+        <button
+          className="btn ml-2"
+          onClick={() => shuffleVideos()}
+          disabled={videos.length === 0}
+        >
+          シャッフル
         </button>
 
         {videos.length > 0 && (

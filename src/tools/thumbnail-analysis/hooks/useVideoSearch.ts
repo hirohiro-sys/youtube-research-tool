@@ -55,6 +55,17 @@ export const useVideoSearch = (files: PreviewFile[]) => {
         setLoading(false);
       }
     };
+
+    const shuffleVideos = () => {
+      setVideos((prevVideos) => {
+        const shuffled = [...prevVideos];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      });
+    };
     
 
     return {
@@ -72,5 +83,6 @@ export const useVideoSearch = (files: PreviewFile[]) => {
         setChannelVideos,
         loading,
         handleSearchchannelVideos,
+        shuffleVideos
     };
 }
