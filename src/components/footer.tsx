@@ -5,7 +5,7 @@ import { Play, Mail, Twitter, Github } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white py-12 border-t border-gray-200">
+    <footer className="bg-gray-800 text-white py-10 border-t border-gray-200">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">

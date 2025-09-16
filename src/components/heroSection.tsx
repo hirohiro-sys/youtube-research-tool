@@ -52,8 +52,8 @@ export default function HeroSection() {
               </h1>
             </div>
 
-            <p className="font-semibold text-xs md:text-lg text-gray-600 mb-8 leading-relaxed flex items-center justify-center">
-              <span className="text-sm md:text-xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+            <p className="font-semibold text-xs md:text-xl text-gray-600 mb-8 leading-relaxed flex items-center justify-center">
+              <span className="text-sm md:text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
                 生成AI
               </span>
               を活用した、次世代クリエイタープラットフォームです
@@ -66,11 +66,11 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
           >
-            <motion.button className="btn bg-gradient-to-r from-red-500 to-yellow-500 hover:bg-black text-white btn-md font-bold shadow-2xl">
+            <motion.button className="btn bg-gradient-to-r from-amber-500 to-pink-500 text-white btn-md font-bold shadow-2xl">
               今すぐ始める
               <ChevronRight />
             </motion.button>
-            <motion.button className="btn btn-outline btn-md w-36 bg-gray-50 text-gray-700 border-gray-700 hover:bg-gray-700 hover:text-white">
+            <motion.button className="btn btn-outline btn-md w-36 bg-gray-50 text-gray-700 border-gray-700">
               詳細を見る
             </motion.button>
           </motion.div>

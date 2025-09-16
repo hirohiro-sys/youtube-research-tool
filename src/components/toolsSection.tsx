@@ -44,13 +44,13 @@ export default function ToolsSection() {
     },
   ];
   return (
-    <>
+    <div className="mt-24 mb-50">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="text-center my-16"
+        className="text-center mb-10"
       >
         <h2 className="text-5xl md:text-6xl font-bold mb-6">
           <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
@@ -63,7 +63,7 @@ export default function ToolsSection() {
           あなたのYouTubeチャンネルを次のレベルへ引き上げます
         </p>
       </motion.div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-24">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {tools.map((tool) => (
           <div
             key={tool.id}
@@ -98,6 +98,6 @@ export default function ToolsSection() {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
