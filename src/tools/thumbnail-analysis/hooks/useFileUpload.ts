@@ -52,6 +52,7 @@ export const useFileUpload = () => {
           );
         },
         maxFiles: 1,
+        disabled: files.length > 0, 
       });
   
     const style: React.CSSProperties = {
@@ -67,6 +68,7 @@ export const useFileUpload = () => {
 
     return {
         files,
+        setFiles,
         getRootProps,
         getInputProps,
         style,

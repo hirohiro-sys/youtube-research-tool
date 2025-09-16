@@ -13,7 +13,8 @@ import Header from "@/src/components/header";
 import { GalleryThumbnails } from "lucide-react";
 
 export default function Page() {
-  const { files, getRootProps, getInputProps, style } = useFileUpload();
+  const { files, getRootProps, getInputProps, style, setFiles } =
+    useFileUpload();
   const {
     previewMode,
     setPreviewMode,
@@ -24,9 +25,11 @@ export default function Page() {
     keyword,
     setKeyword,
     videos,
+    setVideos,
     channelVideos,
+    setChannelVideos,
     handleSearchchannelVideos,
-  } = useVideoSearch();
+  } = useVideoSearch(files);
 
   return (
     <>
@@ -48,6 +51,12 @@ export default function Page() {
           title={title}
           setTitle={setTitle}
           style={style}
+          files={files}
+          setFiles={setFiles}
+          setVideos={setVideos}
+          setChannelVideos={setChannelVideos}
+          setKeyword={setKeyword}
+          setChannelId={setChannelId}
         />
 
         {files.length > 0 && (
@@ -65,7 +74,6 @@ export default function Page() {
                 setChannelId={setChannelId}
                 channelVideos={channelVideos}
                 handleSearchchannelVideos={handleSearchchannelVideos}
-                files={files}
                 title={title}
               />
 
@@ -75,7 +83,6 @@ export default function Page() {
                 setKeyword={setKeyword}
                 handleSearchchannelVideos={handleSearchchannelVideos}
                 videos={videos}
-                files={files}
                 title={title}
               />
 

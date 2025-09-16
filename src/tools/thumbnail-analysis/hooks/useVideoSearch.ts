@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PreviewFile } from "../types/fileTypes";
 
 export type VideoView = {
     videoId: string;
@@ -7,9 +8,10 @@ export type VideoView = {
     viewCount: string 
     daysAgo: number;
     channelName?: string
+    thumbnail?: string
 }
 
-export const useVideoSearch = () => {
+export const useVideoSearch = (files: PreviewFile[]) => {
     const [previewMode, setPreviewMode] = useState<"pc" | "sp">("pc");
     const [title, setTitle] = useState("");
     const [channelId, setChannelId] = useState("");
@@ -31,11 +33,22 @@ export const useVideoSearch = () => {
     
         const response = await fetch(`/api/videos?${query}`);
         const data = await response.json();
+
+        const demoVideo = {
+          videoId: "demo-video",
+          title,
+          channelName: "あなたのチャンネル名",
+          viewCount: 100,
+          daysAgo: 1,
+          duration: "5:30",
+          thumbnail: files[0]?.preview,
+        };
+
         if (keyword) {
-          setVideos(data.videos || []);
+          setVideos([demoVideo, ...(data.videos || [])]);
         } else {
-          setChannelVideos(data.videos || []);
-        }    
+          setChannelVideos([demoVideo, ...(data.videos || [])]);
+        }
       } catch (error) {
         console.error("データの取得に失敗しました:", error);
       } finally {
@@ -54,7 +67,9 @@ export const useVideoSearch = () => {
         keyword,
         setKeyword,
         videos,
+        setVideos,
         channelVideos,
+        setChannelVideos,
         loading,
         handleSearchchannelVideos,
     };
