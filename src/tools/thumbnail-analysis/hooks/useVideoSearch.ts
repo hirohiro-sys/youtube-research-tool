@@ -20,20 +20,19 @@ export const useVideoSearch = (files: PreviewFile[]) => {
     const [keyword, setKeyword] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleSearchchannelVideos = async () => {
+    const handleSearchchannelVideos = async (searchType: "keyword" | "channel") => {
       setLoading(true);
       try {
         let query = "";
-    
-        if (keyword && keyword.trim() !== "") {
+        if (searchType === "keyword") {
           query = `keyword=${encodeURIComponent(keyword)}`;
-        } else {
+        } else if (searchType === "channel") {
           query = `channelId=${channelId}`;
         }
     
         const response = await fetch(`/api/videos?${query}`);
         const data = await response.json();
-
+    
         const demoVideo = {
           videoId: "demo-video",
           title,
@@ -43,14 +42,14 @@ export const useVideoSearch = (files: PreviewFile[]) => {
           duration: "5:30",
           thumbnail: files[0]?.preview,
         };
-
-        if (keyword) {
+    
+        if (searchType === "keyword") {
           setVideos([demoVideo, ...(data.videos || [])]);
         } else {
           setChannelVideos([demoVideo, ...(data.videos || [])]);
         }
       } catch (error) {
-        console.error("データの取得に失敗しました:", error);
+        console.error(error);
       } finally {
         setLoading(false);
       }

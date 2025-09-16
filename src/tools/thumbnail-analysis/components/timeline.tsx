@@ -6,7 +6,7 @@ type TimeLineProps = {
   previewMode: "pc" | "sp";
   keyword: string;
   setKeyword: (keyword: string) => void;
-  handleSearchchannelVideos: () => void;
+  handleSearchchannelVideos: (searchType: "keyword" | "channel") => void;
   videos: VideoView[];
   title: string;
   shuffleVideos: () => void;
@@ -37,7 +37,7 @@ export const TimeLine = ({
         />
         <button
           className="btn"
-          onClick={() => handleSearchchannelVideos()}
+          onClick={() => handleSearchchannelVideos("keyword")}
           disabled={!keyword}
         >
           検索
@@ -58,7 +58,7 @@ export const TimeLine = ({
                 : "flex flex-col gap-3 mt-4"
             }
           >
-            {videos.map((video, index) => (
+            {videos.map((video) => (
               <div
                 key={video.videoId}
                 className={
@@ -91,7 +91,7 @@ export const TimeLine = ({
                         rel="noopener noreferrer"
                         className="font-medium text-gray-900 text-sm line-clamp-2 mb-2 leading-tight hover:underline hover:text-blue-600"
                       >
-                        {index === 0 ? title : video.title}
+                        {video.videoId === "demo-video" ? title : video.title}
                       </a>
                       <div className="text-xs text-gray-600">
                         <div className="mb-1">{video.channelName}</div>
@@ -125,7 +125,7 @@ export const TimeLine = ({
                         rel="noopener noreferrer"
                         className="font-medium text-gray-900 text-sm line-clamp-2 mb-2 leading-tight hover:underline hover:text-blue-600"
                       >
-                        {index === 0 ? title : video.title}
+                        {video.videoId === "demo-video" ? title : video.title}
                       </a>
                       <div className="text-xs text-gray-600">
                         <div className="mb-1">{video.channelName}</div>

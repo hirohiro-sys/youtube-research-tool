@@ -7,7 +7,7 @@ type ChannelVideosProps = {
   channelId: string;
   setChannelId: (channelId: string) => void;
   channelVideos: VideoView[];
-  handleSearchchannelVideos: () => void;
+  handleSearchchannelVideos: (searchType: "keyword" | "channel") => void;
   title: string;
 };
 
@@ -34,7 +34,7 @@ export const ChannelVideos = ({
         />
         <button
           className="btn"
-          onClick={() => handleSearchchannelVideos()}
+          onClick={() => handleSearchchannelVideos("channel")}
           disabled={!channelId}
         >
           取得
@@ -46,7 +46,7 @@ export const ChannelVideos = ({
             チャンネル動画一覧 ({channelVideos.length}件)
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {channelVideos.map((video, index) => (
+            {channelVideos.map((video) => (
               <div
                 key={video.videoId}
                 className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
@@ -74,7 +74,7 @@ export const ChannelVideos = ({
                     rel="noopener noreferrer"
                     className="font-medium text-gray-900 text-sm line-clamp-2 mb-2 leading-tight hover:underline hover:text-blue-600"
                   >
-                    {index === 0 ? title : video.title}
+                    {video.videoId === "demo-video" ? title : video.title}
                   </a>
 
                   <div className="flex items-center justify-between text-xs text-gray-600 mb-3">

@@ -46,6 +46,16 @@ export default function Page() {
           ]}
         />
 
+        {/* 一通り実装終わったら消す */}
+        <div
+          role="alert"
+          className="alert alert-info alert-outline w-[51%] m-auto"
+        >
+          <span>
+            こちらのツールのメイン機能である「AI投票」は現在開発中です。またツール全体としてUI/UXに至らない部分があるかと思いますが、順次改修を進めていきますのでご了承ください。
+          </span>
+        </div>
+
         <FileUploader
           getRootProps={getRootProps}
           getInputProps={getInputProps}
