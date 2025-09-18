@@ -67,7 +67,7 @@ export default function HeroSection() {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
             onClick={() =>
               window.scrollTo({
-                top: 900,
+                top: 750,
                 behavior: "smooth",
               })
             }
