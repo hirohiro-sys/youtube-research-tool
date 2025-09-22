@@ -30,7 +30,7 @@ export const LoadMore = ({
     if (!element) return;
 
     const observer = new IntersectionObserver(handleObserver, {
-      rootMargin: "0px 0px -50px 0px",
+      rootMargin: "0px 0px -600px 0px",
       threshold: 1.0,
     });
 
@@ -42,7 +42,7 @@ export const LoadMore = ({
   return (
     <div className="text-center">
       {loading ? (
-        <span className="loading loading-dots loading-xl mt-20"></span>
+        <span className="loading loading-dots loading-xl mt-10"></span>
       ) : (
         <div ref={sentinelRef} className="h-10"></div>
       )}
