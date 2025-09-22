@@ -1,50 +1,33 @@
-import { useRef, useCallback, useEffect } from "react";
+import { Plus } from "lucide-react";
 
-type LoadMoreProps = {
-  onLoadMore: () => void;
+type LoadMoreButtonProps = {
+  onClick: () => void;
   loading: boolean;
   hasNextPage: boolean;
   keyword: string;
 };
 
-export const LoadMore = ({
-  onLoadMore,
+export const LoadMoreButton = ({
+  onClick,
   loading,
   hasNextPage,
   keyword,
-}: LoadMoreProps) => {
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-
-  const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const target = entries[0];
-      if (target.isIntersecting && !loading && hasNextPage && keyword) {
-        onLoadMore();
-      }
-    },
-    [loading, hasNextPage, onLoadMore, keyword]
-  );
-
-  useEffect(() => {
-    const element = sentinelRef.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(handleObserver, {
-      rootMargin: "0px 0px -600px 0px",
-      threshold: 1.0,
-    });
-
-    observer.observe(element);
-
-    return () => observer.disconnect();
-  }, [handleObserver]);
-
+}: LoadMoreButtonProps) => {
   return (
-    <div className="text-center">
+    <div className="text-center my-10">
       {loading ? (
-        <span className="loading loading-dots loading-xl mt-10"></span>
+        <span className="loading loading-dots loading-xl mt-20"></span>
       ) : (
-        <div ref={sentinelRef} className="h-10"></div>
+        hasNextPage && (
+          <button
+            onClick={onClick}
+            className="btn btn-neutral btn-outline px-10"
+            disabled={!keyword}
+          >
+            <Plus />
+            もっと見る
+          </button>
+        )
       )}
     </div>
   );

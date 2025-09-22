@@ -2,7 +2,7 @@
 
 import Breadcrumb from "@/src/components/breadcrumb";
 import Header from "@/src/components/header";
-import { LoadMore } from "@/src/tools/demand-analysis/components/loadMore";
+import { LoadMoreButton } from "@/src/tools/demand-analysis/components/loadMore";
 
 import { Search } from "@/src/tools/demand-analysis/components/search";
 import { SearchResultHeader } from "@/src/tools/demand-analysis/components/searchResultHeader";
@@ -75,8 +75,8 @@ export default function Page() {
 
         <VideoList videos={videos} />
 
-        <LoadMore
-          onLoadMore={handleLoadMore}
+        <LoadMoreButton
+          onClick={handleLoadMore}
           hasNextPage={hasNextPage}
           loading={loading}
           keyword={keyword}
