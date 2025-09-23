@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "@/src/components/footer";
+import { headers } from "next/headers";
+import { cachedValidateAuthWithRedirect } from "@/src/lib/supabase-auth/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,15 +16,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Youtube需要分析ツール",
-  description: "Youtubeで需要のある動画だけを検索できるツールです。",
+  title: "Youtube動画作成支援ツール",
+  description:
+    "生成AIを用いてYoutubeの動画作成をサポートするプラットフォームです",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 認証チェック
+  const headersList = await headers();
+  const pathname = headersList.get("x-current-path");
+  const isLoginPage = pathname?.startsWith("/login");
+  if (!isLoginPage) await cachedValidateAuthWithRedirect();
+
   return (
     <html lang="ja">
       <body
