@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "生成AIを用いてYoutubeの動画作成をサポートするプラットフォームです",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
