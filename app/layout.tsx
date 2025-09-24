@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Youtube需要分析ツール",
-  description: "Youtubeで需要のある動画だけを検索できるツールです。",
+  title: "Youtube動画作成支援ツール",
+  description:
+    "生成AIを用いてYoutubeの動画作成をサポートするプラットフォームです",
 };
 
 export default function RootLayout({
