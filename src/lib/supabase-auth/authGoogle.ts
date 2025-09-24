@@ -22,7 +22,9 @@ export async function signInWithGoogle() {
 export async function signOut() {
     const supabase = await createClient();
     const { error } = await supabase.auth.signOut();
-    if (error) console.error('Googleログアウトエラー:', error.message)
-    if (!error) return true;
-    return false;
+    if (error) {
+        console.error('Googleログアウトエラー:', error.message);
+        return false;
+    }
+    return true;
 }
