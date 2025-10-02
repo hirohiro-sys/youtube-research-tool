@@ -2,7 +2,8 @@ import { type NextRequest } from 'next/server'
 import { updateSession } from './src/lib/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-    return await updateSession(request)
+    // 現在モニター等で不特定多数のアクセスがあるため、一時的に認証をスキップ
+    // return await updateSession(request)
 }
 
 export const config = {

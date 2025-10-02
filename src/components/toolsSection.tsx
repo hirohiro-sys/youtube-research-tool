@@ -8,7 +8,7 @@ import {
 import { useRouter } from "next/navigation";
 
 import { motion } from "framer-motion";
-import LogOut from "./logOut";
+// import LogOut from "./logOut";
 
 export default function ToolsSection() {
   const router = useRouter();
@@ -99,7 +99,7 @@ export default function ToolsSection() {
           </div>
         ))}
       </div>
-      <LogOut />
+      {/* <LogOut /> */}
     </div>
   );
 }
