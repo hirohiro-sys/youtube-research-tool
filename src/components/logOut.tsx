@@ -1,11 +1,11 @@
 import { useRouter } from "next/navigation";
-import { signOut } from "../lib/supabase-auth/authGoogle";
+import { logout } from "@/app/login/actions";
 
 export default function LogOut() {
   const router = useRouter();
 
   const handleGoogleLogout = async () => {
-    const result = await signOut();
+    const result = await logout();
     if (result) router.refresh();
   };
   return (
