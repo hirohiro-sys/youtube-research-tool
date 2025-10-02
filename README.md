@@ -4,7 +4,7 @@
 
 - **フロントエンド**: Next.js / TypeScript / TailwindCSSなど
 
-- **バックエンド**: Next.js（Route hundlers）
+- **バックエンド**: Next.js（Route hundlers, Server actions）
 
 - **外部API**: Youtube Data API V3 / Gemini API
 
@@ -21,4 +21,4 @@ npm run dev
 
 ## プロジェクト構成
 
-...
+現在ディレクトリ構成をリプレイス(模索)中のため省略
