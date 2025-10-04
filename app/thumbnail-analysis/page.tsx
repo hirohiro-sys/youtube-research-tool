@@ -8,7 +8,7 @@ import { useVideoSearch } from "@/src/tools/thumbnail-analysis/hooks/useVideoSea
 import { FileUploader } from "@/src/tools/thumbnail-analysis/components/fileUploader";
 import { ChannelVideos } from "@/src/tools/thumbnail-analysis/components/channelVideos";
 import { ThumbnailPreview } from "@/src/tools/thumbnail-analysis/components/thumbnailPreview";
-import { TimeLine } from "@/src/tools/thumbnail-analysis/components/timeline";
+// import { TimeLine } from "@/src/tools/thumbnail-analysis/components/timeline";
 import Header from "@/src/components/header";
 import { GalleryThumbnails } from "lucide-react";
 
@@ -70,15 +70,30 @@ export default function Page() {
           setChannelId={setChannelId}
         />
 
-        {files.length > 0 && (
-          <>
-            <div className="max-w-4xl mx-auto p-3 sm:p-4">
+        <div className="max-w-4xl mx-auto p-3 sm:p-4">
+          {files.length > 0 && (
+            <>
               <ThumbnailPreview
                 previewMode={previewMode}
                 setPreviewMode={setPreviewMode}
-                files={files}
                 title={title}
+                keyword={keyword}
+                setKeyword={setKeyword}
+                handleSearchchannelVideos={handleSearchchannelVideos}
+                shuffleVideos={shuffleVideos}
+                videos={videos}
               />
+              {/* <TimeLine
+                previewMode={previewMode}
+                videos={videos}
+                title={title}
+              /> */}
+              <div>
+                <p className="font-bold text-xl mt-10">AI投票(実装中🚧)</p>
+                <p className="mb-2 text-gray-500">
+                  アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
+                </p>
+              </div>
 
               <ChannelVideos
                 channelId={channelId}
@@ -87,26 +102,9 @@ export default function Page() {
                 handleSearchchannelVideos={handleSearchchannelVideos}
                 title={title}
               />
-
-              <TimeLine
-                previewMode={previewMode}
-                keyword={keyword}
-                setKeyword={setKeyword}
-                handleSearchchannelVideos={handleSearchchannelVideos}
-                videos={videos}
-                title={title}
-                shuffleVideos={shuffleVideos}
-              />
-
-              <div>
-                <p className="font-bold text-xl mt-10">AI投票(実装中🚧)</p>
-                <p className="mb-2 text-gray-500">
-                  アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
-                </p>
-              </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
     </>
   );
