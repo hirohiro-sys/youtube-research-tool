@@ -33,7 +33,7 @@ type ThumbnailPreviewProps = {
   setKeyword: (keyword: string) => void;
   handleSearchchannelVideos: (searchType: "keyword" | "channel") => void;
   shuffleVideos: () => void;
-  videos: VideoView[];
+  previewVideos: VideoView[];
 };
 
 export const ThumbnailPreview = ({
@@ -44,7 +44,7 @@ export const ThumbnailPreview = ({
   setKeyword,
   handleSearchchannelVideos,
   shuffleVideos,
-  videos,
+  previewVideos,
 }: ThumbnailPreviewProps) => {
   return (
     <>
@@ -69,12 +69,12 @@ export const ThumbnailPreview = ({
       <button
         className="btn ml-2"
         onClick={() => shuffleVideos()}
-        disabled={videos.length === 0}
+        disabled={previewVideos.length === 0}
       >
         シャッフル
       </button>
 
-      {videos[0] ? (
+      {previewVideos[0] ? (
         <>
           <div className="my-4">
             <div className="bg-gray-200 rounded-lg shadow-md inline-flex">
@@ -114,12 +114,12 @@ export const ThumbnailPreview = ({
                 <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
                   <Image
                     src={
-                      videos[0].thumbnail ??
-                      `https://img.youtube.com/vi/${videos[0].videoId}/maxresdefault.jpg`
+                      previewVideos[0].thumbnail ??
+                      `https://img.youtube.com/vi/${previewVideos[0].videoId}/maxresdefault.jpg`
                     }
                     width={640}
                     height={480}
-                    alt={videos[0].title || "動画サムネイル"}
+                    alt={previewVideos[0].title || "動画サムネイル"}
                     className="object-cover w-full h-full"
                   />
 
@@ -145,7 +145,7 @@ export const ThumbnailPreview = ({
                             previewMode === "sp" ? "text-xs" : "text-sm"
                           } font-medium`}
                         >
-                          {videos[0].duration || "0:00"}
+                          {previewVideos[0].duration || "0:00"}
                         </span>
                       </div>
                       <div className="flex items-center space-x-1">
@@ -179,9 +179,9 @@ export const ThumbnailPreview = ({
                       previewMode === "sp" ? "text-sm" : "text-lg"
                     } font-semibold text-gray-900 mb-2 leading-tight`}
                   >
-                    {videos[0].videoId === "demo-video"
-                      ? title
-                      : videos[0].title}
+                    {previewVideos[0].videoId === "demo-video"
+                      ? title || "タイトルを入力"
+                      : previewVideos[0].title}
                   </h1>
 
                   <div
@@ -190,8 +190,8 @@ export const ThumbnailPreview = ({
                     } text-gray-600 mb-3`}
                   >
                     <span>
-                      {formatViewCount(videos[0].viewCount)} 回視聴 •
-                      {formatDaysAgo(videos[0].daysAgo)}
+                      {formatViewCount(previewVideos[0].viewCount)} 回視聴 •
+                      {formatDaysAgo(previewVideos[0].daysAgo)}
                     </span>
                   </div>
 
@@ -211,7 +211,7 @@ export const ThumbnailPreview = ({
                             previewMode === "sp" ? "text-xs" : "text-sm"
                           }`}
                         >
-                          {videos[0].channelName?.[0] || "-"}
+                          {previewVideos[0].channelName?.[0] || "-"}
                         </span>
                       </div>
                       <div>
@@ -220,7 +220,7 @@ export const ThumbnailPreview = ({
                             previewMode === "sp" ? "text-xs" : "text-sm"
                           }`}
                         >
-                          {videos[0].channelName || "チャンネル名"}
+                          {previewVideos[0].channelName || "チャンネル名"}
                         </p>
                       </div>
                     </div>
@@ -336,7 +336,7 @@ export const ThumbnailPreview = ({
                   関連動画
                 </h3>
                 <div className="space-y-2">
-                  {videos.slice(1, 6).map((video) => (
+                  {previewVideos.slice(1, 6).map((video) => (
                     <div
                       key={video.videoId}
                       className="flex space-x-2 hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer"
@@ -357,7 +357,9 @@ export const ThumbnailPreview = ({
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium text-gray-900 line-clamp-2 mb-1">
-                          {video.videoId === "demo-video" ? title : video.title}
+                          {video.videoId === "demo-video"
+                            ? title || "タイトルを入力"
+                            : video.title}
                         </p>
                         <p className="text-xs text-gray-600 mb-0.5">
                           {video.channelName || "チャンネル名"}

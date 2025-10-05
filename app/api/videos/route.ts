@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     } else if (keyword) {
       searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
         keyword
-      )}&order=relevance&maxResults=5&type=video&videoDuration=medium`;
+      )}&order=relevance&maxResults=20&type=video&videoDuration=medium`;
     }
 
     const searchData = await fetchData(searchUrl);

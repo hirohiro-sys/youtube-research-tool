@@ -13,6 +13,7 @@ type FileUploaderProps = {
   files: PreviewFile[];
   setFiles: (files: PreviewFile[]) => void;
   setVideos: (videos: VideoView[]) => void;
+  setPreviewVideos: (videos: VideoView[]) => void;
   setChannelVideos: (videos: VideoView[]) => void;
   setKeyword: (keyword: string) => void;
   setChannelId: (channelId: string) => void;
@@ -27,6 +28,7 @@ export const FileUploader = ({
   files,
   setFiles,
   setVideos,
+  setPreviewVideos,
   setChannelVideos,
   setKeyword,
   setChannelId,
@@ -35,6 +37,7 @@ export const FileUploader = ({
     URL.revokeObjectURL(file.preview);
     setFiles([]);
     setVideos([]);
+    setPreviewVideos([]);
     setChannelVideos([]);
     setTitle("");
     setKeyword("");

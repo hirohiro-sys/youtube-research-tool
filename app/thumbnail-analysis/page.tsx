@@ -24,8 +24,10 @@ export default function Page() {
     setChannelId,
     keyword,
     setKeyword,
-    videos,
+    // videos,
     setVideos,
+    previewVideos,
+    setPreviewVideos,
     channelVideos,
     setChannelVideos,
     handleSearchchannelVideos,
@@ -65,6 +67,7 @@ export default function Page() {
           files={files}
           setFiles={setFiles}
           setVideos={setVideos}
+          setPreviewVideos={setPreviewVideos}
           setChannelVideos={setChannelVideos}
           setKeyword={setKeyword}
           setChannelId={setChannelId}
@@ -81,7 +84,7 @@ export default function Page() {
                 setKeyword={setKeyword}
                 handleSearchchannelVideos={handleSearchchannelVideos}
                 shuffleVideos={shuffleVideos}
-                videos={videos}
+                previewVideos={previewVideos}
               />
               {/* <TimeLine
                 previewMode={previewMode}

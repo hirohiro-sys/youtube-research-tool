@@ -16,7 +16,8 @@ export const useVideoSearch = (files: PreviewFile[]) => {
     const [title, setTitle] = useState("");
     const [channelId, setChannelId] = useState("");
     const [videos, setVideos] = useState<VideoView[]>([]);
-    const [channelVideos,setChannelVideos] = useState<VideoView[]>([])
+    const [previewVideos,setPreviewVideos] = useState<VideoView[]>([]);
+    const [channelVideos,setChannelVideos] = useState<VideoView[]>([]);
     const [keyword, setKeyword] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -45,6 +46,7 @@ export const useVideoSearch = (files: PreviewFile[]) => {
     
         if (searchType === "keyword") {
           setVideos([demoVideo, ...(data.videos || [])]);
+          setPreviewVideos([demoVideo, ...(data.videos || [])].slice(0,6));
         } else {
           setChannelVideos([demoVideo, ...(data.videos || [])]);
         }
@@ -56,7 +58,7 @@ export const useVideoSearch = (files: PreviewFile[]) => {
     };
 
     const shuffleVideos = () => {
-      setVideos((prevVideos) => {
+      setPreviewVideos((prevVideos) => {
         const shuffled = [...prevVideos];
         for (let i = shuffled.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -78,6 +80,8 @@ export const useVideoSearch = (files: PreviewFile[]) => {
         setKeyword,
         videos,
         setVideos,
+        previewVideos,
+        setPreviewVideos,
         channelVideos,
         setChannelVideos,
         loading,
