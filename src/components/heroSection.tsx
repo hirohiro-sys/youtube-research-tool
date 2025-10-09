@@ -48,7 +48,7 @@ export default function HeroSection() {
                 />
               </motion.div>
               <h1 className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
-                Youtube動画作成支援ツール
+                Youtube動画作成支援ツール(test)
               </h1>
             </div>
 
