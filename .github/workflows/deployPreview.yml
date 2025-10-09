@@ -1,4 +1,4 @@
-name: Github Auto Deploy
+name: Github Auto Deploy(Preview)
 
 on:
   push:
