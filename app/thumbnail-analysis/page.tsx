@@ -11,6 +11,7 @@ import { ThumbnailPreview } from "@/src/tools/thumbnail-analysis/components/thum
 // import { TimeLine } from "@/src/tools/thumbnail-analysis/components/timeline";
 import Header from "@/src/components/header";
 import { GalleryThumbnails } from "lucide-react";
+import { AiVote } from "@/src/tools/thumbnail-analysis/components/aiVote";
 
 export default function Page() {
   const { files, getRootProps, getInputProps, style, setFiles } =
@@ -91,12 +92,8 @@ export default function Page() {
                 videos={videos}
                 title={title}
               /> */}
-              <div>
-                <p className="font-bold text-xl mt-10">AI投票(実装中🚧)</p>
-                <p className="mb-2 text-gray-500">
-                  アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
-                </p>
-              </div>
+
+              <AiVote />
 
               <ChannelVideos
                 channelId={channelId}
