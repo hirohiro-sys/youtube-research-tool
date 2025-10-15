@@ -11,7 +11,7 @@ import { ThumbnailPreview } from "@/src/tools/thumbnail-analysis/components/thum
 // import { TimeLine } from "@/src/tools/thumbnail-analysis/components/timeline";
 import Header from "@/src/components/header";
 import { GalleryThumbnails } from "lucide-react";
-import { AiVote } from "@/src/tools/thumbnail-analysis/components/aiVote";
+import { AiVote } from "@/src/tools/thumbnail-analysis/components/ai-vote/aiVote";
 
 export default function Page() {
   const { files, getRootProps, getInputProps, style, setFiles } =
@@ -25,7 +25,7 @@ export default function Page() {
     setChannelId,
     keyword,
     setKeyword,
-    // videos,
+    videos,
     setVideos,
     previewVideos,
     setPreviewVideos,
@@ -93,7 +93,7 @@ export default function Page() {
                 title={title}
               /> */}
 
-              <AiVote />
+              <AiVote videos={videos} title={title}/>
 
               <ChannelVideos
                 channelId={channelId}
