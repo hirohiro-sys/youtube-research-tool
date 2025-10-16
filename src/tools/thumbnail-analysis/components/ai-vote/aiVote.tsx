@@ -1,4 +1,5 @@
 import { VideoView } from "../../hooks/useVideoSearch";
+import { VirtualUserList } from "./VirtualUserList";
 import { VoteTargetVideos } from "./voteTargetVideos";
 
 type AiVoteProps = {
@@ -14,6 +15,7 @@ export const AiVote = ({ videos, title }: AiVoteProps) => {
         アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
       </p>
       <VoteTargetVideos videos={videos} title={title} />
+      {videos.length > 0 && <VirtualUserList />}
     </>
   );
 };

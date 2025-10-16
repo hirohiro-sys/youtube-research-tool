@@ -29,7 +29,9 @@ export const VoteTargetVideos = ({ videos, title }: VoteTargetVideosProps) => {
               height={180}
               alt={videos[0].title || "動画サムネイル"}
             />
-            <p className="text-xs">{index === 0 ? title : video.title}</p>
+            <p className="text-xs">
+              {(index === 0 ? title : video.title) || "タイトルを入力"}
+            </p>
           </div>
         );
       })}
