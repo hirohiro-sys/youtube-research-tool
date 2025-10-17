@@ -1,8 +1,12 @@
-import { useState } from "react";
+type VirtualUserListProps = {
+  targetUser: string;
+  setTargetUser: (value: string) => void;
+};
 
-export const VirtualUserList = () => {
-    // ペルソナの状態はAI投票で使うからhooks切ってstate管理した方がいいかも
-  const [targetUser, setTargetUser] = useState("");
+export const VirtualUserList = ({
+  targetUser,
+  setTargetUser,
+}: VirtualUserListProps) => {
   return (
     <>
       <fieldset className="fieldset">
