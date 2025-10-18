@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { PreviewFile } from "../types/fileTypes";
+import { VideoView } from "./useVideoSearch";
 
 export type VirtualUser = {
     id: number;
@@ -8,15 +10,28 @@ export type VirtualUser = {
     overview: string;
 }
 
-export const useAiVote = () => {
+export const useAiVote = (files: PreviewFile[],title: string) => {
     const [targetUserRules, setTargetUserRules] = useState("");
     const [virtualUsers,setVirtualUsers] = useState<VirtualUser[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [selectedVideos,setSelectedVideos] = useState<{videoId: string,title: string}[]>([])
 
+    const handleSelectVideos = (video: VideoView) => {
+        const isAlreadySelected = selectedVideos.some(
+          (v) => v.videoId === video.videoId
+        );
+        if (isAlreadySelected) {
+          setSelectedVideos((prev) =>
+            prev.filter((v) => v.videoId !== video.videoId)
+          );
+        } else if (selectedVideos.length < 4) {
+          setSelectedVideos((prev) => [
+            ...prev,
+            { videoId: video.videoId, title: video.title },
+          ]);
+        }
+      };
+    
     const generateVirtualUsers = async () => {
-        setLoading(true);
-        setErrorMessage("");
 
         try {
             const res = await fetch("/api/virtual-users", {
@@ -29,25 +44,24 @@ export const useAiVote = () => {
             const data = await res.json();
 
             if (!res.ok) {
-                setErrorMessage("仮想ユーザーの生成に失敗しました");
                 return;
             }
 
             setVirtualUsers(data.virtualUsers);
         } catch (error) {
             console.error("仮想ユーザーの生成に失敗しました", error);
-            setErrorMessage("ネットワークエラーなどにより仮想ユーザーの生成に失敗しました");
-        } finally {
-            setLoading(false);
-        }
+        } 
     }
+
+    // AI投票を実装予定
+    console.log(files,title)
 
     return {
         targetUserRules,
         setTargetUserRules,
         generateVirtualUsers,
         virtualUsers,
-        loading,
-        errorMessage,
+        handleSelectVideos,
+        selectedVideos,
     }
 }

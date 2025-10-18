@@ -93,7 +93,7 @@ export default function Page() {
                 title={title}
               /> */}
 
-              <AiVote videos={videos} title={title}/>
+              <AiVote videos={videos} title={title} files={files} />
 
               <ChannelVideos
                 channelId={channelId}

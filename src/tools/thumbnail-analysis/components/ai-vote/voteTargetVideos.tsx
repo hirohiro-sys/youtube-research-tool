@@ -4,18 +4,30 @@ import { VideoView } from "../../hooks/useVideoSearch";
 type VoteTargetVideosProps = {
   videos: VideoView[];
   title: string;
+  handleSelectVideos: (video: VideoView) => void;
+  selectedVideos: { videoId: string; title: string }[];
 };
 
-export const VoteTargetVideos = ({ videos, title }: VoteTargetVideosProps) => {
+export const VoteTargetVideos = ({
+  videos,
+  title,
+  handleSelectVideos,
+  selectedVideos,
+}: VoteTargetVideosProps) => {
   return (
     <div className="grid grid-cols-5 gap-2">
       {videos.map((video, index) => {
+        const isSelected = selectedVideos.some(
+          (v) => v.videoId === video.videoId
+        );
+        const isDisabled = index === 0;
         return (
           <div
             key={video.videoId}
             className={`p-2 ${
-              index === 0 ? "border-2 border-green-500 rounded-lg" : ""
-            }`}
+              index === 0 ? "outline-2 outline-green-500 rounded-lg" : ""
+            } ${isSelected ? "outline-2 outline-red-500 rounded-lg" : ""}`}
+            onClick={!isDisabled ? () => handleSelectVideos(video) : undefined}
           >
             <Image
               src={
