@@ -92,7 +92,7 @@ export const FileUploader = ({
 
         <input
           type="text"
-          placeholder="タイトルを入力"
+          placeholder="動画タイトルを入力"
           className="input mt-4"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
