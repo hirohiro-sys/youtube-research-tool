@@ -9,7 +9,7 @@ type AiVoteProps = {
 };
 
 export const AiVote = ({ videos, title }: AiVoteProps) => {
-  const { targetUser, setTargetUser } = useAiVote();
+  const { targetUserRules, setTargetUserRules } = useAiVote();
   return (
     <>
       <p className="font-bold text-xl mt-10">AI投票(実装中🚧)</p>
@@ -19,8 +19,8 @@ export const AiVote = ({ videos, title }: AiVoteProps) => {
       <VoteTargetVideos videos={videos} title={title} />
       {videos.length > 0 && (
         <VirtualUserList
-          targetUser={targetUser}
-          setTargetUser={setTargetUser}
+          targetUserRules={targetUserRules}
+          setTargetUserRules={setTargetUserRules}
         />
       )}
     </>

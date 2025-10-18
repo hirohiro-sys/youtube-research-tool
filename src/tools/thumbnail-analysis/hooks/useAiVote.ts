@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 export const useAiVote = () => {
-    const [targetUser, setTargetUser] = useState("");
+    const [targetUserRules, setTargetUserRules] = useState("");
     return {
-        targetUser,
-        setTargetUser,
+        targetUserRules,
+        setTargetUserRules,
     }
 }

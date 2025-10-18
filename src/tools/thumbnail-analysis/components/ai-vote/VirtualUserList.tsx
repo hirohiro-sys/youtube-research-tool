@@ -1,11 +1,11 @@
 type VirtualUserListProps = {
-  targetUser: string;
-  setTargetUser: (value: string) => void;
+  targetUserRules: string;
+  setTargetUserRules: (value: string) => void;
 };
 
 export const VirtualUserList = ({
-  targetUser,
-  setTargetUser,
+  targetUserRules,
+  setTargetUserRules,
 }: VirtualUserListProps) => {
   return (
     <>
@@ -15,10 +15,10 @@ export const VirtualUserList = ({
           <textarea
             className="textarea h-24"
             placeholder="例: 20〜30代のプログラミング初心者、転職を考えている社会人、副業でプログラミングを学びたい人"
-            value={targetUser}
-            onChange={(e) => setTargetUser(e.target.value)}
+            value={targetUserRules}
+            onChange={(e) => setTargetUserRules(e.target.value)}
           ></textarea>
-          <button className="btn" disabled={!targetUser}>
+          <button className="btn" disabled={!targetUserRules}>
             仮想ユーザーを生成
           </button>
         </div>
