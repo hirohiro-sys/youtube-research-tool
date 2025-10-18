@@ -6,7 +6,6 @@ type VoteTargetVideosProps = {
   title: string;
 };
 
-// あくまでタイトルとサムネイル画像の投票をするので、ここはそこまでYoutubeライクなUIにしなくていい
 export const VoteTargetVideos = ({ videos, title }: VoteTargetVideosProps) => {
   return (
     <div className="grid grid-cols-5 gap-2">
