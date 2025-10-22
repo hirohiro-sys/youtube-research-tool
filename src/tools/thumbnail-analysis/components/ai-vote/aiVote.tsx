@@ -21,7 +21,7 @@ export const AiVote = ({ videos, title, files }: AiVoteProps) => {
   } = useAiVote(files, title);
   return (
     <>
-      <p className="font-bold text-xl mt-10">AI投票(実装中🚧)</p>
+      <p className="font-bold text-xl mt-10">AI投票</p>
       <p className="mb-2 text-gray-500">
         アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
       </p>

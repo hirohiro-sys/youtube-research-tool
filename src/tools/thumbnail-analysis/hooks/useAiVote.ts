@@ -8,12 +8,17 @@ export type VirtualUser = {
     age: number;
     interest: string[];
     overview: string;
+    voteReason?: string
 }
 
 export const useAiVote = (files: PreviewFile[],title: string) => {
     const [targetUserRules, setTargetUserRules] = useState("");
     const [virtualUsers,setVirtualUsers] = useState<VirtualUser[]>([]);
-    const [selectedVideos,setSelectedVideos] = useState<{videoId: string,title: string}[]>([])
+    const [selectedVideos,setSelectedVideos] = useState<{videoId: string,title: string,voteCount?: number}[]>([])
+    // 1位の動画の分析
+    const [topVideoAnalysis, setTopVideoAnalysis] = useState("");
+    // アップロードした動画に対するフィードバック
+    const [uploadedVideosFeedback, setUploadedVideosFeedback] = useState("")
 
     const handleSelectVideos = (video: VideoView) => {
         const isAlreadySelected = selectedVideos.some(
@@ -53,8 +58,30 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
         } 
     }
 
-    // AI投票を実装予定
-    console.log(files,title)
+    const aiVote = async () => {
+      try {
+        const res = await fetch("/api/ai-vote",{
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            files,
+            title,
+            selectedVideos,
+            virtualUsers,
+          }),
+        })
+
+        // const data = await res.json();
+        // ペルソナごと投票理由を追記
+        // ビデオごとの投票数を追記
+        // 1位の動画の分析を追記
+        // アップロードした動画に対するフィードバックを追記
+
+      } catch (error) {
+        console.error("AI投票に失敗しました",error)
+      }
+    }
+
 
     return {
         targetUserRules,
