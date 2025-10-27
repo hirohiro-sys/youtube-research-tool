@@ -16,8 +16,10 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
     const [virtualUsers,setVirtualUsers] = useState<VirtualUser[]>([]);
     const [selectedVideos,setSelectedVideos] = useState<{videoId: string,title: string,voteCount?: number}[]>([])
     // 1位の動画の分析
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [topVideoAnalysis, setTopVideoAnalysis] = useState("");
     // アップロードした動画に対するフィードバック
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [uploadedVideosFeedback, setUploadedVideosFeedback] = useState("")
 
     const handleSelectVideos = (video: VideoView) => {
@@ -60,6 +62,7 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
 
     const aiVote = async () => {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const res = await fetch("/api/ai-vote",{
           method: "POST",
           headers: { "Content-Type": "application/json" },
