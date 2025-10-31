@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
 import { VideoView } from "./useVideoSearch";
 
@@ -15,12 +15,23 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
     const [targetUserRules, setTargetUserRules] = useState("");
     const [virtualUsers,setVirtualUsers] = useState<VirtualUser[]>([]);
     const [selectedVideos,setSelectedVideos] = useState<{videoId: string,title: string,voteCount?: number}[]>([])
-    // 1位の動画の分析
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [topVideoAnalysis, setTopVideoAnalysis] = useState("");
-    // アップロードした動画に対するフィードバック
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [uploadedVideosFeedback, setUploadedVideosFeedback] = useState("")
+
+    const syncUploadedVideoTitle = (newTitle: string) => {
+      setSelectedVideos((prev) =>
+        prev.map((v, i) => (i === 0 ? { ...v, title: newTitle } : v))
+      );
+    };
+
+    useEffect(() => {
+      if (files.length === 0) return
+      setSelectedVideos([{videoId: files[0].preview,title}])
+    // タイトルをdepsに入れるとレンダリングの影響でいちいちビデオの選択状態が解除されるのでスルーしている
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[files])
 
     const handleSelectVideos = (video: VideoView) => {
         const isAlreadySelected = selectedVideos.some(
@@ -30,7 +41,7 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
           setSelectedVideos((prev) =>
             prev.filter((v) => v.videoId !== video.videoId)
           );
-        } else if (selectedVideos.length < 4) {
+        } else if (selectedVideos.length < 5) {
           setSelectedVideos((prev) => [
             ...prev,
             { videoId: video.videoId, title: video.title },
@@ -94,5 +105,6 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
         handleSelectVideos,
         selectedVideos,
         aiVote,
+        syncUploadedVideoTitle
     }
 }

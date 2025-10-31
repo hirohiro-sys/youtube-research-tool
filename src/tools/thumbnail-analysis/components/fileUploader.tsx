@@ -17,6 +17,7 @@ type FileUploaderProps = {
   setChannelVideos: (videos: VideoView[]) => void;
   setKeyword: (keyword: string) => void;
   setChannelId: (channelId: string) => void;
+  syncUploadedVideoTitle: (newTitle: string) => void;
 };
 
 export const FileUploader = ({
@@ -32,6 +33,7 @@ export const FileUploader = ({
   setChannelVideos,
   setKeyword,
   setChannelId,
+  syncUploadedVideoTitle,
 }: FileUploaderProps) => {
   const removeFile = (file: PreviewFile) => {
     URL.revokeObjectURL(file.preview);
@@ -95,7 +97,11 @@ export const FileUploader = ({
           placeholder="動画タイトルを入力"
           className="input mt-4"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            const newTitle = e.target.value;
+            setTitle(newTitle);
+            syncUploadedVideoTitle(newTitle);
+          }}
         />
       </div>
     </div>

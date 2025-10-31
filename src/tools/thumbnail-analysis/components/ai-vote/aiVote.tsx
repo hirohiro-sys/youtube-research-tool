@@ -1,24 +1,29 @@
-import { useAiVote } from "../../hooks/useAiVote";
+import { VirtualUser } from "../../hooks/useAiVote";
 import { VideoView } from "../../hooks/useVideoSearch";
-import { PreviewFile } from "../../types/fileTypes";
 import { VirtualUserList } from "./VirtualUserList";
 import { VoteTargetVideos } from "./voteTargetVideos";
 
 type AiVoteProps = {
   videos: VideoView[];
   title: string;
-  files: PreviewFile[];
+  targetUserRules: string;
+  setTargetUserRules: (rules: string) => void;
+  generateVirtualUsers: () => Promise<void>;
+  virtualUsers: VirtualUser[];
+  handleSelectVideos: (video: VideoView) => void;
+  selectedVideos: { videoId: string; title: string; voteCount?: number }[];
 };
 
-export const AiVote = ({ videos, title, files }: AiVoteProps) => {
-  const {
-    targetUserRules,
-    setTargetUserRules,
-    generateVirtualUsers,
-    virtualUsers,
-    handleSelectVideos,
-    selectedVideos,
-  } = useAiVote(files, title);
+export const AiVote = ({
+  videos,
+  title,
+  targetUserRules,
+  setTargetUserRules,
+  generateVirtualUsers,
+  virtualUsers,
+  handleSelectVideos,
+  selectedVideos,
+}: AiVoteProps) => {
   return (
     <>
       <p className="font-bold text-xl mt-10">AI投票</p>

@@ -1,11 +1,19 @@
-import { NextRequest } from "next/server";
+import { GoogleGenAI } from "@google/genai";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { uploadedThumbnail, title, selectedVideos, virtualUsers } = await req.json();
-        // reqで受け取ったデータをAIに渡せる形にする(stateの型と照らし合わせる)
-        // 紐付けがむずいな。どうやるか
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+        console.log(uploadedThumbnail, title, selectedVideos, virtualUsers,ai)
+      
+      return NextResponse.json({
+        // voteReasons,             // それぞれのVirtualUserがその動画に投票した理由をvoteReasonに入れるためのテキスト(idと紐つけて返す)
+        // voteResults,             // それぞれの動画の投票数(videoIdと紐つけて返す)
+        // topVideoAnalysis,        // 投票率1位の動画の分析テキスト
+        // uploadedVideoAnalysis,   // ユーザーがアップロードした動画(サムネイル、タイトル)の改善案提示
+      });
     } catch (error) {
         console.error("AI投票に失敗しました",error)
     }
