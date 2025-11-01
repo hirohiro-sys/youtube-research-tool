@@ -78,8 +78,6 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            uploadedThumbnail: files[0].preview,
-            title,
             selectedVideos,
             virtualUsers,
           }),
