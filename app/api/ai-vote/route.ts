@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { VirtualUser } from "@/src/tools/thumbnail-analysis/hooks/useAiVote";
+import { selectedVideo, userVotes } from "@/src/tools/thumbnail-analysis/types/aiVote";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
 // サムネイル情報をgeminiに渡せる形式に変換する関数
 async function fetchThumbnailBase64(
-  video: {videoId: string,title: string,voteCount?: number}, 
-  selectedVideos: {videoId: string,title: string,voteCount?: number}[]
+  video: selectedVideo, 
+  selectedVideos: selectedVideo[]
 ): Promise<string> {
   // selectedVideosの最初の動画はアップロードされた動画なので、videoIdがすでにgeminiに渡せる形式になっている
   if (video.videoId === selectedVideos[0].videoId) return video.videoId
@@ -20,11 +21,11 @@ async function fetchThumbnailBase64(
 // 仮想ユーザーごとに投票とその理由を生成する関数
 async function decideVotesAndReasonsWithImage(
   ai: GoogleGenAI,
-  selectedVideos: { videoId: string; title: string; voteCount?: number }[],
+  selectedVideos: selectedVideo[],
   users: VirtualUser[]
-): Promise<{ userVotes: { userId: number; videoId: string; reason: string }[] }> {
+): Promise<{ userVotes: userVotes[] }> {
   
-  const userVotes: { userId: number; videoId: string; reason: string }[] = [];
+  const userVotes: userVotes[] = [];
 
   for (const user of users) {
     const videoImages = await Promise.all(
@@ -90,11 +91,11 @@ async function decideVotesAndReasonsWithImage(
 
 // 投票結果を集計する関数
 function aggregateResults(
-  videos: { videoId: string; title: string; voteCount?: number }[],
-  userVotes: { userId: number; videoId: string; reason: string }[]
+  videos: selectedVideo[],
+  userVotes: userVotes[]
 ): {
   voteResults: { videoId: string; votes: number }[];
-  topVideo: { videoId: string; title: string; voteCount?: number };
+  topVideo: selectedVideo;
 } {
   const counts: Record<string, number> = {};
   for (const v of videos) {
@@ -118,8 +119,8 @@ function aggregateResults(
 // 投票数トップの動画を分析する関数
 async function analyzeTopVideo(
   ai: GoogleGenAI,
-  topVideo: { videoId: string; title: string; voteCount?: number },
-  userVotes: { userId: number; videoId: string; reason: string }[]
+  topVideo: selectedVideo,
+  userVotes: userVotes[]
 ): Promise<string> {
   const reasonsForTop = userVotes
     .filter(v => v.videoId === topVideo.videoId)
@@ -153,7 +154,7 @@ ${reasonsForTop}
 // アップロードされた動画の改善案を生成する関数
 async function generateUploadedVideoAnalysis(
   ai: GoogleGenAI,
-  uploaded: {videoId: string,title: string,voteCount?: number},
+  uploaded: selectedVideo,
 ): Promise<string> {
   const prompt = `
 あなたは動画マーケティングの専門家です。ユーザーがアップロードした以下の動画について、サムネイルおよびタイトルを元に **視聴数を増やすための改善案** を箇条書きで3つ提示してください：
