@@ -1,16 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { VirtualUser } from "@/src/tools/thumbnail-analysis/hooks/useAiVote";
-import { selectedVideo, userVotes } from "@/src/tools/thumbnail-analysis/types/aiVote";
+import {
+  selectedVideo,
+  userVotes,
+} from "@/src/tools/thumbnail-analysis/types/aiVote";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
 // サムネイル情報をgeminiに渡せる形式に変換する関数
 async function fetchThumbnailBase64(
-  video: selectedVideo, 
-  selectedVideos: selectedVideo[]
+  video: selectedVideo,
+  selectedVideos: selectedVideo[],
 ): Promise<string> {
   // selectedVideosの最初の動画はアップロードされた動画なので、videoIdがすでにgeminiに渡せる形式になっている
-  if (video.videoId === selectedVideos[0].videoId) return video.videoId
+  if (video.videoId === selectedVideos[0].videoId) return video.videoId;
   const url = `https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`;
   const resp = await fetch(url);
   const buffer = await resp.arrayBuffer();
@@ -22,9 +24,8 @@ async function fetchThumbnailBase64(
 async function decideVotesAndReasonsWithImage(
   ai: GoogleGenAI,
   selectedVideos: selectedVideo[],
-  users: VirtualUser[]
+  users: VirtualUser[],
 ): Promise<{ userVotes: userVotes[] }> {
-  
   const userVotes: userVotes[] = [];
 
   for (const user of users) {
@@ -33,7 +34,7 @@ async function decideVotesAndReasonsWithImage(
         videoId: v.videoId,
         title: v.title,
         imageBase64: await fetchThumbnailBase64(v, selectedVideos),
-      }))
+      })),
     );
 
     const textPrompt = `
@@ -41,7 +42,7 @@ async function decideVotesAndReasonsWithImage(
 プロフィール: ${user.overview}
 興味・関心: ${user.interest.join("、")}
 
-以下の動画候補（タイトルと画像）を見て、最も自分に合うと思う動画を1つ選び、
+与えられた動画候補（タイトルとサムネイル画像）を見て、最も自分に合うと思う動画を1つ選び、
 選んだ理由を簡潔に日本語で説明してください。
 
 出力形式:
@@ -79,9 +80,12 @@ async function decideVotesAndReasonsWithImage(
       };
     }
 
+    const video = selectedVideos.find((v) => v.videoId === parsed.videoId)
+
     userVotes.push({
       userId: user.id,
       videoId: parsed.videoId,
+      title: video ? video.title : "動画のタイトルを取得できませんでした。",
       reason: parsed.reason,
     });
   }
@@ -92,50 +96,59 @@ async function decideVotesAndReasonsWithImage(
 // 投票結果を集計する関数
 function aggregateResults(
   videos: selectedVideo[],
-  userVotes: userVotes[]
+  userVotes: userVotes[],
 ): {
   voteResults: { videoId: string; votes: number }[];
-  topVideo: selectedVideo;
 } {
+
   const counts: Record<string, number> = {};
   for (const v of videos) {
     counts[v.videoId] = 0;
   }
-  for (const uv of userVotes) {
-    counts[uv.videoId] += 1;
-  }
-  const voteResults = videos.map(v => ({
-    videoId: v.videoId,
-    votes: counts[v.videoId] ?? 0
-  }));
-  const topVideoId = voteResults.reduce((prev, curr) =>
-    curr.votes > prev.votes ? curr : prev
-  ).videoId;
-  const topVideo = videos.find(v => v.videoId === topVideoId)!;
 
-  return { voteResults, topVideo };
+  for (const uv of userVotes) {
+    counts[uv.videoId] = (counts[uv.videoId] || 0) + 1;
+  }
+  
+  const voteResults = videos.map((v) => ({
+    videoId: v.videoId,
+    votes: counts[v.videoId] ?? 0,
+  }));
+
+  return { voteResults };
 }
 
 // 投票数トップの動画を分析する関数
 async function analyzeTopVideo(
   ai: GoogleGenAI,
-  topVideo: selectedVideo,
-  userVotes: userVotes[]
+  voteResults: { videoId: string; votes: number }[],
+  userVotes: userVotes[],
+  videos: selectedVideo[],
 ): Promise<string> {
+  
+  const topVideoId = voteResults.reduce((prev, curr) =>
+    curr.votes > prev.votes ? curr : prev,
+  ).videoId;
+  const topVideo = videos.find((v) => v.videoId === topVideoId)!;
+
+  const imageBase64 = await fetchThumbnailBase64(topVideo, videos);
+
   const reasonsForTop = userVotes
-    .filter(v => v.videoId === topVideo.videoId)
-    .map(v => `- ${v.reason}`)
+    .filter((v) => v.videoId === topVideo.videoId)
+    .map((v) => `- ${v.reason}`)
     .join("\n");
 
   const prompt = `
-以下の動画が複数のユーザーから最も多く投票されました。
+以下は最も多く投票された動画です。
 動画タイトル: ${topVideo.title}
 
-この動画が人気となった理由を、ユーザーの投票理由を参考にして簡潔に日本語で分析してください。
-ユーザーの投票理由:
-${reasonsForTop}
+この動画のサムネイル画像と、ユーザーの投票理由を参考にして、
+「なぜこの動画が人気になったのか」を簡潔に分析してください。
 
-分析結果:
+ユーザー投票理由:
+${reasonsForTop || "（この動画への投票理由はありません）"}
+
+分析は**日本語**で出力してください。
 `;
 
   const resp = await ai.models.generateContent({
@@ -143,13 +156,22 @@ ${reasonsForTop}
     contents: [
       {
         role: "user",
-        parts: [{ text: prompt }],
+        parts: [
+          { text: prompt },
+          {
+            inlineData: {
+              mimeType: "image/jpeg",
+              data: imageBase64,
+            },
+          },
+        ],
       },
     ],
   });
 
   return resp.text?.trim() ?? "分析に失敗しました。";
 }
+
 
 // アップロードされた動画の改善案を生成する関数
 async function generateUploadedVideoAnalysis(
@@ -159,36 +181,68 @@ async function generateUploadedVideoAnalysis(
   const prompt = `
 あなたは動画マーケティングの専門家です。ユーザーがアップロードした以下の動画について、サムネイルおよびタイトルを元に **視聴数を増やすための改善案** を箇条書きで3つ提示してください：
 タイトル：${uploaded.title}
-サムネイル画像（base64形式）：${uploaded.videoId}
-  `;
+サムネイル画像（base64形式）: ${uploaded.videoId}
+`;
+
   const resp = await ai.models.generateContent({
     model: "gemini-2.0-flash-lite",
     contents: [
       {
         parts: [
           { text: prompt },
-          { inlineData: { mimeType: "image/jpeg", data: uploaded.videoId } }
-        ]
-      }
-    ]
+          { inlineData: { mimeType: "image/jpeg", data: uploaded.videoId } },
+        ],
+      },
+    ],
   });
   return resp.text ?? "改善案を生成できませんでした。";
 }
 
-export async function POST(req: NextRequest) {
-    try {
-        const { selectedVideos, virtualUsers } = await req.json();
-        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-        console.log(selectedVideos, virtualUsers,ai)
-      
-      return NextResponse.json({
-        // voteReasons,             // それぞれのVirtualUserがその動画に投票した理由をvoteReasonに入れるためのテキスト(idと紐つけて返す)
-        // voteResults,             // それぞれの動画の投票数(videoIdと紐つけて返す)
-        // topVideoAnalysis,        // 投票率1位の動画の分析テキスト
-        // uploadedVideoAnalysis,   // ユーザーがアップロードした動画(サムネイル、タイトル)の改善案提示
-      });
-    } catch (error) {
-        console.error("AI投票に失敗しました",error)
+export async function POST(req: NextRequest) {
+  try {
+    const { selectedVideos, virtualUsers } = await req.json();
+
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("GEMINI_API_KEY is not set.");
+      throw new Error("AI configuration is missing.");
     }
+
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+    const { userVotes } = await decideVotesAndReasonsWithImage(
+      ai,
+      selectedVideos,
+      virtualUsers,
+    );
+    const voteReasons = userVotes;
+
+    const { voteResults } = aggregateResults(
+      selectedVideos,
+      userVotes,
+    );
+
+    const topVideoAnalysis = await analyzeTopVideo(ai, voteResults, userVotes, selectedVideos);
+
+    const uploadedVideo = selectedVideos[0];
+    const uploadedVideoAnalysis = await generateUploadedVideoAnalysis(
+      ai,
+      uploadedVideo,
+    );
+    return NextResponse.json({
+      voteReasons,
+      voteResults,
+      topVideoAnalysis,
+      uploadedVideoAnalysis,
+    });
+  } catch (error) {
+    console.error("AI投票に失敗しました", error);
+    return NextResponse.json(
+      {
+        error: "AI voting process failed.",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 },
+    );
+  }
 }
