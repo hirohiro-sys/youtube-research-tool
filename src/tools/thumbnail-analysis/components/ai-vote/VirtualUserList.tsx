@@ -1,4 +1,4 @@
-import { VirtualUser } from "../../hooks/useAiVote";
+import { VirtualUser } from "../../types/aiVote";
 
 type VirtualUserListProps = {
   targetUserRules: string;

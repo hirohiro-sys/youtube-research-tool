@@ -1,7 +1,7 @@
-import { VirtualUser } from "@/src/tools/thumbnail-analysis/hooks/useAiVote";
 import {
   selectedVideo,
   userVotes,
+  VirtualUser,
 } from "@/src/tools/thumbnail-analysis/types/aiVote";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
@@ -9,10 +9,15 @@ import { NextRequest, NextResponse } from "next/server";
 // サムネイル情報をgeminiに渡せる形式に変換する関数
 async function fetchThumbnailBase64(
   video: selectedVideo,
-  selectedVideos: selectedVideo[],
 ): Promise<string> {
-  // selectedVideosの最初の動画はアップロードされた動画なので、videoIdがすでにgeminiに渡せる形式になっている
-  if (video.videoId === selectedVideos[0].videoId) return video.videoId;
+
+  // サーバーではblobを扱えないのでフロント側で変換する必要がありそう
+  if (video.videoId.startsWith("blob:")) {
+    const resp = await fetch(video.videoId);
+    const buffer = await resp.arrayBuffer();
+    const data = Buffer.from(buffer).toString("base64");
+    return data;
+  }  
   const url = `https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`;
   const resp = await fetch(url);
   const buffer = await resp.arrayBuffer();
@@ -33,7 +38,7 @@ async function decideVotesAndReasonsWithImage(
       selectedVideos.map(async (v) => ({
         videoId: v.videoId,
         title: v.title,
-        imageBase64: await fetchThumbnailBase64(v, selectedVideos),
+        imageBase64: await fetchThumbnailBase64(v),
       })),
     );
 
@@ -131,7 +136,7 @@ async function analyzeTopVideo(
   ).videoId;
   const topVideo = videos.find((v) => v.videoId === topVideoId)!;
 
-  const imageBase64 = await fetchThumbnailBase64(topVideo, videos);
+  const imageBase64 = await fetchThumbnailBase64(topVideo);
 
   const reasonsForTop = userVotes
     .filter((v) => v.videoId === topVideo.videoId)

@@ -17,3 +17,13 @@ export type userVotes = {
     title: string
     reason: string;
 }
+
+// 仮想ユーザーの型定義
+export type VirtualUser = {
+    id: number;
+    name: string;
+    age: number;
+    interest: string[];
+    overview: string;
+    voteReason?: string
+}

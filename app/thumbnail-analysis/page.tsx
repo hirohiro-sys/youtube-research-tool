@@ -42,7 +42,8 @@ export default function Page() {
     virtualUsers,
     handleSelectVideos,
     selectedVideos,
-    syncUploadedVideoTitle
+    syncUploadedVideoTitle,
+    aiVote
   } = useAiVote(files, title);
   return (
     <>
@@ -102,6 +103,7 @@ export default function Page() {
               virtualUsers={virtualUsers}
               handleSelectVideos={handleSelectVideos}
               selectedVideos={selectedVideos}
+              aiVote={aiVote}
               />
 
               <ChannelVideos

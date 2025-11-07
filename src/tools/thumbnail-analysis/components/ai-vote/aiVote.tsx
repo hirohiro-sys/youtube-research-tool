@@ -1,6 +1,5 @@
-import { VirtualUser } from "../../hooks/useAiVote";
 import { VideoView } from "../../hooks/useVideoSearch";
-import { selectedVideo } from "../../types/aiVote";
+import { selectedVideo, VirtualUser } from "../../types/aiVote";
 import { VirtualUserList } from "./VirtualUserList";
 import { VoteTargetVideos } from "./voteTargetVideos";
 
@@ -13,6 +12,7 @@ type AiVoteProps = {
   virtualUsers: VirtualUser[];
   handleSelectVideos: (video: VideoView) => void;
   selectedVideos: selectedVideo[];
+  aiVote: () => Promise<void>
 };
 
 export const AiVote = ({
@@ -24,6 +24,7 @@ export const AiVote = ({
   virtualUsers,
   handleSelectVideos,
   selectedVideos,
+  aiVote
 }: AiVoteProps) => {
   return (
     <>
@@ -45,6 +46,7 @@ export const AiVote = ({
           virtualUsers={virtualUsers}
         />
       )}
+      <button className="btn btn-link" onClick={aiVote}>AI投票テスト</button>
     </>
   );
 };

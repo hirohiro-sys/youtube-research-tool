@@ -1,23 +1,13 @@
 import { useEffect, useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
 import { VideoView } from "./useVideoSearch";
-
-export type VirtualUser = {
-    id: number;
-    name: string;
-    age: number;
-    interest: string[];
-    overview: string;
-    voteReason?: string
-}
+import { VirtualUser } from "../types/aiVote";
 
 export const useAiVote = (files: PreviewFile[],title: string) => {
     const [targetUserRules, setTargetUserRules] = useState("");
     const [virtualUsers,setVirtualUsers] = useState<VirtualUser[]>([]);
     const [selectedVideos,setSelectedVideos] = useState<{videoId: string,title: string,voteCount?: number}[]>([])
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [topVideoAnalysis, setTopVideoAnalysis] = useState("");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [uploadedVideosFeedback, setUploadedVideosFeedback] = useState("")
 
     const syncUploadedVideoTitle = (newTitle: string) => {
@@ -73,7 +63,6 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
 
     const aiVote = async () => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const res = await fetch("/api/ai-vote",{
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -83,12 +72,31 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
           }),
         })
 
-        // const data = await res.json();
-        // ペルソナごと投票理由を追記
-        // ビデオごとの投票数を追記
-        // 1位の動画の分析を追記
-        // アップロードした動画に対するフィードバックを追記
+        if (!res.ok) {
+          console.error("AI投票APIからエラーが返されました");
+          return;
+        }
+        const data = await res.json();
+        setVirtualUsers(prevUsers =>
+          prevUsers.map(user => {
+            const vote = data.voteReasons.find((v: { userId: number }) => v.userId === user.id);
+            return vote ? { ...user, voteReason: vote.reason } : user;
+          })
+        )
+        setSelectedVideos(prevVideos =>
+          prevVideos.map(video => {
+            const voteCount = data.voteResults.find((v: { videoId: string }) => v.videoId === video.videoId)?.votes || 0;
+            return { ...video, voteCount };
+          })
+        );
+        setTopVideoAnalysis(data.topVideoAnalysis);
+        setUploadedVideosFeedback(data.uploadedVideoAnalysis);
 
+        // ログで確認できたらUI表示
+        console.log("仮想ユーザーの投票理由: ",data.voteReasons);
+        console.log("投票結果: ",data.voteResults);
+        console.log("投票数トップの動画分析: ",data.topVideoAnalysis);
+        console.log("アップロード動画へのフィードバック: ",data.uploadedVideoAnalysis);
       } catch (error) {
         console.error("AI投票に失敗しました",error)
       }
@@ -103,6 +111,8 @@ export const useAiVote = (files: PreviewFile[],title: string) => {
         handleSelectVideos,
         selectedVideos,
         aiVote,
-        syncUploadedVideoTitle
+        syncUploadedVideoTitle,
+        topVideoAnalysis,
+        uploadedVideosFeedback
     }
 }
