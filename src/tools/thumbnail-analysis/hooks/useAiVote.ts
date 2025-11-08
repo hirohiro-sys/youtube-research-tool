@@ -1,118 +1,147 @@
 import { useEffect, useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
 import { VideoView } from "./useVideoSearch";
-import { VirtualUser } from "../types/aiVote";
+import { selectedVideo, VirtualUser } from "../types/aiVote";
 
-export const useAiVote = (files: PreviewFile[],title: string) => {
-    const [targetUserRules, setTargetUserRules] = useState("");
-    const [virtualUsers,setVirtualUsers] = useState<VirtualUser[]>([]);
-    const [selectedVideos,setSelectedVideos] = useState<{videoId: string,title: string,voteCount?: number}[]>([])
-    const [topVideoAnalysis, setTopVideoAnalysis] = useState("");
-    const [uploadedVideosFeedback, setUploadedVideosFeedback] = useState("")
+export const useAiVote = (files: PreviewFile[], title: string) => {
+  const [targetUserRules, setTargetUserRules] = useState("");
+  const [virtualUsers, setVirtualUsers] = useState<VirtualUser[]>([]);
+  const [selectedVideos, setSelectedVideos] = useState<selectedVideo[]>([]);
+  const [topVideoAnalysis, setTopVideoAnalysis] = useState("");
+  const [uploadedVideosFeedback, setUploadedVideosFeedback] = useState("");
 
-    const syncUploadedVideoTitle = (newTitle: string) => {
-      setSelectedVideos((prev) =>
-        prev.map((v, i) => (i === 0 ? { ...v, title: newTitle } : v))
-      );
-    };
+  const syncUploadedVideoTitle = (newTitle: string) => {
+    setSelectedVideos((prev) =>
+      prev.map((v, i) => (i === 0 ? { ...v, title: newTitle } : v)),
+    );
+  };
 
-    useEffect(() => {
-      if (files.length === 0) return
-      setSelectedVideos([{videoId: files[0].preview,title}])
+  useEffect(() => {
+    if (files.length === 0) return;
+    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].preview }]);
     // タイトルをdepsに入れるとレンダリングの影響でいちいちビデオの選択状態が解除されるのでスルーしている
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[files])
+  }, [files]);
 
-    const handleSelectVideos = (video: VideoView) => {
-        const isAlreadySelected = selectedVideos.some(
-          (v) => v.videoId === video.videoId
-        );
-        if (isAlreadySelected) {
-          setSelectedVideos((prev) =>
-            prev.filter((v) => v.videoId !== video.videoId)
-          );
-        } else if (selectedVideos.length < 5) {
-          setSelectedVideos((prev) => [
-            ...prev,
-            { videoId: video.videoId, title: video.title },
-          ]);
-        }
-      };
-    
-    const generateVirtualUsers = async () => {
-
-        try {
-            const res = await fetch("/api/virtual-users", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    targetUserRules,
-                }),
-            });
-            const data = await res.json();
-
-            if (!res.ok) {
-                return;
-            }
-
-            setVirtualUsers(data.virtualUsers);
-        } catch (error) {
-            console.error("仮想ユーザーの生成に失敗しました", error);
-        } 
+  const handleSelectVideos = (video: VideoView) => {
+    const isAlreadySelected = selectedVideos.some(
+      (v) => v.videoId === video.videoId,
+    );
+    if (isAlreadySelected) {
+      setSelectedVideos((prev) =>
+        prev.filter((v) => v.videoId !== video.videoId),
+      );
+    } else if (selectedVideos.length < 5) {
+      setSelectedVideos((prev) => [
+        ...prev,
+        { videoId: video.videoId, title: video.title, thumbnailInfo: `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg` || "" },
+      ]);
     }
+  };
 
-    const aiVote = async () => {
-      try {
-        const res = await fetch("/api/ai-vote",{
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            selectedVideos,
-            virtualUsers,
-          }),
-        })
+  const generateVirtualUsers = async () => {
+    try {
+      const res = await fetch("/api/virtual-users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          targetUserRules,
+        }),
+      });
+      const data = await res.json();
 
-        if (!res.ok) {
-          console.error("AI投票APIからエラーが返されました");
-          return;
-        }
-        const data = await res.json();
-        setVirtualUsers(prevUsers =>
-          prevUsers.map(user => {
-            const vote = data.voteReasons.find((v: { userId: number }) => v.userId === user.id);
-            return vote ? { ...user, voteReason: vote.reason } : user;
-          })
-        )
-        setSelectedVideos(prevVideos =>
-          prevVideos.map(video => {
-            const voteCount = data.voteResults.find((v: { videoId: string }) => v.videoId === video.videoId)?.votes || 0;
-            return { ...video, voteCount };
-          })
-        );
-        setTopVideoAnalysis(data.topVideoAnalysis);
-        setUploadedVideosFeedback(data.uploadedVideoAnalysis);
-
-        // ログで確認できたらUI表示
-        console.log("仮想ユーザーの投票理由: ",data.voteReasons);
-        console.log("投票結果: ",data.voteResults);
-        console.log("投票数トップの動画分析: ",data.topVideoAnalysis);
-        console.log("アップロード動画へのフィードバック: ",data.uploadedVideoAnalysis);
-      } catch (error) {
-        console.error("AI投票に失敗しました",error)
+      if (!res.ok) {
+        return;
       }
-    }
 
-
-    return {
-        targetUserRules,
-        setTargetUserRules,
-        generateVirtualUsers,
-        virtualUsers,
-        handleSelectVideos,
-        selectedVideos,
-        aiVote,
-        syncUploadedVideoTitle,
-        topVideoAnalysis,
-        uploadedVideosFeedback
+      setVirtualUsers(data.virtualUsers);
+    } catch (error) {
+      console.error("仮想ユーザーの生成に失敗しました", error);
     }
-}
+  };
+
+  // サムネイル情報をgeminiに渡せる形式に変換する関数(クライアント側では動かない箇所があるかも？)
+  async function fetchThumbnailBase64(video: selectedVideo): Promise<string> {
+    if (video.thumbnailInfo.startsWith("blob:")) {
+      const resp = await fetch(video.thumbnailInfo);
+      const buffer = await resp.arrayBuffer();
+      return Buffer.from(buffer).toString("base64");
+    }
+  
+    const resp = await fetch(video.thumbnailInfo);
+    const buffer = await resp.arrayBuffer();
+    return Buffer.from(buffer).toString("base64");
+  }
+  
+
+  const aiVote = async () => {
+    try {
+      const videosWithBase64 = await Promise.all(
+        selectedVideos.map(async (video) => {
+          const thumbnailBase64 = await fetchThumbnailBase64(video);
+          return {
+            ...video,
+            thumbnailInfo: thumbnailBase64,
+          };
+        })
+      );
+      const res = await fetch("/api/ai-vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          selectedVideos: videosWithBase64,
+          virtualUsers,
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("AI投票APIからエラーが返されました");
+        return;
+      }
+      const data = await res.json();
+      setVirtualUsers((prevUsers) =>
+        prevUsers.map((user) => {
+          const vote = data.voteReasons.find(
+            (v: { userId: number }) => v.userId === user.id,
+          );
+          return vote ? { ...user, voteReason: vote.reason } : user;
+        }),
+      );
+      setSelectedVideos((prevVideos) =>
+        prevVideos.map((video) => {
+          const voteCount =
+            data.voteResults.find(
+              (v: { videoId: string }) => v.videoId === video.videoId,
+            )?.votes || 0;
+          return { ...video, voteCount };
+        }),
+      );
+      setTopVideoAnalysis(data.topVideoAnalysis);
+      setUploadedVideosFeedback(data.uploadedVideoAnalysis);
+
+      // ログで確認できたらUI表示
+      console.log("仮想ユーザーの投票理由: ", data.voteReasons);
+      console.log("投票結果: ", data.voteResults);
+      console.log("投票数トップの動画分析: ", data.topVideoAnalysis);
+      console.log(
+        "アップロード動画へのフィードバック: ",
+        data.uploadedVideoAnalysis,
+      );
+    } catch (error) {
+      console.error("AI投票に失敗しました", error);
+    }
+  };
+
+  return {
+    targetUserRules,
+    setTargetUserRules,
+    generateVirtualUsers,
+    virtualUsers,
+    handleSelectVideos,
+    selectedVideos,
+    aiVote,
+    syncUploadedVideoTitle,
+    topVideoAnalysis,
+    uploadedVideosFeedback,
+  };
+};

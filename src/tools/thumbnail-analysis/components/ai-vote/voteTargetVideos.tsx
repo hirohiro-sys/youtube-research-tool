@@ -14,26 +14,31 @@ export const VoteTargetVideos = ({
   handleSelectVideos,
   selectedVideos,
 }: VoteTargetVideosProps) => {
+  console.log("これ", selectedVideos);
   return (
     <div className="grid grid-cols-5 gap-2">
       {videos.map((video, index) => {
         const isSelected = selectedVideos.some(
           (v) => v.videoId === video.videoId
         );
-        const isDisabled = index === 0;
+        const isDisabled = video.videoId === "demo-video";
         return (
           <div
             key={video.videoId}
             className={`p-2 ${
-              index === 0 ? "outline-2 outline-green-500 rounded-lg" : ""
-            } ${isSelected ? "outline-2 outline-red-500 rounded-lg" : ""}`}
+              video.videoId === "demo-video"
+                ? "outline-2 outline-green-500 rounded-lg"
+                : isSelected
+                  ? "outline-2 outline-red-500 rounded-lg"
+                  : ""
+            }`}
             onClick={!isDisabled ? () => handleSelectVideos(video) : undefined}
           >
             <Image
               src={
                 (index === 0
                   ? videos[0].thumbnail
-                  : `https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`) ??
+                  : `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`) ??
                 "サムネイルの取得に失敗しました。"
               }
               width={320}
@@ -41,7 +46,8 @@ export const VoteTargetVideos = ({
               alt={video.title || "動画サムネイル"}
             />
             <p className="text-xs">
-              {(index === 0 ? title : video.title) || "タイトルを入力"}
+              {(video.videoId === "demo-video" ? title : video.title) ||
+                "タイトルを入力"}
             </p>
           </div>
         );

@@ -7,6 +7,7 @@ AI投票に関する型定義ファイル
 export type selectedVideo = {
     videoId: string;
     title: string;
+    thumbnailInfo: string;
     voteCount?: number;
 };
 
