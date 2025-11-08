@@ -23,6 +23,10 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
+  const initializeSelectedVideos = () => {
+    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].preview }]);
+  }
+
   const handleSelectVideos = (video: VideoView) => {
     const isAlreadySelected = selectedVideos.some(
       (v) => v.videoId === video.videoId,
@@ -143,5 +147,6 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     syncUploadedVideoTitle,
     topVideoAnalysis,
     uploadedVideosFeedback,
+    initializeSelectedVideos
   };
 };

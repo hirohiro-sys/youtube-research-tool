@@ -35,7 +35,6 @@ export async function POST(req: NextRequest) {
                 data: base64ImageData,
               },
             },
-            // プロンプトは関数で切り分けた方が見やすいかも(prompt = getAiAnalysisPrompt(title, ...)的な)
             {
               text: `
     # 命令
