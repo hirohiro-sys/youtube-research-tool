@@ -27,40 +27,45 @@ async function decideVotesAndReasonsWithImage(
 ): Promise<{ userVotes: userVotes[] }> {
   const userVotes: userVotes[] = [];
 
-  for (const user of users) {
-    const videoImages = await Promise.all(
-      selectedVideos.map(async (v) => ({
-        videoId: v.videoId,
-        title: v.title,
-        imageBase64: await fetchThumbnailBase64(v),
-      })),
-    );
+  const videoImages = await Promise.all(
+    selectedVideos.map(async (v) => ({
+      videoId: v.videoId,
+      title: v.title,
+      imageBase64: await fetchThumbnailBase64(v),
+    })),
+  );
 
-    const textPrompt = `
+  for (const user of users) {
+const contents = [
+  {
+    role: "user",
+    parts: [
+      {
+        text: `
 あなたは仮想ユーザー「${user.name}（年齢 ${user.age}）」です。
 プロフィール: ${user.overview}
 興味・関心: ${user.interest.join("、")}
 
-与えられた動画候補（タイトルとサムネイル画像）を見て、最も自分に合うと思う動画を1つ選び、
-選んだ理由を簡潔に日本語で説明してください。
-
-出力形式:
+次の動画候補（タイトルとサムネイル画像）を見て、最も自分に合うと思う動画を1つ選び、
+選んだ理由を簡潔に日本語で説明してください。なぜそのサムネイルをクリックしたのかも言及してください。
+【出力形式】(JSON形式のみで回答してください)
 {
   "videoId": "<選んだvideoId>",
   "reason": "<理由>"
 }
-`;
-    const contents = [
-      {
-        role: "user",
-        parts: [
-          { text: textPrompt },
-          ...videoImages.map((v) => ({
-            inlineData: { mimeType: "image/jpeg", data: v.imageBase64 },
-          })),
-        ],
+`,
       },
-    ];
+      ...videoImages.flatMap((v, index) => [
+        {
+          text: `動画 ${index + 1}:\n- videoId: ${v.videoId}\n- title: ${v.title}`,
+        },
+        {
+          inlineData: { mimeType: "image/jpeg", data: v.imageBase64 },
+        },
+      ]),
+    ],
+  },
+];
 
     const resp = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
@@ -73,7 +78,6 @@ async function decideVotesAndReasonsWithImage(
     try {
       const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
       parsed = JSON.parse(cleaned);
-      console.log("parsed.videoId:", parsed.videoId);
     } catch (err) {
       console.log("投票理由の生成に失敗しました",err)
       parsed = {
