@@ -18,13 +18,13 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
 
   useEffect(() => {
     if (files.length === 0) return;
-    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].preview }]);
+    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].base64 }]);
     // タイトルをdepsに入れるとレンダリングの影響でいちいちビデオの選択状態が解除されるのでスルーしている
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
   const initializeSelectedVideos = () => {
-    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].preview }]);
+    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].base64 }]);
   }
 
   const handleSelectVideos = (video: VideoView) => {
@@ -64,36 +64,13 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     }
   };
 
-  // サムネイル情報をgeminiに渡せる形式に変換する関数(クライアント側では動かない箇所があるかも？)
-  async function fetchThumbnailBase64(video: selectedVideo): Promise<string> {
-    if (video.thumbnailInfo.startsWith("blob:")) {
-      const resp = await fetch(video.thumbnailInfo);
-      const buffer = await resp.arrayBuffer();
-      return Buffer.from(buffer).toString("base64");
-    }
-  
-    const resp = await fetch(video.thumbnailInfo);
-    const buffer = await resp.arrayBuffer();
-    return Buffer.from(buffer).toString("base64");
-  }
-  
-
   const aiVote = async () => {
     try {
-      const videosWithBase64 = await Promise.all(
-        selectedVideos.map(async (video) => {
-          const thumbnailBase64 = await fetchThumbnailBase64(video);
-          return {
-            ...video,
-            thumbnailInfo: thumbnailBase64,
-          };
-        })
-      );
       const res = await fetch("/api/ai-vote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          selectedVideos: videosWithBase64,
+          selectedVideos,
           virtualUsers,
         }),
       });

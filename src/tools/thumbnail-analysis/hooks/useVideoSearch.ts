@@ -41,7 +41,7 @@ export const useVideoSearch = (files: PreviewFile[]) => {
           viewCount: 100,
           daysAgo: 1,
           duration: "5:30",
-          thumbnail: files[0]?.preview,
+          thumbnail: files[0]?.base64,
         };
     
         if (searchType === "keyword") {

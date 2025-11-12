@@ -3,6 +3,15 @@ import { PreviewFile } from "../types/fileTypes";
 import { useDropzone } from "react-dropzone";
 
 
+async function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
 const baseStyle: React.CSSProperties = {
     flex: 1,
     display: "flex",
@@ -42,14 +51,16 @@ export const useFileUpload = () => {
           "image/jpeg": [".jpeg", ".jpg"],
           "image/png": [".png"],
         },
-        onDrop: (acceptedFiles) => {
-          setFiles(
-            acceptedFiles.map((file) =>
-              Object.assign(file, {
-                preview: URL.createObjectURL(file),
-              })
-            )
-          );
+        onDrop: async (acceptedFiles) => {
+          const filePromises = acceptedFiles.map(async (file) => {
+            const base64 = await fileToBase64(file);
+            return Object.assign(file, {
+              preview: URL.createObjectURL(file), // これはもういらんかも
+              base64,
+            });
+          });
+          const withBase64 = await Promise.all(filePromises);
+          setFiles(withBase64);
         },
         maxFiles: 1,
         disabled: files.length > 0, 

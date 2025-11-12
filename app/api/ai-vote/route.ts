@@ -6,6 +6,19 @@ import {
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
+ // サムネイル情報をgeminiに渡せる形式に変換する関数
+async function fetchThumbnailBase64(video: selectedVideo): Promise<string> {
+  if (video.videoId==="demo-video") {
+      // "data:image/jpeg;base64," のようなプレフィックスを取り除いてgeminiに渡せる形式に変換
+      const commaIndex = video.thumbnailInfo.indexOf(',');
+      return video.thumbnailInfo.substring(commaIndex + 1);
+  };
+
+  const resp = await fetch(video.thumbnailInfo);
+  const buffer = await resp.arrayBuffer();
+  return Buffer.from(buffer).toString("base64");
+}
+
 // 仮想ユーザーごとに投票とその理由を生成する関数
 async function decideVotesAndReasonsWithImage(
   ai: GoogleGenAI,
@@ -19,7 +32,7 @@ async function decideVotesAndReasonsWithImage(
       selectedVideos.map(async (v) => ({
         videoId: v.videoId,
         title: v.title,
-        imageBase64: v.thumbnailInfo,
+        imageBase64: await fetchThumbnailBase64(v),
       })),
     );
 
@@ -58,8 +71,11 @@ async function decideVotesAndReasonsWithImage(
     let parsed: { videoId: string; reason: string };
 
     try {
-      parsed = JSON.parse(text);
-    } catch {
+      const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      parsed = JSON.parse(cleaned);
+      console.log("parsed.videoId:", parsed.videoId);
+    } catch (err) {
+      console.log("投票理由の生成に失敗しました",err)
       parsed = {
         videoId: selectedVideos[0].videoId,
         reason: "分析に失敗しました。",
@@ -117,7 +133,7 @@ async function analyzeTopVideo(
   ).videoId;
   const topVideo = videos.find((v) => v.videoId === topVideoId)!;
 
-  const imageBase64 = topVideo.thumbnailInfo;
+  const imageBase64 = await fetchThumbnailBase64(topVideo);
 
   const reasonsForTop = userVotes
     .filter((v) => v.videoId === topVideo.videoId)
@@ -170,13 +186,14 @@ async function generateUploadedVideoAnalysis(
 サムネイル画像（base64形式）: ${uploaded.videoId}
 `;
 
+  const imageBase64 = await fetchThumbnailBase64(uploaded);
   const resp = await ai.models.generateContent({
     model: "gemini-2.0-flash-lite",
     contents: [
       {
         parts: [
           { text: prompt },
-          { inlineData: { mimeType: "image/jpeg", data: uploaded.thumbnailInfo } },
+          { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
         ],
       },
     ],
