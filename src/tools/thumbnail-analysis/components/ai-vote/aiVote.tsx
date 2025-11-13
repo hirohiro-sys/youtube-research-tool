@@ -1,4 +1,4 @@
-import { RotateCw } from "lucide-react";
+import { Bot, RotateCw } from "lucide-react";
 import { VideoView } from "../../hooks/useVideoSearch";
 import { selectedVideo, VirtualUser } from "../../types/aiVote";
 import { VirtualUserList } from "./VirtualUserList";
@@ -56,8 +56,13 @@ export const AiVote = ({
           virtualUsers={virtualUsers}
         />
       )}
-      <button className="btn btn-link" onClick={aiVote}>
-        AI投票テスト
+      <button
+        className="btn btn-outline btn-primary mt-8"
+        onClick={aiVote}
+        disabled={selectedVideos.length === 0 || virtualUsers.length === 0 || !title}
+      >
+        <Bot />
+        AI投票を開始する
       </button>
     </>
   );

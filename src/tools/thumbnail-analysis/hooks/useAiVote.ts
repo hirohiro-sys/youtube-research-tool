@@ -100,14 +100,6 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
       setTopVideoAnalysis(data.topVideoAnalysis);
       setUploadedVideosFeedback(data.uploadedVideoAnalysis);
 
-      // ログで確認できたらUI表示
-      console.log("仮想ユーザーの投票理由: ", data.voteReasons);
-      console.log("投票結果: ", data.voteResults);
-      console.log("投票数トップの動画分析: ", data.topVideoAnalysis);
-      console.log(
-        "アップロード動画へのフィードバック: ",
-        data.uploadedVideoAnalysis,
-      );
     } catch (error) {
       console.error("AI投票に失敗しました", error);
     }

@@ -1,3 +1,4 @@
+import { CircleUserRound } from "lucide-react";
 import { VirtualUser } from "../../types/aiVote";
 
 type VirtualUserListProps = {
@@ -40,11 +41,17 @@ export const VirtualUserList = ({
         {virtualUsers.map((user) => (
           <div key={user.id} className="card bg-base-100 shadow-md">
             <div className="card-body">
-              <h2 className="card-title">
+              <h2 className="card-title whitespace-nowrap">
+                <CircleUserRound />
                 {user.name}({user.age}歳)
               </h2>
               <p className="text-xs">{user.overview}</p>
               <p className="text-xs">興味: {user.interest}</p>
+              {user.voteReason && (
+                <p className="text-xs text-blue-500">
+                  投票理由: {user.voteReason}
+                </p>
+              )}
             </div>
           </div>
         ))}

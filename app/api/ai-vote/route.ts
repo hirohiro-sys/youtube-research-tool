@@ -55,11 +55,12 @@ const contents = [
 
 次の動画候補（タイトルとサムネイル画像）を見て、最も自分に合うと思う動画を1つ選び、
 選んだ理由を簡潔に日本語で説明してください。なぜそのサムネイルをクリックしたのかも言及してください。
-【出力形式】(必ずダブルクオート付きのJSON形式のみで出力してください。)
+【出力形式】(必ず正しいJSONを出力してください。以下の形式に厳密に従ってください)
 {
   "videoId": "<選んだvideoId>",
   "reason": "<理由>"
 }
+JSON以外の出力は一切含めないでください。
 `,
       },
       ...videoImages.flatMap((v, index) => [
@@ -84,9 +85,15 @@ const contents = [
 
     try {
       const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      if (!cleaned.startsWith("{") && !cleaned.startsWith("[")) {
+        throw new Error("JSON形式ではありません");
+      }
+
       parsed = JSON.parse(cleaned);
     } catch (err) {
       console.log("投票理由の生成に失敗しました",err)
+      console.log("元の出力:", text);
       parsed = {
         videoId: selectedVideos[0].videoId,
         reason: "分析に失敗しました。",
