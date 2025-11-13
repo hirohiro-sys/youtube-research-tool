@@ -7,16 +7,19 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
  // サムネイル情報をgeminiに渡せる形式に変換する関数
-async function fetchThumbnailBase64(video: selectedVideo): Promise<string> {
-  if (video.videoId==="demo-video") {
-      // "data:image/jpeg;base64," のようなプレフィックスを取り除いてgeminiに渡せる形式に変換
-      const commaIndex = video.thumbnailInfo.indexOf(',');
-      return video.thumbnailInfo.substring(commaIndex + 1);
-  };
+async function fetchThumbnailBase64(
+  video: selectedVideo,
+): Promise<{ mimeType: string; base64: string }> {
+  if (video.videoId === "demo-video") {
+    const match = video.thumbnailInfo.match(/^data:(image\/[a-zA-Z+]+);base64,/);
+    const mimeType = match ? match[1] : "image/jpeg";
+    const base64 = video.thumbnailInfo.split(",")[1];
+    return { mimeType, base64 };
+  }
 
   const resp = await fetch(video.thumbnailInfo);
   const buffer = await resp.arrayBuffer();
-  return Buffer.from(buffer).toString("base64");
+  return { mimeType: "image/jpeg", base64: Buffer.from(buffer).toString("base64") };
 }
 
 // 仮想ユーザーごとに投票とその理由を生成する関数
@@ -26,13 +29,17 @@ async function decideVotesAndReasonsWithImage(
   users: VirtualUser[],
 ): Promise<{ userVotes: userVotes[] }> {
   const userVotes: userVotes[] = [];
-
+  
   const videoImages = await Promise.all(
-    selectedVideos.map(async (v) => ({
-      videoId: v.videoId,
-      title: v.title,
-      imageBase64: await fetchThumbnailBase64(v),
-    })),
+    selectedVideos.map(async (v) => {
+      const { mimeType, base64 } = await fetchThumbnailBase64(v);
+      return {
+        videoId: v.videoId,
+        title: v.title,
+        mimeType,
+        imageBase64: base64,
+      };
+    }),
   );
 
   for (const user of users) {
@@ -48,7 +55,7 @@ const contents = [
 
 次の動画候補（タイトルとサムネイル画像）を見て、最も自分に合うと思う動画を1つ選び、
 選んだ理由を簡潔に日本語で説明してください。なぜそのサムネイルをクリックしたのかも言及してください。
-【出力形式】(JSON形式のみで回答してください)
+【出力形式】(必ずダブルクオート付きのJSON形式のみで出力してください。)
 {
   "videoId": "<選んだvideoId>",
   "reason": "<理由>"
@@ -60,7 +67,7 @@ const contents = [
           text: `動画 ${index + 1}:\n- videoId: ${v.videoId}\n- title: ${v.title}`,
         },
         {
-          inlineData: { mimeType: "image/jpeg", data: v.imageBase64 },
+          inlineData: { mimeType: v.mimeType, data: v.imageBase64 },
         },
       ]),
     ],
@@ -137,7 +144,7 @@ async function analyzeTopVideo(
   ).videoId;
   const topVideo = videos.find((v) => v.videoId === topVideoId)!;
 
-  const imageBase64 = await fetchThumbnailBase64(topVideo);
+  const image = await fetchThumbnailBase64(topVideo);
 
   const reasonsForTop = userVotes
     .filter((v) => v.videoId === topVideo.videoId)
@@ -166,8 +173,8 @@ ${reasonsForTop || "（この動画への投票理由はありません）"}
           { text: prompt },
           {
             inlineData: {
-              mimeType: "image/jpeg",
-              data: imageBase64,
+              mimeType: image.mimeType,
+              data: image.base64,
             },
           },
         ],
@@ -190,14 +197,14 @@ async function generateUploadedVideoAnalysis(
 サムネイル画像（base64形式）: ${uploaded.videoId}
 `;
 
-  const imageBase64 = await fetchThumbnailBase64(uploaded);
-  const resp = await ai.models.generateContent({
+const image = await fetchThumbnailBase64(uploaded);
+const resp = await ai.models.generateContent({
     model: "gemini-2.0-flash-lite",
     contents: [
       {
         parts: [
           { text: prompt },
-          { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
+          { inlineData: { mimeType: image.mimeType, data: image.base64 } },
         ],
       },
     ],
