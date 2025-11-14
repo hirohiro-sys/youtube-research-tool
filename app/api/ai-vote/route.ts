@@ -84,7 +84,7 @@ JSON以外の出力は一切含めないでください。
     let parsed: { videoId: string; reason: string };
 
     try {
-      const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim().replace(/,\s*}/g, "}");;
 
       if (!cleaned.startsWith("{") && !cleaned.startsWith("[")) {
         throw new Error("JSON形式ではありません");

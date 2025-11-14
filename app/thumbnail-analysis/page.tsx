@@ -44,7 +44,9 @@ export default function Page() {
     selectedVideos,
     syncUploadedVideoTitle,
     aiVote,
-    initializeSelectedVideos
+    initializeSelectedVideos,
+    topVideoAnalysis,
+    uploadedVideosFeedback,
   } = useAiVote(files, title);
   return (
     <>
@@ -95,17 +97,19 @@ export default function Page() {
                 title={title}
               /> */}
 
-              <AiVote 
-              videos={videos} 
-              title={title}  
-              targetUserRules={targetUserRules}
-              setTargetUserRules={setTargetUserRules}
-              generateVirtualUsers={generateVirtualUsers}
-              virtualUsers={virtualUsers}
-              handleSelectVideos={handleSelectVideos}
-              selectedVideos={selectedVideos}
-              aiVote={aiVote}
-              initializeSelectedVideos={initializeSelectedVideos}
+              <AiVote
+                videos={videos}
+                title={title}
+                targetUserRules={targetUserRules}
+                setTargetUserRules={setTargetUserRules}
+                generateVirtualUsers={generateVirtualUsers}
+                virtualUsers={virtualUsers}
+                handleSelectVideos={handleSelectVideos}
+                selectedVideos={selectedVideos}
+                aiVote={aiVote}
+                initializeSelectedVideos={initializeSelectedVideos}
+                topVideoAnalysis={topVideoAnalysis}
+                uploadedVideosFeedback={uploadedVideosFeedback}
               />
 
               <ChannelVideos

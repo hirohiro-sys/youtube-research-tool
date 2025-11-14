@@ -3,6 +3,7 @@ import { VideoView } from "../../hooks/useVideoSearch";
 import { selectedVideo, VirtualUser } from "../../types/aiVote";
 import { VirtualUserList } from "./VirtualUserList";
 import { VoteTargetVideos } from "./voteTargetVideos";
+import { VoteAnalysis } from "./voteAnalysis";
 
 type AiVoteProps = {
   videos: VideoView[];
@@ -15,6 +16,8 @@ type AiVoteProps = {
   selectedVideos: selectedVideo[];
   aiVote: () => Promise<void>;
   initializeSelectedVideos: () => void;
+  topVideoAnalysis: string;
+  uploadedVideosFeedback: string;
 };
 
 export const AiVote = ({
@@ -28,6 +31,8 @@ export const AiVote = ({
   selectedVideos,
   aiVote,
   initializeSelectedVideos,
+  topVideoAnalysis,
+  uploadedVideosFeedback,
 }: AiVoteProps) => {
   return (
     <>
@@ -57,13 +62,19 @@ export const AiVote = ({
         />
       )}
       <button
-        className="btn btn-outline btn-primary mt-8"
+        className="btn btn-outline btn-primary mt-4"
         onClick={aiVote}
-        disabled={selectedVideos.length === 0 || virtualUsers.length === 0 || !title}
+        disabled={
+          selectedVideos.length === 0 || virtualUsers.length === 0 || !title
+        }
       >
         <Bot />
         AI投票を開始する
       </button>
+      <VoteAnalysis
+        topVideoAnalysis={topVideoAnalysis}
+        uploadedVideosFeedback={uploadedVideosFeedback}
+      />
     </>
   );
 };
