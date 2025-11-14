@@ -20,7 +20,7 @@ export const VoteTargetVideos = ({
       <div className="grid grid-cols-5 gap-2">
         {videos.map((video, index) => {
           const isSelected = selectedVideos.some(
-            (v) => v.videoId === video.videoId
+            (v) => v.videoId === video.videoId,
           );
           const isDisabled = video.videoId === "demo-video";
           return (
@@ -63,11 +63,11 @@ export const VoteTargetVideos = ({
           <div className="grid grid-cols-5 gap-2">
             {videos
               .filter((video) =>
-                selectedVideos.some((sv) => sv.videoId === video.videoId)
+                selectedVideos.some((sv) => sv.videoId === video.videoId),
               )
               .map((video) => {
                 const selected = selectedVideos.find(
-                  (sv) => sv.videoId === video.videoId
+                  (sv) => sv.videoId === video.videoId,
                 );
                 const voteCount = selected?.voteCount ?? 0;
                 return (
@@ -90,9 +90,8 @@ export const VoteTargetVideos = ({
                       alt={video.title || "動画サムネイル"}
                     />
                     <p className="text-xs">
-                      {(video.videoId === "demo-video"
-                        ? title
-                        : video.title) || "タイトルを入力"}
+                      {(video.videoId === "demo-video" ? title : video.title) ||
+                        "タイトルを入力"}
                     </p>
                   </div>
                 );

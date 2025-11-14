@@ -5,11 +5,11 @@
 このプロジェクトは複数のツールで構成されており、現在は以下のツールが存在します。
 
 1. 需要分析ツール
-    - パス: app/demand-analysis
-    - 概要: Youtube上から需要のある動画を取得・AI分析できるツール
+   - パス: app/demand-analysis
+   - 概要: Youtube上から需要のある動画を取得・AI分析できるツール
 2. サムネイル分析ツール
-    - パス: app/thumbnail-analysis
-    - 概要: アップロードしたサムネイル画像をAI分析したり、Youtube上でどのように表示されるか確認できるツール
+   - パス: app/thumbnail-analysis
+   - 概要: アップロードしたサムネイル画像をAI分析したり、Youtube上でどのように表示されるか確認できるツール
 
 # フォルダ構成
 
@@ -38,7 +38,6 @@
 - **バックエンド**: Next.js（route hundlers）
 
 - **外部API**: Youtube Data API V3 / Gemini API
-
 
 # 開発ルール
 

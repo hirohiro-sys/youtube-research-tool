@@ -53,7 +53,7 @@ export default function Footer() {
                       {tool}
                     </motion.a>
                   </li>
-                )
+                ),
               )}
             </ul>
           </div>
@@ -74,7 +74,7 @@ export default function Footer() {
                       {item}
                     </motion.a>
                   </li>
-                )
+                ),
               )}
             </ul>
           </div>

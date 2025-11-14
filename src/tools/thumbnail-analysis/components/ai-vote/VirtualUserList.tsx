@@ -6,6 +6,7 @@ type VirtualUserListProps = {
   setTargetUserRules: (value: string) => void;
   generateVirtualUsers: () => Promise<void>;
   virtualUsers: VirtualUser[];
+  isGeneratingVirtualUsers: boolean;
 };
 
 export const VirtualUserList = ({
@@ -13,11 +14,12 @@ export const VirtualUserList = ({
   setTargetUserRules,
   generateVirtualUsers,
   virtualUsers,
+  isGeneratingVirtualUsers,
 }: VirtualUserListProps) => {
   return (
     <>
       <fieldset className="fieldset">
-        <legend className="fieldset-legend">想定ユーザー</legend>
+        <legend className="fieldset-legend text-lg">想定ユーザー</legend>
         <div className="flex items-end gap-2">
           <textarea
             className="textarea h-24"
@@ -27,10 +29,10 @@ export const VirtualUserList = ({
           ></textarea>
           <button
             className="btn"
-            disabled={!targetUserRules}
+            disabled={!targetUserRules || isGeneratingVirtualUsers}
             onClick={generateVirtualUsers}
           >
-            仮想ユーザーを生成
+            {isGeneratingVirtualUsers ? "生成中..." : "仮想ユーザーを生成"}
           </button>
         </div>
         <div className="label">

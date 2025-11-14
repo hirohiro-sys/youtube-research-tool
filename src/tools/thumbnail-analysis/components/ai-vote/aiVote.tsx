@@ -18,6 +18,8 @@ type AiVoteProps = {
   initializeSelectedVideos: () => void;
   topVideoAnalysis: string;
   uploadedVideosFeedback: string;
+  isGeneratingVirtualUsers: boolean;
+  isVoting: boolean;
 };
 
 export const AiVote = ({
@@ -33,6 +35,8 @@ export const AiVote = ({
   initializeSelectedVideos,
   topVideoAnalysis,
   uploadedVideosFeedback,
+  isGeneratingVirtualUsers,
+  isVoting,
 }: AiVoteProps) => {
   return (
     <>
@@ -59,21 +63,26 @@ export const AiVote = ({
           setTargetUserRules={setTargetUserRules}
           generateVirtualUsers={generateVirtualUsers}
           virtualUsers={virtualUsers}
+          isGeneratingVirtualUsers={isGeneratingVirtualUsers}
         />
       )}
       <button
         className="btn btn-outline btn-primary mt-4"
         onClick={aiVote}
         disabled={
-          selectedVideos.length === 0 || virtualUsers.length === 0 || !title
+          selectedVideos.length !== 5 ||
+          virtualUsers.length === 0 ||
+          !title ||
+          isVoting
         }
       >
         <Bot />
-        AI投票を開始する
+        {isVoting ? "投票中..." : "AI投票を開始する"}
       </button>
       <VoteAnalysis
         topVideoAnalysis={topVideoAnalysis}
         uploadedVideosFeedback={uploadedVideosFeedback}
+        isVoting={isVoting}
       />
     </>
   );

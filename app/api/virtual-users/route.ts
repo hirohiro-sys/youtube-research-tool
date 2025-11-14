@@ -32,9 +32,12 @@ export async function POST(req: Request) {
     });
 
     let jsonText = response.text!;
-    
-    jsonText = jsonText.replace(/```json/g, "").replace(/```/g, "").trim();
-    
+
+    jsonText = jsonText
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
     let virtualUsers;
     try {
       virtualUsers = JSON.parse(jsonText);
@@ -42,7 +45,7 @@ export async function POST(req: Request) {
       console.error("AI出力のJSONパースに失敗しました", e, response.text);
       return NextResponse.json(
         { error: "AIの出力がJSON形式ではありません" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -51,7 +54,7 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json(
       { error: "仮想ユーザーの生成に失敗しました" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

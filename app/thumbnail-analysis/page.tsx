@@ -47,6 +47,8 @@ export default function Page() {
     initializeSelectedVideos,
     topVideoAnalysis,
     uploadedVideosFeedback,
+    isGeneratingVirtualUsers,
+    isVoting,
   } = useAiVote(files, title);
   return (
     <>
@@ -110,6 +112,8 @@ export default function Page() {
                 initializeSelectedVideos={initializeSelectedVideos}
                 topVideoAnalysis={topVideoAnalysis}
                 uploadedVideosFeedback={uploadedVideosFeedback}
+                isGeneratingVirtualUsers={isGeneratingVirtualUsers}
+                isVoting={isVoting}
               />
 
               <ChannelVideos

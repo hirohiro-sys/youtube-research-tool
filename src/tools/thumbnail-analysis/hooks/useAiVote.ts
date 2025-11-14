@@ -9,6 +9,9 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
   const [selectedVideos, setSelectedVideos] = useState<selectedVideo[]>([]);
   const [topVideoAnalysis, setTopVideoAnalysis] = useState("");
   const [uploadedVideosFeedback, setUploadedVideosFeedback] = useState("");
+  const [isGeneratingVirtualUsers, setIsGeneratingVirtualUsers] =
+    useState(false);
+  const [isVoting, setIsVoting] = useState(false);
 
   const syncUploadedVideoTitle = (newTitle: string) => {
     setSelectedVideos((prev) =>
@@ -18,14 +21,18 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
 
   useEffect(() => {
     if (files.length === 0) return;
-    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].base64 }]);
+    setSelectedVideos([
+      { videoId: "demo-video", title, thumbnailInfo: files[0].base64 },
+    ]);
     // タイトルをdepsに入れるとレンダリングの影響でいちいちビデオの選択状態が解除されるのでスルーしている
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
   const initializeSelectedVideos = () => {
-    setSelectedVideos([{ videoId: "demo-video", title, thumbnailInfo: files[0].base64 }]);
-  }
+    setSelectedVideos([
+      { videoId: "demo-video", title, thumbnailInfo: files[0].base64 },
+    ]);
+  };
 
   const handleSelectVideos = (video: VideoView) => {
     const isAlreadySelected = selectedVideos.some(
@@ -38,12 +45,18 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     } else if (selectedVideos.length < 5) {
       setSelectedVideos((prev) => [
         ...prev,
-        { videoId: video.videoId, title: video.title, thumbnailInfo: `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg` || "" },
+        {
+          videoId: video.videoId,
+          title: video.title,
+          thumbnailInfo:
+            `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg` || "",
+        },
       ]);
     }
   };
 
   const generateVirtualUsers = async () => {
+    setIsGeneratingVirtualUsers(true);
     try {
       const res = await fetch("/api/virtual-users", {
         method: "POST",
@@ -61,10 +74,13 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
       setVirtualUsers(data.virtualUsers);
     } catch (error) {
       console.error("仮想ユーザーの生成に失敗しました", error);
+    } finally {
+      setIsGeneratingVirtualUsers(false);
     }
   };
 
   const aiVote = async () => {
+    setIsVoting(true);
     try {
       const res = await fetch("/api/ai-vote", {
         method: "POST",
@@ -99,9 +115,10 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
       );
       setTopVideoAnalysis(data.topVideoAnalysis);
       setUploadedVideosFeedback(data.uploadedVideoAnalysis);
-
     } catch (error) {
       console.error("AI投票に失敗しました", error);
+    } finally {
+      setIsVoting(false);
     }
   };
 
@@ -116,6 +133,8 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     syncUploadedVideoTitle,
     topVideoAnalysis,
     uploadedVideosFeedback,
-    initializeSelectedVideos
+    initializeSelectedVideos,
+    isGeneratingVirtualUsers,
+    isVoting,
   };
 };

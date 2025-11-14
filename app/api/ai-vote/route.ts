@@ -6,12 +6,14 @@ import {
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
- // サムネイル情報をgeminiに渡せる形式に変換する関数
+// サムネイル情報をgeminiに渡せる形式に変換する関数
 async function fetchThumbnailBase64(
   video: selectedVideo,
 ): Promise<{ mimeType: string; base64: string }> {
   if (video.videoId === "demo-video") {
-    const match = video.thumbnailInfo.match(/^data:(image\/[a-zA-Z+]+);base64,/);
+    const match = video.thumbnailInfo.match(
+      /^data:(image\/[a-zA-Z+]+);base64,/,
+    );
     const mimeType = match ? match[1] : "image/jpeg";
     const base64 = video.thumbnailInfo.split(",")[1];
     return { mimeType, base64 };
@@ -19,7 +21,10 @@ async function fetchThumbnailBase64(
 
   const resp = await fetch(video.thumbnailInfo);
   const buffer = await resp.arrayBuffer();
-  return { mimeType: "image/jpeg", base64: Buffer.from(buffer).toString("base64") };
+  return {
+    mimeType: "image/jpeg",
+    base64: Buffer.from(buffer).toString("base64"),
+  };
 }
 
 // 仮想ユーザーごとに投票とその理由を生成する関数
@@ -29,7 +34,7 @@ async function decideVotesAndReasonsWithImage(
   users: VirtualUser[],
 ): Promise<{ userVotes: userVotes[] }> {
   const userVotes: userVotes[] = [];
-  
+
   const videoImages = await Promise.all(
     selectedVideos.map(async (v) => {
       const { mimeType, base64 } = await fetchThumbnailBase64(v);
@@ -43,12 +48,12 @@ async function decideVotesAndReasonsWithImage(
   );
 
   for (const user of users) {
-const contents = [
-  {
-    role: "user",
-    parts: [
+    const contents = [
       {
-        text: `
+        role: "user",
+        parts: [
+          {
+            text: `
 あなたは仮想ユーザー「${user.name}（年齢 ${user.age}）」です。
 プロフィール: ${user.overview}
 興味・関心: ${user.interest.join("、")}
@@ -62,18 +67,18 @@ const contents = [
 }
 JSON以外の出力は一切含めないでください。
 `,
+          },
+          ...videoImages.flatMap((v, index) => [
+            {
+              text: `動画 ${index + 1}:\n- videoId: ${v.videoId}\n- title: ${v.title}`,
+            },
+            {
+              inlineData: { mimeType: v.mimeType, data: v.imageBase64 },
+            },
+          ]),
+        ],
       },
-      ...videoImages.flatMap((v, index) => [
-        {
-          text: `動画 ${index + 1}:\n- videoId: ${v.videoId}\n- title: ${v.title}`,
-        },
-        {
-          inlineData: { mimeType: v.mimeType, data: v.imageBase64 },
-        },
-      ]),
-    ],
-  },
-];
+    ];
 
     const resp = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
@@ -84,7 +89,11 @@ JSON以外の出力は一切含めないでください。
     let parsed: { videoId: string; reason: string };
 
     try {
-      const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim().replace(/,\s*}/g, "}");;
+      const cleaned = text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim()
+        .replace(/,\s*}/g, "}");
 
       if (!cleaned.startsWith("{") && !cleaned.startsWith("[")) {
         throw new Error("JSON形式ではありません");
@@ -92,7 +101,7 @@ JSON以外の出力は一切含めないでください。
 
       parsed = JSON.parse(cleaned);
     } catch (err) {
-      console.log("投票理由の生成に失敗しました",err)
+      console.log("投票理由の生成に失敗しました", err);
       console.log("元の出力:", text);
       parsed = {
         videoId: selectedVideos[0].videoId,
@@ -100,7 +109,7 @@ JSON以外の出力は一切含めないでください。
       };
     }
 
-    const video = selectedVideos.find((v) => v.videoId === parsed.videoId)
+    const video = selectedVideos.find((v) => v.videoId === parsed.videoId);
 
     userVotes.push({
       userId: user.id,
@@ -120,7 +129,6 @@ function aggregateResults(
 ): {
   voteResults: { videoId: string; votes: number }[];
 } {
-
   const counts: Record<string, number> = {};
   for (const v of videos) {
     counts[v.videoId] = 0;
@@ -129,7 +137,7 @@ function aggregateResults(
   for (const uv of userVotes) {
     counts[uv.videoId] = (counts[uv.videoId] || 0) + 1;
   }
-  
+
   const voteResults = videos.map((v) => ({
     videoId: v.videoId,
     votes: counts[v.videoId] ?? 0,
@@ -145,7 +153,6 @@ async function analyzeTopVideo(
   userVotes: userVotes[],
   videos: selectedVideo[],
 ): Promise<string> {
-  
   const topVideoId = voteResults.reduce((prev, curr) =>
     curr.votes > prev.votes ? curr : prev,
   ).videoId;
@@ -192,7 +199,6 @@ ${reasonsForTop || "（この動画への投票理由はありません）"}
   return resp.text?.trim() ?? "分析に失敗しました。";
 }
 
-
 // アップロードされた動画の改善案を生成する関数
 async function generateUploadedVideoAnalysis(
   ai: GoogleGenAI,
@@ -204,8 +210,8 @@ async function generateUploadedVideoAnalysis(
 サムネイル画像（base64形式）: ${uploaded.videoId}
 `;
 
-const image = await fetchThumbnailBase64(uploaded);
-const resp = await ai.models.generateContent({
+  const image = await fetchThumbnailBase64(uploaded);
+  const resp = await ai.models.generateContent({
     model: "gemini-2.0-flash-lite",
     contents: [
       {
@@ -218,7 +224,6 @@ const resp = await ai.models.generateContent({
   });
   return resp.text ?? "改善案を生成できませんでした。";
 }
-
 
 export async function POST(req: NextRequest) {
   try {
@@ -238,12 +243,14 @@ export async function POST(req: NextRequest) {
     );
     const voteReasons = userVotes;
 
-    const { voteResults } = aggregateResults(
-      selectedVideos,
-      userVotes,
-    );
+    const { voteResults } = aggregateResults(selectedVideos, userVotes);
 
-    const topVideoAnalysis = await analyzeTopVideo(ai, voteResults, userVotes, selectedVideos);
+    const topVideoAnalysis = await analyzeTopVideo(
+      ai,
+      voteResults,
+      userVotes,
+      selectedVideos,
+    );
 
     const uploadedVideo = selectedVideos[0];
     const uploadedVideoAnalysis = await generateUploadedVideoAnalysis(
