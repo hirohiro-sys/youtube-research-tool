@@ -1,10 +1,9 @@
-import { GoogleGenAI } from "@google/genai";
+import { ai } from "@/src/lib/gemini/gemini";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
     const { targetUserRules } = await req.json();
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",

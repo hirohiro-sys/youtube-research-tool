@@ -34,6 +34,7 @@ export default function Page() {
     setChannelVideos,
     handleSearchchannelVideos,
     shuffleVideos,
+    loading
   } = useVideoSearch(files);
   const {
     targetUserRules,
@@ -92,6 +93,8 @@ export default function Page() {
                 handleSearchchannelVideos={handleSearchchannelVideos}
                 shuffleVideos={shuffleVideos}
                 previewVideos={previewVideos}
+                loading={loading}
+                initializeSelectedVideos={initializeSelectedVideos}
               />
               {/* <TimeLine
                 previewMode={previewMode}
@@ -109,7 +112,6 @@ export default function Page() {
                 handleSelectVideos={handleSelectVideos}
                 selectedVideos={selectedVideos}
                 aiVote={aiVote}
-                initializeSelectedVideos={initializeSelectedVideos}
                 topVideoAnalysis={topVideoAnalysis}
                 uploadedVideosFeedback={uploadedVideosFeedback}
                 isGeneratingVirtualUsers={isGeneratingVirtualUsers}

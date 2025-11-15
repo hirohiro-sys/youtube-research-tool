@@ -1,4 +1,4 @@
-import { Bot, RotateCw } from "lucide-react";
+import { Bot } from "lucide-react";
 import { VideoView } from "../../hooks/useVideoSearch";
 import { selectedVideo, VirtualUser } from "../../types/aiVote";
 import { VirtualUserList } from "./VirtualUserList";
@@ -15,7 +15,6 @@ type AiVoteProps = {
   handleSelectVideos: (video: VideoView) => void;
   selectedVideos: selectedVideo[];
   aiVote: () => Promise<void>;
-  initializeSelectedVideos: () => void;
   topVideoAnalysis: string;
   uploadedVideosFeedback: string;
   isGeneratingVirtualUsers: boolean;
@@ -32,7 +31,6 @@ export const AiVote = ({
   handleSelectVideos,
   selectedVideos,
   aiVote,
-  initializeSelectedVideos,
   topVideoAnalysis,
   uploadedVideosFeedback,
   isGeneratingVirtualUsers,
@@ -40,17 +38,11 @@ export const AiVote = ({
 }: AiVoteProps) => {
   return (
     <>
-      <p className="font-bold text-xl mt-10">AI投票</p>
-      <div className="flex items-center justify-between">
-        <p className="mb-2 text-gray-500">
-          アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
-        </p>
-        {selectedVideos.length > 1 && (
-          <button className="btn mb-2" onClick={initializeSelectedVideos}>
-            <RotateCw />
-          </button>
-        )}
-      </div>
+      <p className="font-bold text-xl mt-10">AI投票(beta版)</p>
+      <p className="mb-2 text-gray-500">
+        アップロードしたサムネイルをAIが他動画と比較し、投票・フィードバックを行います
+      </p>
+
       <VoteTargetVideos
         videos={videos}
         title={title}
