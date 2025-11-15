@@ -1,6 +1,6 @@
+import { ai } from "@/src/lib/gemini/gemini";
 import { CommentItem } from "@/src/tools/demand-analysis/types/youtubeApiTypes";
 import { fetchData } from "@/src/tools/demand-analysis/utils/fetchData";
-import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -18,10 +18,9 @@ export async function POST(req: NextRequest) {
         { status: 404 },
       );
 
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const thumbnail = await fetch(thumbnailUrl);
     const imageArrayBuffer = await thumbnail.arrayBuffer();
-    const base64ImageData = Buffer.from(imageArrayBuffer).toString('base64');
+    const base64ImageData = Buffer.from(imageArrayBuffer).toString("base64");
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
@@ -31,7 +30,7 @@ export async function POST(req: NextRequest) {
           parts: [
             {
               inlineData: {
-                mimeType: 'image/jpeg',
+                mimeType: "image/jpeg",
                 data: base64ImageData,
               },
             },

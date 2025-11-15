@@ -34,6 +34,8 @@ type ThumbnailPreviewProps = {
   handleSearchchannelVideos: (searchType: "keyword" | "channel") => void;
   shuffleVideos: () => void;
   previewVideos: VideoView[];
+  loading: boolean;
+  initializeSelectedVideos: () => void;
 };
 
 export const ThumbnailPreview = ({
@@ -45,6 +47,8 @@ export const ThumbnailPreview = ({
   handleSearchchannelVideos,
   shuffleVideos,
   previewVideos,
+  loading,
+  initializeSelectedVideos,
 }: ThumbnailPreviewProps) => {
   return (
     <>
@@ -61,10 +65,13 @@ export const ThumbnailPreview = ({
       />
       <button
         className="btn"
-        onClick={() => handleSearchchannelVideos("keyword")}
-        disabled={!keyword}
+        onClick={() => {
+          handleSearchchannelVideos("keyword");
+          initializeSelectedVideos();
+        }}
+        disabled={!keyword || loading}
       >
-        検索
+        {loading ? "検索中..." : "検索"}
       </button>
       <button
         className="btn ml-2"

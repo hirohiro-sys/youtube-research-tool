@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   if (!channelId && !keyword) {
     return new Response(
       JSON.stringify({ error: "channelId または keyword が必要です" }),
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -20,14 +20,14 @@ export async function GET(request: Request) {
       searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=8&type=video`;
     } else if (keyword) {
       searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
-        keyword
-      )}&order=relevance&maxResults=20&type=video&videoDuration=medium`;
+        keyword,
+      )}&order=relevance&maxResults=19&type=video&videoDuration=medium`;
     }
 
     const searchData = await fetchData(searchUrl);
 
     const videoIds = searchData.items.map(
-      (item: { id: { videoId: string } }) => item.id.videoId
+      (item: { id: { videoId: string } }) => item.id.videoId,
     );
 
     if (videoIds.length === 0) {
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
       }) => {
         const publishedDate = new Date(item.snippet.publishedAt);
         const daysAgo = Math.floor(
-          (Date.now() - publishedDate.getTime()) / (1000 * 60 * 60 * 24)
+          (Date.now() - publishedDate.getTime()) / (1000 * 60 * 60 * 24),
         );
 
         return {
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
           viewCount: item.statistics.viewCount,
           daysAgo,
         };
-      }
+      },
     );
 
     return Response.json({ videos });
@@ -65,7 +65,7 @@ export async function GET(request: Request) {
     console.error("データ取得エラー:", error);
     return new Response(
       JSON.stringify({ videos: [], error: "データの取得に失敗しました" }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
