@@ -1,6 +1,9 @@
 import { ai } from "@/src/lib/gemini/gemini";
 import { NextResponse } from "next/server";
 
+// タイムアウトエラーを防ぐために指定
+export const maxDuration = 30;
+
 export async function POST(req: Request) {
   try {
     const { targetUserRules } = await req.json();

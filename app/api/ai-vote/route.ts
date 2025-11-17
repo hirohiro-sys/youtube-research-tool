@@ -7,7 +7,8 @@ import {
 } from "@/src/tools/thumbnail-analysis/services/aiVote.service";
 import { NextRequest, NextResponse } from "next/server";
 
-export const maxDuration = 5; // This function can run for a maximum of 5 seconds
+// タイムアウトエラーを防ぐために指定
+export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   const start = performance.now();
