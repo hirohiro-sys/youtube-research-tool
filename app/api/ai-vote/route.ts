@@ -1,8 +1,15 @@
 import { ai } from "@/src/lib/gemini/gemini";
-import { aggregateResults, analyzeTopVideo, decideVotesAndReasonsWithImage, generateUploadedVideoAnalysis } from "@/src/tools/thumbnail-analysis/services/aiVote.service";
+import {
+  aggregateResults,
+  analyzeTopVideo,
+  decideVotesAndReasonsWithImage,
+  generateUploadedVideoAnalysis,
+} from "@/src/tools/thumbnail-analysis/services/aiVote.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
+  const start = performance.now();
+
   try {
     const { selectedVideos, virtualUsers } = await req.json();
 
@@ -15,18 +22,15 @@ export async function POST(req: NextRequest) {
 
     const { voteResults } = aggregateResults(selectedVideos, userVotes);
 
-    const topVideoAnalysis = await analyzeTopVideo(
-      ai,
-      voteResults,
-      userVotes,
-      selectedVideos,
-    );
-
     const uploadedVideo = selectedVideos[0];
-    const uploadedVideoAnalysis = await generateUploadedVideoAnalysis(
-      ai,
-      uploadedVideo,
-    );
+    const [topVideoAnalysis, uploadedVideoAnalysis] = await Promise.all([
+      analyzeTopVideo(ai, voteResults, userVotes, selectedVideos),
+      generateUploadedVideoAnalysis(ai, uploadedVideo),
+    ]);
+
+    const end = performance.now();
+    console.log(`AI投票 全処理時間: ${(end - start).toFixed(2)} ms`);
+
     return NextResponse.json({
       voteReasons,
       voteResults,
