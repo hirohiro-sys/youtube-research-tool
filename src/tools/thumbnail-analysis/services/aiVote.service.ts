@@ -29,7 +29,6 @@ export async function decideVotesAndReasonsWithImage(
     selectedVideos: selectedVideo[],
     users: VirtualUser[],
   ): Promise<{ userVotes: userVotes[] }> {
-    const userVotes: userVotes[] = [];
   
     const videoImages = await Promise.all(
       selectedVideos.map(async (v) => {
@@ -43,77 +42,72 @@ export async function decideVotesAndReasonsWithImage(
       }),
     );
   
-    for (const user of users) {
-      const contents = [
-        {
-          role: "user",
-          parts: [
-            {
-              text: `
-  あなたは仮想ユーザー「${user.name}（年齢 ${user.age}）」です。
-  プロフィール: ${user.overview}
-  興味・関心: ${user.interest.join("、")}
-  
-  次の動画候補（タイトルとサムネイル画像）を見て、最も自分に合うと思う動画を1つ選び、
-  選んだ理由を簡潔に日本語で説明してください。なぜそのサムネイルをクリックしたのかも言及してください。
-  【出力形式】(必ず正しいJSONを出力してください。以下の形式に厳密に従ってください)
-  {
-    "videoId": "<選んだvideoId>",
-    "reason": "<理由>"
-  }
-  JSON以外の出力は一切含めないでください。
-  `,
-            },
-            ...videoImages.flatMap((v, index) => [
+    const userVotes = await Promise.all(
+      users.map(async (user) => {
+        const contents = [
+          {
+            role: "user",
+            parts: [
               {
-                text: `動画 ${index + 1}:\n- videoId: ${v.videoId}\n- title: ${v.title}`,
-              },
-              {
-                inlineData: { mimeType: v.mimeType, data: v.imageBase64 },
-              },
-            ]),
-          ],
-        },
-      ];
-  
-      const resp = await ai.models.generateContent({
-        model: "gemini-2.0-flash-lite",
-        contents,
-      });
-  
-      const text = resp.text ?? "";
-      let parsed: { videoId: string; reason: string };
-  
-      try {
-        const cleaned = text
-          .replace(/```json/g, "")
-          .replace(/```/g, "")
-          .trim()
-          .replace(/,\s*}/g, "}");
-  
-        if (!cleaned.startsWith("{") && !cleaned.startsWith("[")) {
-          throw new Error("JSON形式ではありません");
-        }
-  
-        parsed = JSON.parse(cleaned);
-      } catch (err) {
-        console.log("投票理由の生成に失敗しました", err);
-        console.log("元の出力:", text);
-        parsed = {
-          videoId: selectedVideos[0].videoId,
-          reason: "分析に失敗しました。",
-        };
-      }
-  
-      const video = selectedVideos.find((v) => v.videoId === parsed.videoId);
-  
-      userVotes.push({
-        userId: user.id,
-        videoId: parsed.videoId,
-        title: video ? video.title : "動画のタイトルを取得できませんでした。",
-        reason: parsed.reason,
-      });
+                text: `
+    あなたは仮想ユーザー「${user.name}（年齢 ${user.age}）」です。
+    プロフィール: ${user.overview}
+    興味・関心: ${user.interest.join("、")}
+    
+    次の動画候補（タイトルとサムネイル画像）を見て、最も自分に合うと思う動画を1つ選び、
+    選んだ理由を簡潔に日本語で説明してください。なぜそのサムネイルをクリックしたのかも言及してください。
+    【出力形式】(必ず正しいJSONを出力してください。以下の形式に厳密に従ってください)
+    {
+      "videoId": "<選んだvideoId>",
+      "reason": "<理由>"
     }
+    JSON以外の出力は一切含めないでください。
+              `,
+              },
+              ...videoImages.flatMap((v, index) => [
+                { text: `動画 ${index + 1}:\n- videoId: ${v.videoId}\n- title: ${v.title}` },
+                { inlineData: { mimeType: v.mimeType, data: v.imageBase64 } },
+              ]),
+            ],
+          },
+        ];
+    
+        const resp = await ai.models.generateContent({
+          model: "gemini-2.0-flash-lite",
+          contents,
+        });
+    
+        const text = resp.text ?? "";
+        let parsed: { videoId: string; reason: string };
+    
+        try {
+          const cleaned = text
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim()
+            .replace(/,\s*}/g, "}");
+    
+          if (!cleaned.startsWith("{") && !cleaned.startsWith("[")) {
+            throw new Error("JSON形式ではありません");
+          }
+    
+          parsed = JSON.parse(cleaned);
+        } catch (err) {
+          console.log("投票理由の生成に失敗しました", err);
+          console.log("元の出力:", text);
+          parsed = { videoId: selectedVideos[0].videoId, reason: "分析に失敗しました。" };
+        }
+    
+        const video = selectedVideos.find((v) => v.videoId === parsed.videoId);
+    
+        return {
+          userId: user.id,
+          videoId: parsed.videoId,
+          title: video ? video.title : "動画のタイトルを取得できませんでした。",
+          reason: parsed.reason,
+        };
+      })
+    );
   
     return { userVotes };
   }
