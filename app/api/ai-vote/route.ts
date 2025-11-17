@@ -7,6 +7,9 @@ import {
 } from "@/src/tools/thumbnail-analysis/services/aiVote.service";
 import { NextRequest, NextResponse } from "next/server";
 
+// これを指定しないとタイムアウトエラーになる
+export const maxDuration = 30;
+
 export async function POST(req: NextRequest) {
   const start = performance.now();
 
