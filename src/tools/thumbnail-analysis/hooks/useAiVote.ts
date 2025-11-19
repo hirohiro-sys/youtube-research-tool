@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
 import { VideoView } from "./useVideoSearch";
 import { selectedVideo, VirtualUser } from "../types/aiVote";
+import { generateVirtualUsersAction } from "../actions/generateVirtualUsers";
 
 export const useAiVote = (files: PreviewFile[], title: string) => {
   const [targetUserRules, setTargetUserRules] = useState("");
@@ -55,23 +56,35 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     }
   };
 
+  // const generateVirtualUsers = async () => {
+  //   setIsGeneratingVirtualUsers(true);
+  //   try {
+  //     const res = await fetch("/api/virtual-users", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         targetUserRules,
+  //       }),
+  //     });
+  //     const data = await res.json();
+
+  //     if (!res.ok) {
+  //       return;
+  //     }
+
+  //     setVirtualUsers(data.virtualUsers);
+  //   } catch (error) {
+  //     console.error("仮想ユーザーの生成に失敗しました", error);
+  //   } finally {
+  //     setIsGeneratingVirtualUsers(false);
+  //   }
+  // };
+
   const generateVirtualUsers = async () => {
     setIsGeneratingVirtualUsers(true);
     try {
-      const res = await fetch("/api/virtual-users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetUserRules,
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        return;
-      }
-
-      setVirtualUsers(data.virtualUsers);
+      const result = await generateVirtualUsersAction(targetUserRules);
+      setVirtualUsers(result);
     } catch (error) {
       console.error("仮想ユーザーの生成に失敗しました", error);
     } finally {

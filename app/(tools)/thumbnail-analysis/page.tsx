@@ -14,6 +14,8 @@ import { GalleryThumbnails } from "lucide-react";
 import { AiVote } from "@/src/tools/thumbnail-analysis/components/ai-vote/aiVote";
 import { useAiVote } from "@/src/tools/thumbnail-analysis/hooks/useAiVote";
 
+// export const maxDuration = 30; // 後で必要かどうかのテストをする
+
 export default function Page() {
   const { files, getRootProps, getInputProps, style, setFiles } =
     useFileUpload();
@@ -34,7 +36,7 @@ export default function Page() {
     setChannelVideos,
     handleSearchchannelVideos,
     shuffleVideos,
-    loading
+    loading,
   } = useVideoSearch(files);
   const {
     targetUserRules,
