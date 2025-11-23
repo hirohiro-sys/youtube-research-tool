@@ -34,7 +34,7 @@ export default function Page() {
     setPreviewVideos,
     channelVideos,
     setChannelVideos,
-    handleSearchchannelVideos,
+    handleSearchVideos,
     shuffleVideos,
     loading,
   } = useVideoSearch(files);
@@ -92,7 +92,7 @@ export default function Page() {
                 title={title}
                 keyword={keyword}
                 setKeyword={setKeyword}
-                handleSearchchannelVideos={handleSearchchannelVideos}
+                handleSearchVideos={handleSearchVideos}
                 shuffleVideos={shuffleVideos}
                 previewVideos={previewVideos}
                 loading={loading}
@@ -124,7 +124,7 @@ export default function Page() {
                 channelId={channelId}
                 setChannelId={setChannelId}
                 channelVideos={channelVideos}
-                handleSearchchannelVideos={handleSearchchannelVideos}
+                handleSearchVideos={handleSearchVideos}
                 title={title}
               />
             </>

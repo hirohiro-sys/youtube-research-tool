@@ -31,7 +31,7 @@ type ThumbnailPreviewProps = {
   keyword: string;
   title: string;
   setKeyword: (keyword: string) => void;
-  handleSearchchannelVideos: (searchType: "keyword" | "channel") => void;
+  handleSearchVideos: (searchType: "keyword" | "channel") => void;
   shuffleVideos: () => void;
   previewVideos: VideoView[];
   loading: boolean;
@@ -44,7 +44,7 @@ export const ThumbnailPreview = ({
   keyword,
   title,
   setKeyword,
-  handleSearchchannelVideos,
+  handleSearchVideos,
   shuffleVideos,
   previewVideos,
   loading,
@@ -66,7 +66,7 @@ export const ThumbnailPreview = ({
       <button
         className="btn"
         onClick={() => {
-          handleSearchchannelVideos("keyword");
+          handleSearchVideos("keyword");
           initializeSelectedVideos();
         }}
         disabled={!keyword || loading}
