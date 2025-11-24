@@ -1,4 +1,6 @@
-// カンマ区切りで1つの変数に入れるか検討
+import "server-only";
+
+// 今後ここの定義は別ファイルに切り出した方がよさそう
 const API_KEYS = [
   process.env.YOUTUBE_API_KEY,
   process.env.YOUTUBE_API_KEY2,
