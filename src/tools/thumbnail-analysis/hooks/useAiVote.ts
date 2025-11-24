@@ -57,30 +57,6 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     }
   };
 
-  // const generateVirtualUsers = async () => {
-  //   setIsGeneratingVirtualUsers(true);
-  //   try {
-  //     const res = await fetch("/api/virtual-users", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         targetUserRules,
-  //       }),
-  //     });
-  //     const data = await res.json();
-
-  //     if (!res.ok) {
-  //       return;
-  //     }
-
-  //     setVirtualUsers(data.virtualUsers);
-  //   } catch (error) {
-  //     console.error("仮想ユーザーの生成に失敗しました", error);
-  //   } finally {
-  //     setIsGeneratingVirtualUsers(false);
-  //   }
-  // };
-
   const generateVirtualUsers = async () => {
     setIsGeneratingVirtualUsers(true);
     try {
@@ -92,49 +68,6 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
       setIsGeneratingVirtualUsers(false);
     }
   };
-
-  // const aiVote = async () => {
-  //   setIsVoting(true);
-  //   try {
-  //     const res = await fetch("/api/ai-vote", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         selectedVideos,
-  //         virtualUsers,
-  //       }),
-  //     });
-
-  //     if (!res.ok) {
-  //       console.error("AI投票APIからエラーが返されました");
-  //       return;
-  //     }
-  //     const data = await res.json();
-  //     setVirtualUsers((prevUsers) =>
-  //       prevUsers.map((user) => {
-  //         const vote = data.voteReasons.find(
-  //           (v: { userId: number }) => v.userId === user.id,
-  //         );
-  //         return vote ? { ...user, voteReason: vote.reason } : user;
-  //       }),
-  //     );
-  //     setSelectedVideos((prevVideos) =>
-  //       prevVideos.map((video) => {
-  //         const voteCount =
-  //           data.voteResults.find(
-  //             (v: { videoId: string }) => v.videoId === video.videoId,
-  //           )?.votes || 0;
-  //         return { ...video, voteCount };
-  //       }),
-  //     );
-  //     setTopVideoAnalysis(data.topVideoAnalysis);
-  //     setUploadedVideosFeedback(data.uploadedVideoAnalysis);
-  //   } catch (error) {
-  //     console.error("AI投票に失敗しました", error);
-  //   } finally {
-  //     setIsVoting(false);
-  //   }
-  // };
 
   const aiVote = async () => {
     setIsVoting(true);

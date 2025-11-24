@@ -22,44 +22,7 @@ export const useVideoSearch = (files: PreviewFile[]) => {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const handleSearchchannelVideos = async (
-  //   searchType: "keyword" | "channel",
-  // ) => {
-  //   setLoading(true);
-  //   try {
-  //     let query = "";
-  //     if (searchType === "keyword") {
-  //       query = `keyword=${encodeURIComponent(keyword)}`;
-  //     } else if (searchType === "channel") {
-  //       query = `channelId=${channelId}`;
-  //     }
-
-  //     const response = await fetch(`/api/videos?${query}`);
-  //     const data = await response.json();
-
-  //     const demoVideo = {
-  //       videoId: "demo-video",
-  //       title,
-  //       channelName: "あなたのチャンネル名",
-  //       viewCount: 100,
-  //       daysAgo: 1,
-  //       duration: "5:30",
-  //       thumbnail: files[0]?.base64,
-  //     };
-
-  //     if (searchType === "keyword") {
-  //       setVideos([demoVideo, ...(data.videos || [])]);
-  //       setPreviewVideos([demoVideo, ...(data.videos || [])].slice(0, 6));
-  //     } else {
-  //       setChannelVideos([demoVideo, ...(data.videos || [])]);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
+  // keywordとchannelは分けるべきかもだが、どちらも似たような処理かつ複雑ではないので一旦まとめている
   const handleSearchVideos = async (
     searchType: "keyword" | "channel",
   ) => {

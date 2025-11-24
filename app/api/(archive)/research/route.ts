@@ -142,3 +142,57 @@ export async function GET(request: Request) {
     );
   }
 }
+
+  // リクエスト側の実装
+  // const handleSearch = async (suggestKeyword?: string) => {
+  //   setLoading(true);
+  //   setHasSearched(true);
+  //   try {
+  //     const publishedAfter = getPublishedAfter(range);
+  //     const query = new URLSearchParams({
+  //       keyword: suggestKeyword ?? keyword,
+  //       scale,
+  //       timeOption,
+  //       ...(publishedAfter && { publishedAfter }),
+  //     });
+  //     const response = await fetch(`/api/research?${query.toString()}`);
+  //     const data = await response.json();
+  //     setVideos(data.videos);
+  //     setNextPageToken(data.nextPageToken);
+  //     setSuggestions(data.suggestions);
+  //   } catch (error) {
+  //     console.error("データの取得に失敗しました:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleLoadMore = async () => {
+  //   if (!nextPageToken) return;
+  //   setLoading(true);
+  //   try {
+  //     const publishedAfter = getPublishedAfter(range);
+  //     const query = new URLSearchParams({
+  //       keyword,
+  //       scale,
+  //       timeOption,
+  //       pageToken: nextPageToken,
+  //       ...(publishedAfter && { publishedAfter }),
+  //     });
+  //     const response = await fetch(`/api/research?${query.toString()}`);
+  //     const data = await response.json();
+  //     setVideos((prev) => {
+  //       const existingIds = new Set(prev.map((v) => v.videoId));
+  //       const uniqueNewVideos = data.videos.filter(
+  //         (video: Video) => !existingIds.has(video.videoId),
+  //       );
+  //       return [...prev, ...uniqueNewVideos];
+  //     });
+  //     setNextPageToken(data.nextPageToken);
+  //     setSuggestions(data.suggestions);
+  //   } catch (error) {
+  //     console.error("データの取得に失敗しました:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };

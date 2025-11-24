@@ -81,3 +81,38 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "分析に失敗しました" }, { status: 500 });
   }
 }
+
+  // リクエスト側の処理
+  // const analyze = async () => {
+  //   setLoading(true);
+  //   setErrorMessage("");
+
+  //   try {
+  //     const res = await fetch("/api/ai-analysis", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         videoId: video.videoId,
+  //         title: video.title,
+  //         thumbnailUrl: `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`,
+  //       }),
+  //     });
+  //     const data = await res.json();
+
+  //     if (!res.ok) {
+  //       if (res.status === 404) {
+  //         setErrorMessage("コメントが見つかりませんでした");
+  //       } else {
+  //         setErrorMessage("分析に失敗しました");
+  //       }
+  //       return;
+  //     }
+
+  //     setSummary(data.response);
+  //   } catch (error) {
+  //     console.error("コメント取得に失敗しました", error);
+  //     setErrorMessage("ネットワークエラーなどにより分析に失敗しました");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
