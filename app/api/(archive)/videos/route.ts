@@ -69,3 +69,42 @@ export async function GET(request: Request) {
     );
   }
 }
+
+  // リクエスト側の実装
+  // const handleSearchchannelVideos = async (
+  //   searchType: "keyword" | "channel",
+  // ) => {
+  //   setLoading(true);
+  //   try {
+  //     let query = "";
+  //     if (searchType === "keyword") {
+  //       query = `keyword=${encodeURIComponent(keyword)}`;
+  //     } else if (searchType === "channel") {
+  //       query = `channelId=${channelId}`;
+  //     }
+
+  //     const response = await fetch(`/api/videos?${query}`);
+  //     const data = await response.json();
+
+  //     const demoVideo = {
+  //       videoId: "demo-video",
+  //       title,
+  //       channelName: "あなたのチャンネル名",
+  //       viewCount: 100,
+  //       daysAgo: 1,
+  //       duration: "5:30",
+  //       thumbnail: files[0]?.base64,
+  //     };
+
+  //     if (searchType === "keyword") {
+  //       setVideos([demoVideo, ...(data.videos || [])]);
+  //       setPreviewVideos([demoVideo, ...(data.videos || [])].slice(0, 6));
+  //     } else {
+  //       setChannelVideos([demoVideo, ...(data.videos || [])]);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };

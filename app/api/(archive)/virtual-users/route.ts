@@ -60,3 +60,27 @@ export async function POST(req: Request) {
     );
   }
 }
+  // リクエスト側の実装
+  // const generateVirtualUsers = async () => {
+  //   setIsGeneratingVirtualUsers(true);
+  //   try {
+  //     const res = await fetch("/api/virtual-users", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         targetUserRules,
+  //       }),
+  //     });
+  //     const data = await res.json();
+
+  //     if (!res.ok) {
+  //       return;
+  //     }
+
+  //     setVirtualUsers(data.virtualUsers);
+  //   } catch (error) {
+  //     console.error("仮想ユーザーの生成に失敗しました", error);
+  //   } finally {
+  //     setIsGeneratingVirtualUsers(false);
+  //   }
+  // };

@@ -37,6 +37,7 @@ export interface SearchData {
 // 動画の型情報
 export interface Video {
   videoId: string;
+  channelId: string;
   title: string;
   viewCount: number;
   likeCount: number;

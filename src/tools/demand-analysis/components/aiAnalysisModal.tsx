@@ -14,7 +14,8 @@ export const AiAnalysisModal = ({
   setIsOpen,
   video,
 }: AiAnalysisModalProps) => {
-  const { loading, summary, errorMessage, analyze } = useAiAnalysis(video);
+  const { loading, summary, errorMessage, handleAnalyze } =
+    useAiAnalysis(video);
 
   if (!isOpen) return null;
 
@@ -40,7 +41,7 @@ export const AiAnalysisModal = ({
           {!summary && !errorMessage ? (
             <button
               className="btn bg-gray-600 text-white m-auto block"
-              onClick={analyze}
+              onClick={handleAnalyze}
               disabled={loading}
             >
               {loading ? (

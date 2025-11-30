@@ -10,11 +10,11 @@ type AiVoteProps = {
   title: string;
   targetUserRules: string;
   setTargetUserRules: (rules: string) => void;
-  generateVirtualUsers: () => Promise<void>;
+  handleGenerateVirtualUsers: () => Promise<void>;
   virtualUsers: VirtualUser[];
   handleSelectVideos: (video: VideoView) => void;
   selectedVideos: selectedVideo[];
-  aiVote: () => Promise<void>;
+  handleAiVote: () => Promise<void>;
   topVideoAnalysis: string;
   uploadedVideosFeedback: string;
   isGeneratingVirtualUsers: boolean;
@@ -26,11 +26,11 @@ export const AiVote = ({
   title,
   targetUserRules,
   setTargetUserRules,
-  generateVirtualUsers,
+  handleGenerateVirtualUsers,
   virtualUsers,
   handleSelectVideos,
   selectedVideos,
-  aiVote,
+  handleAiVote,
   topVideoAnalysis,
   uploadedVideosFeedback,
   isGeneratingVirtualUsers,
@@ -53,14 +53,14 @@ export const AiVote = ({
         <VirtualUserList
           targetUserRules={targetUserRules}
           setTargetUserRules={setTargetUserRules}
-          generateVirtualUsers={generateVirtualUsers}
+          handleGenerateVirtualUsers={handleGenerateVirtualUsers}
           virtualUsers={virtualUsers}
           isGeneratingVirtualUsers={isGeneratingVirtualUsers}
         />
       )}
       <button
         className="btn btn-outline btn-primary mt-4"
-        onClick={aiVote}
+        onClick={handleAiVote}
         disabled={
           selectedVideos.length !== 5 ||
           virtualUsers.length === 0 ||

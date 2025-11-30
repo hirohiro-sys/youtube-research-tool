@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
 import { VideoView } from "./useVideoSearch";
 import { selectedVideo, VirtualUser } from "../types/aiVote";
+import { generateVirtualUsers } from "../actions/generateVirtualUsers";
+import { aiVote } from "../actions/aiVote";
 
 export const useAiVote = (files: PreviewFile[], title: string) => {
   const [targetUserRules, setTargetUserRules] = useState("");
@@ -55,23 +57,11 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     }
   };
 
-  const generateVirtualUsers = async () => {
+  const handleGenerateVirtualUsers = async () => {
     setIsGeneratingVirtualUsers(true);
     try {
-      const res = await fetch("/api/virtual-users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetUserRules,
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        return;
-      }
-
-      setVirtualUsers(data.virtualUsers);
+      const result = await generateVirtualUsers(targetUserRules);
+      setVirtualUsers(result);
     } catch (error) {
       console.error("仮想ユーザーの生成に失敗しました", error);
     } finally {
@@ -79,42 +69,42 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     }
   };
 
-  const aiVote = async () => {
+  const handleAiVote = async () => {
     setIsVoting(true);
+  
     try {
-      const res = await fetch("/api/ai-vote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          selectedVideos,
-          virtualUsers,
-        }),
+      const data = await aiVote({
+        selectedVideos,
+        virtualUsers,
       });
-
-      if (!res.ok) {
-        console.error("AI投票APIからエラーが返されました");
+  
+      if (data.error) {
+        console.error("AI投票エラー: ", data.details);
         return;
       }
-      const data = await res.json();
+  
       setVirtualUsers((prevUsers) =>
         prevUsers.map((user) => {
-          const vote = data.voteReasons.find(
+          const vote = data.voteReasons?.find(
             (v: { userId: number }) => v.userId === user.id,
           );
           return vote ? { ...user, voteReason: vote.reason } : user;
         }),
       );
+  
       setSelectedVideos((prevVideos) =>
         prevVideos.map((video) => {
           const voteCount =
-            data.voteResults.find(
+            data.voteResults?.find(
               (v: { videoId: string }) => v.videoId === video.videoId,
-            )?.votes || 0;
+            )?.votes ?? 0;
+  
           return { ...video, voteCount };
         }),
       );
-      setTopVideoAnalysis(data.topVideoAnalysis);
-      setUploadedVideosFeedback(data.uploadedVideoAnalysis);
+  
+      setTopVideoAnalysis(data.topVideoAnalysis || "");
+      setUploadedVideosFeedback(data.uploadedVideoAnalysis || "");
     } catch (error) {
       console.error("AI投票に失敗しました", error);
     } finally {
@@ -125,11 +115,11 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
   return {
     targetUserRules,
     setTargetUserRules,
-    generateVirtualUsers,
+    handleGenerateVirtualUsers,
     virtualUsers,
     handleSelectVideos,
     selectedVideos,
-    aiVote,
+    handleAiVote,
     syncUploadedVideoTitle,
     topVideoAnalysis,
     uploadedVideosFeedback,
