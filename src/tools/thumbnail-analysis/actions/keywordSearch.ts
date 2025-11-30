@@ -3,7 +3,7 @@
 import { fetchData } from "@/src/tools/demand-analysis/utils/fetchData";
 import { formatDuration } from "@/src/tools/thumbnail-analysis/utils/formatDuration";
 
-export async function keywordSearchAction({
+export async function keywordSearch({
   channelId,
   keyword,
 }: {

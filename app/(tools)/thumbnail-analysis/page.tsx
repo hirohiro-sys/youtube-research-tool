@@ -41,12 +41,12 @@ export default function Page() {
   const {
     targetUserRules,
     setTargetUserRules,
-    generateVirtualUsers,
+    handleGenerateVirtualUsers,
     virtualUsers,
     handleSelectVideos,
     selectedVideos,
     syncUploadedVideoTitle,
-    aiVote,
+    handleAiVote,
     initializeSelectedVideos,
     topVideoAnalysis,
     uploadedVideosFeedback,
@@ -109,11 +109,11 @@ export default function Page() {
                 title={title}
                 targetUserRules={targetUserRules}
                 setTargetUserRules={setTargetUserRules}
-                generateVirtualUsers={generateVirtualUsers}
+                handleGenerateVirtualUsers={handleGenerateVirtualUsers}
                 virtualUsers={virtualUsers}
                 handleSelectVideos={handleSelectVideos}
                 selectedVideos={selectedVideos}
-                aiVote={aiVote}
+                handleAiVote={handleAiVote}
                 topVideoAnalysis={topVideoAnalysis}
                 uploadedVideosFeedback={uploadedVideosFeedback}
                 isGeneratingVirtualUsers={isGeneratingVirtualUsers}

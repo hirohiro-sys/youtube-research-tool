@@ -9,7 +9,7 @@ import {
 } from "@/src/tools/thumbnail-analysis/services/aiVote.service";
 import { selectedVideo, VirtualUser } from "../types/aiVote";
 
-export async function aiVoteAction({
+export async function aiVote({
   selectedVideos,
   virtualUsers,
 }: {

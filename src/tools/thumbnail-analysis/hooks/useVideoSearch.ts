@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
-import { keywordSearchAction } from "../actions/keywordSearch";
+import { keywordSearch } from "../actions/keywordSearch";
 
 export type VideoView = {
   videoId: string;
@@ -29,7 +29,7 @@ export const useVideoSearch = (files: PreviewFile[]) => {
       setLoading(true);
   
       try {
-        const data = await keywordSearchAction({
+        const data = await keywordSearch({
           keyword: searchType === "keyword" ? keyword : undefined,
           channelId: searchType === "channel" ? channelId : undefined,
         });

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { PreviewFile } from "../types/fileTypes";
 import { VideoView } from "./useVideoSearch";
 import { selectedVideo, VirtualUser } from "../types/aiVote";
-import { generateVirtualUsersAction } from "../actions/generateVirtualUsers";
-import { aiVoteAction } from "../actions/aiVote";
+import { generateVirtualUsers } from "../actions/generateVirtualUsers";
+import { aiVote } from "../actions/aiVote";
 
 export const useAiVote = (files: PreviewFile[], title: string) => {
   const [targetUserRules, setTargetUserRules] = useState("");
@@ -57,10 +57,10 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     }
   };
 
-  const generateVirtualUsers = async () => {
+  const handleGenerateVirtualUsers = async () => {
     setIsGeneratingVirtualUsers(true);
     try {
-      const result = await generateVirtualUsersAction(targetUserRules);
+      const result = await generateVirtualUsers(targetUserRules);
       setVirtualUsers(result);
     } catch (error) {
       console.error("仮想ユーザーの生成に失敗しました", error);
@@ -69,11 +69,11 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
     }
   };
 
-  const aiVote = async () => {
+  const handleAiVote = async () => {
     setIsVoting(true);
   
     try {
-      const data = await aiVoteAction({
+      const data = await aiVote({
         selectedVideos,
         virtualUsers,
       });
@@ -115,11 +115,11 @@ export const useAiVote = (files: PreviewFile[], title: string) => {
   return {
     targetUserRules,
     setTargetUserRules,
-    generateVirtualUsers,
+    handleGenerateVirtualUsers,
     virtualUsers,
     handleSelectVideos,
     selectedVideos,
-    aiVote,
+    handleAiVote,
     syncUploadedVideoTitle,
     topVideoAnalysis,
     uploadedVideosFeedback,

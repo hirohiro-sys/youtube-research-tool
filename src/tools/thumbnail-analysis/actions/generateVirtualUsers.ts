@@ -2,7 +2,7 @@
 
 import { ai } from "@/src/lib/gemini/gemini";
 
-export async function generateVirtualUsersAction(targetUserRules: string) {
+export async function generateVirtualUsers(targetUserRules: string) {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
