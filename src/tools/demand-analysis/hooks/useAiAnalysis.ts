@@ -1,28 +1,24 @@
 import { useState } from "react";
 import { Video } from "../types/youtubeApiTypes";
+import { aiAnalysisAction } from "../actions/aiAnalysis";
 
 export const useAiAnalysis = (video: Video) => {
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const analyze = async () => {
+  const handleAnalyze = async () => {
     setLoading(true);
     setErrorMessage("");
-
+  
     try {
-      const res = await fetch("/api/ai-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          videoId: video.videoId,
-          title: video.title,
-          thumbnailUrl: `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`,
-        }),
+      const res = await aiAnalysisAction({
+        videoId: video.videoId,
+        title: video.title,
+        thumbnailUrl: `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`,
       });
-      const data = await res.json();
-
-      if (!res.ok) {
+  
+      if (res.error) {
         if (res.status === 404) {
           setErrorMessage("コメントが見つかりませんでした");
         } else {
@@ -30,10 +26,10 @@ export const useAiAnalysis = (video: Video) => {
         }
         return;
       }
-
-      setSummary(data.response);
-    } catch (error) {
-      console.error("コメント取得に失敗しました", error);
+  
+      setSummary(res.response || "");
+    } catch (e) {
+      console.error("エラー:", e);
       setErrorMessage("ネットワークエラーなどにより分析に失敗しました");
     } finally {
       setLoading(false);
@@ -44,6 +40,6 @@ export const useAiAnalysis = (video: Video) => {
     loading,
     summary,
     errorMessage,
-    analyze,
+    handleAnalyze,
   };
 };

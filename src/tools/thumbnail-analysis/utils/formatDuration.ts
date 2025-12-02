@@ -1,6 +1,8 @@
 export function formatDuration(isoDuration: string): string {
-  const match = isoDuration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  // 投稿待機中の動画はdurationが空になるため適当に返す
+  if (!isoDuration) return "0:00";
 
+  const match = isoDuration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!match) return "0:00";
 
   const hours = Number(match[1] || "0");

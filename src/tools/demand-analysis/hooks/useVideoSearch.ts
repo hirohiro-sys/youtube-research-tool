@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Range, Video } from "../types/youtubeApiTypes";
+import { searchHighDemandVideos } from "../actions/searchHighDemandVideos";
 
 export const useVideoSearch = () => {
   const [keyword, setKeyword] = useState("");
@@ -40,16 +41,16 @@ export const useVideoSearch = () => {
   const handleSearch = async (suggestKeyword?: string) => {
     setLoading(true);
     setHasSearched(true);
+  
     try {
       const publishedAfter = getPublishedAfter(range);
-      const query = new URLSearchParams({
+      const data = await searchHighDemandVideos({
         keyword: suggestKeyword ?? keyword,
         scale,
-        timeOption,
+        isShort: timeOption === "short",
         ...(publishedAfter && { publishedAfter }),
       });
-      const response = await fetch(`/api/research?${query.toString()}`);
-      const data = await response.json();
+  
       setVideos(data.videos);
       setNextPageToken(data.nextPageToken);
       setSuggestions(data.suggestions);
@@ -59,28 +60,29 @@ export const useVideoSearch = () => {
       setLoading(false);
     }
   };
-
+  
   const handleLoadMore = async () => {
     if (!nextPageToken) return;
     setLoading(true);
+  
     try {
       const publishedAfter = getPublishedAfter(range);
-      const query = new URLSearchParams({
+      const data = await searchHighDemandVideos({
         keyword,
         scale,
-        timeOption,
+        isShort: timeOption === "short",
         pageToken: nextPageToken,
         ...(publishedAfter && { publishedAfter }),
       });
-      const response = await fetch(`/api/research?${query.toString()}`);
-      const data = await response.json();
+  
       setVideos((prev) => {
         const existingIds = new Set(prev.map((v) => v.videoId));
         const uniqueNewVideos = data.videos.filter(
-          (video: Video) => !existingIds.has(video.videoId),
+          (video: Video) => !existingIds.has(video.videoId)
         );
         return [...prev, ...uniqueNewVideos];
       });
+  
       setNextPageToken(data.nextPageToken);
       setSuggestions(data.suggestions);
     } catch (error) {
@@ -88,7 +90,7 @@ export const useVideoSearch = () => {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const sortedVideos = useMemo(() => {
     if (sortType === "newest") {

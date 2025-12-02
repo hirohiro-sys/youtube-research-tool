@@ -7,7 +7,7 @@ type ChannelVideosProps = {
   channelId: string;
   setChannelId: (channelId: string) => void;
   channelVideos: VideoView[];
-  handleSearchchannelVideos: (searchType: "keyword" | "channel") => void;
+  handleSearchVideos: (searchType: "keyword" | "channel") => void;
   title: string;
 };
 
@@ -15,7 +15,7 @@ export const ChannelVideos = ({
   channelId,
   setChannelId,
   channelVideos,
-  handleSearchchannelVideos,
+  handleSearchVideos,
   title,
 }: ChannelVideosProps) => {
   return (
@@ -34,7 +34,7 @@ export const ChannelVideos = ({
         />
         <button
           className="btn"
-          onClick={() => handleSearchchannelVideos("channel")}
+          onClick={() => handleSearchVideos("channel")}
           disabled={!channelId}
         >
           取得

@@ -14,6 +14,8 @@ import { GalleryThumbnails } from "lucide-react";
 import { AiVote } from "@/src/tools/thumbnail-analysis/components/ai-vote/aiVote";
 import { useAiVote } from "@/src/tools/thumbnail-analysis/hooks/useAiVote";
 
+// export const maxDuration = 30; // 後で必要かどうかのテストをする
+
 export default function Page() {
   const { files, getRootProps, getInputProps, style, setFiles } =
     useFileUpload();
@@ -32,19 +34,19 @@ export default function Page() {
     setPreviewVideos,
     channelVideos,
     setChannelVideos,
-    handleSearchchannelVideos,
+    handleSearchVideos,
     shuffleVideos,
-    loading
+    loading,
   } = useVideoSearch(files);
   const {
     targetUserRules,
     setTargetUserRules,
-    generateVirtualUsers,
+    handleGenerateVirtualUsers,
     virtualUsers,
     handleSelectVideos,
     selectedVideos,
     syncUploadedVideoTitle,
-    aiVote,
+    handleAiVote,
     initializeSelectedVideos,
     topVideoAnalysis,
     uploadedVideosFeedback,
@@ -90,7 +92,7 @@ export default function Page() {
                 title={title}
                 keyword={keyword}
                 setKeyword={setKeyword}
-                handleSearchchannelVideos={handleSearchchannelVideos}
+                handleSearchVideos={handleSearchVideos}
                 shuffleVideos={shuffleVideos}
                 previewVideos={previewVideos}
                 loading={loading}
@@ -107,11 +109,11 @@ export default function Page() {
                 title={title}
                 targetUserRules={targetUserRules}
                 setTargetUserRules={setTargetUserRules}
-                generateVirtualUsers={generateVirtualUsers}
+                handleGenerateVirtualUsers={handleGenerateVirtualUsers}
                 virtualUsers={virtualUsers}
                 handleSelectVideos={handleSelectVideos}
                 selectedVideos={selectedVideos}
-                aiVote={aiVote}
+                handleAiVote={handleAiVote}
                 topVideoAnalysis={topVideoAnalysis}
                 uploadedVideosFeedback={uploadedVideosFeedback}
                 isGeneratingVirtualUsers={isGeneratingVirtualUsers}
@@ -122,7 +124,7 @@ export default function Page() {
                 channelId={channelId}
                 setChannelId={setChannelId}
                 channelVideos={channelVideos}
-                handleSearchchannelVideos={handleSearchchannelVideos}
+                handleSearchVideos={handleSearchVideos}
                 title={title}
               />
             </>

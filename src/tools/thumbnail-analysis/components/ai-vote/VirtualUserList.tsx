@@ -4,7 +4,7 @@ import { VirtualUser } from "../../types/aiVote";
 type VirtualUserListProps = {
   targetUserRules: string;
   setTargetUserRules: (value: string) => void;
-  generateVirtualUsers: () => Promise<void>;
+  handleGenerateVirtualUsers: () => Promise<void>;
   virtualUsers: VirtualUser[];
   isGeneratingVirtualUsers: boolean;
 };
@@ -12,7 +12,7 @@ type VirtualUserListProps = {
 export const VirtualUserList = ({
   targetUserRules,
   setTargetUserRules,
-  generateVirtualUsers,
+  handleGenerateVirtualUsers,
   virtualUsers,
   isGeneratingVirtualUsers,
 }: VirtualUserListProps) => {
@@ -30,7 +30,7 @@ export const VirtualUserList = ({
           <button
             className="btn"
             disabled={!targetUserRules || isGeneratingVirtualUsers}
-            onClick={generateVirtualUsers}
+            onClick={handleGenerateVirtualUsers}
           >
             {isGeneratingVirtualUsers ? "生成中..." : "仮想ユーザーを生成"}
           </button>
